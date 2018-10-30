@@ -1,0 +1,17 @@
+IChar
+ISpan
+IEND
+----------
+IOpenCapture
+ITestSet
+ISet
+ISpan
+ITestChar
+IChoice
+IANY
+ISet
+ISpan
+ICommit
+ITestSet
+ICloseCapture
+IEND
