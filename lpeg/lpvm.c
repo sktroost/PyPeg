@@ -168,49 +168,41 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
     assert(stackidx(ptop) + ndyncap == lua_gettop(L) && ndyncap <= captop);
     switch ((Opcode)p->i.code) {
       case IEnd: {
-		printf("IEND\n");
         assert(stack == getstackbase(L, ptop) + 1);
         capture[captop].kind = Cclose;
         capture[captop].s = NULL;
         return s;
       }
       case IGiveup: {
-		printf("IGIVEUP\n");
         assert(stack == getstackbase(L, ptop));
         return NULL;
       }
       case IRet: {
-		printf("IRET\n");
         assert(stack > getstackbase(L, ptop) && (stack - 1)->s == NULL);
         p = (--stack)->p;
         continue;
       }
       case IAny: {
-		printf("IANY\n");
         if (s < e) { p++; s++; }
         else goto fail;
         continue;
       }
       case ITestAny: {
-		printf("ITestAny\n");
         if (s < e) p += 2;
         else p += getoffset(p);
         continue;
       }
       case IChar: {
-		printf("IChar\n");
         if ((byte)*s == p->i.aux && s < e) { p++; s++; }
         else goto fail;
         continue;
       }
       case ITestChar: {
-		printf("ITestChar\n");
         if ((byte)*s == p->i.aux && s < e) p += 2;
         else p += getoffset(p);
         continue;
       }
       case ISet: {
-		printf("ISet\n");
         int c = (byte)*s;
         if (testchar((p+1)->buff, c) && s < e)
           { p += CHARSETINSTSIZE; s++; }
@@ -218,7 +210,6 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
         continue;
       }
       case ITestSet: {
-		printf("ITestSet\n");
         int c = (byte)*s;
         if (testchar((p + 2)->buff, c) && s < e)
           p += 1 + CHARSETINSTSIZE;
@@ -226,14 +217,12 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
         continue;
       }
       case IBehind: {
-		printf("IBehind\n");
         int n = p->i.aux;
         if (n > s - o) goto fail;
         s -= n; p++;
         continue;
       }
       case ISpan: {
-		  printf("ISpan\n");
         for (; s < e; s++) {
           int c = (byte)*s;
           if (!testchar((p+1)->buff, c)) break;
@@ -242,12 +231,10 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
         continue;
       }
       case IJmp: {
-		  printf("IJmp\n");
         p += getoffset(p);
         continue;
       }
       case IChoice: {
-		  printf("IChoice\n");
         if (stack == stacklimit)
           stack = doublestack(L, &stacklimit, ptop);
         stack->p = p + getoffset(p);
@@ -258,7 +245,6 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
         continue;
       }
       case ICall: {
-		  printf("ICall\n");
         if (stack == stacklimit)
           stack = doublestack(L, &stacklimit, ptop);
         stack->s = NULL;
@@ -268,14 +254,12 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
         continue;
       }
       case ICommit: {
-		printf("ICommit\n");
         assert(stack > getstackbase(L, ptop) && (stack - 1)->s != NULL);
         stack--;
         p += getoffset(p);
         continue;
       }
       case IPartialCommit: {
-		  printf("IPartialCommit\n");
         assert(stack > getstackbase(L, ptop) && (stack - 1)->s != NULL);
         (stack - 1)->s = s;
         (stack - 1)->caplevel = captop;
@@ -283,7 +267,6 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
         continue;
       }
       case IBackCommit: {
-		  printf("IBackCommit\n");
         assert(stack > getstackbase(L, ptop) && (stack - 1)->s != NULL);
         s = (--stack)->s;
         captop = stack->caplevel;
@@ -291,12 +274,10 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
         continue;
       }
       case IFailTwice:
-	  printf("IFailTwice\n");
         assert(stack > getstackbase(L, ptop));
         stack--;
         /* go through */
       case IFail:
-	  printf("IFail\n");
       fail: { /* pattern failed: try to backtrack */
         do {  /* remove pending calls */
           assert(stack > getstackbase(L, ptop));
@@ -312,7 +293,6 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
         continue;
       }
       case ICloseRunTime: {
-		printf("ICloseRunTime\n");
         CapState cs;
         int rem, res, n;
         int fr = lua_gettop(L) + 1;  /* stack index of first result */
@@ -341,7 +321,6 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
         continue;
       }
       case ICloseCapture: {
-		printf("ICloseCapture\n");
         const char *s1 = s;
         assert(captop > 0);
         /* if possible, turn capture into a full capture */
@@ -358,12 +337,10 @@ const char *match (lua_State *L, const char *o, const char *s, const char *e,
         }
       }
       case IOpenCapture:
-	    printf("IOpenCapture\n");
         capture[captop].siz = 0;  /* mark entry as open */
         capture[captop].s = s;
         goto pushcapture;
       case IFullCapture:
-	    printf("IFullCapture\n");
         capture[captop].siz = getoff(p) + 1;  /* save capture size */
         capture[captop].s = s - getoff(p);
         /* goto pushcapture; */

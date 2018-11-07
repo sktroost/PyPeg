@@ -1006,6 +1006,7 @@ Instruction *compile (lua_State *L, Pattern *p) {
   addinstruction(&compst, IEnd, 0);
   realloccode(L, p, compst.ncode);  /* set final size */
   peephole(&compst);
+  printpatt(p->code, compst.ncode);/*cfbolz rules*/
   return p->code;
 }
 
