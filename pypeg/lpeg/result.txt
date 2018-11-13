@@ -1,0 +1,43 @@
+hi
+00: char 'a'
+01: span [(62)]
+10: end 
+IChar
+ISpan
+IEND
+----------
+hi
+00: opencapture simple (idx = 0)
+01: testset [(2b)(2d)]-> 12
+11: any 
+12: set [(30-39)]
+21: span [(30-39)]
+30: testchar '.'-> 55
+32: choice -> 55
+34: any 
+35: set [(30-39)]
+44: span [(30-39)]
+53: commit -> 55
+55: testset [(45)(65)]-> 99
+65: choice -> 99
+67: any 
+68: testset [(2b)(2d)]-> 79
+78: any 
+79: set [(30-39)]
+88: span [(30-39)]
+97: commit -> 99
+99: closecapture 
+100: end 
+IOpenCapture
+ITestSet
+ISet
+ISpan
+ITestChar
+IChoice
+IANY
+ISet
+ISpan
+ICommit
+ITestSet
+ICloseCapture
+IEND
