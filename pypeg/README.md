@@ -1,9 +1,10 @@
 # PyPeg
 TODOS:
 -black anschauen (habs nich installiert bekommen, aber alternative gefunden)
+
 -pep 8 lesen (DONE! lösung: modul mit namen "pep8" installiert, was ein python-programm auf pep8 style kontrolliert und fehler anzeigt, und meinen code danach manuell angepasst)
 
--->datenstruktur weniger scheiße anlegen(DONE! der lua-teil ist jetzt ein unterordner,
+-datenstruktur weniger scheiße anlegen(DONE! der lua-teil ist jetzt ein unterordner,
 die python-sachen sind meiner meinung nach wesentlich strukturierter)
 
 -pattern "a" ausführen können (-> am vm emulator anfangen) (DONE! siehe vm.py)
