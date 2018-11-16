@@ -1,10 +1,12 @@
-TODOS:
--black anschauen (habs nich installiert bekommen, aber alternative gefunden)
--pep 8 lesen (DONE! lösung: "pep8" installiert, was ein python-programm auf pep8 style kontrolliert und fehler anzeigt, und meinen code danach manuell angepasst)
+---------------
 
--->datenstruktur weniger scheiße anlegen(DONE! der lua-teil ist jetzt ein unterordner,
-die python-sachen sind meiner meinung nach wesentlich strukturierter)
+-wie funktioniert coverage.py (tool für tests, zeigt was getestet wird) (DONE! thanks cfbolz!)
 
--pattern "a" ausführen können (-> am vm emulator anfangen) (DONE! siehe vm.py)
+-relabel tests (parse tests anpassen, hinzufügen das neue labels passen müssen)
+-statevariablen in vm.py sinnvoll umbenennen
+-any, choice, commit bytecode (DONE! ->vm.py)
+-alle tests die ich habe brauchen n testcase wo der string unerwartet früh zu ende is (z.b. pattern "ab" input "a", oder pattern "a" input "")
+-getesteten prozentsatz des codes (insbesondere parser) erhöhen (siehe coverage und das htmlding)
 
--instructionpositionen ändern (labels, gotos) (DONE! methode relabel in parser.py)
+python -m coverage run  `which py.test`
+python -m coverage html

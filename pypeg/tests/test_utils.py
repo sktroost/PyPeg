@@ -1,4 +1,5 @@
 from pypeg.utils import charrange, runlpeg, runpattern
+from pypeg.instruction import Instruction
 
 def test_charrange():
     chars=charrange("a","z")
@@ -11,7 +12,5 @@ def test_charrange():
 
 
 def test_runpattern():
-    bytecode = runpattern("lpeg.P\"a\"", "aaa")
-    assert bytecode == runlpeg("temp.lua")
-    assert bytecode == runpattern('lpeg.P"a"','aaa')
-    assert bytecode == runpattern('lpeg.P"a"','bbb')
+    bytecode = runpattern("lpeg.P\"a\"")
+    assert bytecode == "00: char 'a'\n01: end \n"

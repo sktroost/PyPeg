@@ -1,18 +1,8 @@
-#usage: call from commandline python lua_to_instr.py myluafile.lua.
-#only works with lua files that only output bytecode
-#(no other printlines allowed)
 from subprocess import check_output
 from sys import argv
 from os import chdir
 from instruction import Instruction
-from utils import runlpeg
-
-
-def charrange(a, b):
-    ret = []
-    for i in range(ord(a), ord(b) + 1):
-        ret.append(chr(i))
-    return ret
+from utils import runlpeg, charrange
 
 
 def line_to_instruction(line):
@@ -34,10 +24,7 @@ def line_to_instruction(line):
         charlist = []
         for element in bracketsplit:
             element = (
-                element.replace("(", "")
-                .replace(")", "")
-                .replace("[", "")
-                .replace("]", "")
+                element.strip("()[]")
             )
             if "-" in element:  # describes a range of values
                 sublist = []

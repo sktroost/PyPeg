@@ -17,14 +17,14 @@ def runlpeg(filename):
     return bytecodestring
 
 
-def runpattern(pattern,inputstring):
+def runpattern(pattern):
     chdir("./lpeg")
     f = open("temp.lua","w")
     code = (
         "local lpeg = require(\"lpeg\"); lpeg.match("
         + pattern
         + ", \"" 
-        + inputstring 
+        + "aaa"  # inputstring is irrelevant for bytecode generation
         + "\")"
     )
     f.write(code)
