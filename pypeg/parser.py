@@ -71,7 +71,7 @@ def parse(lines):
     for line in lines:
         if line.strip():  # if line is not empty
             instruction = line_to_instruction(line)
-            instructionlist.append(instruction) 
+            instructionlist.append(instruction)
     return instructionlist
 
 

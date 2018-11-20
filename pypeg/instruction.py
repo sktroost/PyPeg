@@ -44,7 +44,8 @@ class Instruction(object):
     def __eq__(self, other):
         return (self.name == other.name and self.label == other.label
                 and self.goto == other.goto and self.charlist == other.charlist
-                and self.idx == other.idx and self.size == other.size 
+                and self.idx == other.idx and self.size == other.size
                 and self.character == other.character)
+
     def __ne__(self, other):
         return not __eq__(self, other)

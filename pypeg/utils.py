@@ -19,11 +19,11 @@ def runlpeg(filename):
 
 def runpattern(pattern):
     chdir("./lpeg")
-    f = open("temp.lua","w")
+    f = open("temp.lua", "w")
     code = (
         "local lpeg = require(\"lpeg\"); lpeg.match("
         + pattern
-        + ", \"" 
+        + ", \""
         + "aaa"  # inputstring is irrelevant for bytecode generation
         + "\")"
     )

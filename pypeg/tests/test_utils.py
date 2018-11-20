@@ -1,8 +1,9 @@
 from pypeg.utils import charrange, runlpeg, runpattern
 from pypeg.instruction import Instruction
 
+
 def test_charrange():
-    chars=charrange("a","z")
+    chars = charrange("a", "z")
     assert "a" in chars
     assert "z" in chars
     assert "0" not in chars
