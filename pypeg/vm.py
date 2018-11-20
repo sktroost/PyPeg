@@ -6,13 +6,11 @@ def run(pattern, inputstring, debug=False):
     bytecodestring = runpattern(pattern)
     instructionlist = parse(bytecodestring)
     instructionlist = relabel(instructionlist)
-    #The state of the VM is realized by 4 values p, i, e and c.
-    #Their definitions are found in the paper.
-    PC = 0  # probably the index of the instructionlist (program counter)
-    index = 0  # probably the index of the inputstring (index)
-    e = []  # TODO: find out what that is
+    PC = 0
+    index = 0
+    e = []
     c = "something"  # TODO: find out what that is
-    while True:  # Iterating over every instruction once is impractical
+    while True:
         if debug:
             print("-"*10)
             print("Program Counter: "+str(p))
@@ -22,7 +20,7 @@ def run(pattern, inputstring, debug=False):
                 print("Instruction: "+str(instructionlist[PC]))
         if PC == "FAIL":  # NOTE: THIS BREAKS AFTER NON TUPLE OBJECTS GO
         #ON THE STACK. SEE PAPER, PAGE 15, FAIL CASE BEHAVIOR ("any")
-            if len(e):  # if backtrackstack isnt empty (i love that word)
+            if len(e):
                 ret = e.pop()
                 PC = ret[0]
                 index = ret[1]
