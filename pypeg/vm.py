@@ -13,8 +13,8 @@ def run(pattern, inputstring, debug=False):
     while True:
         if debug:
             print("-"*10)
-            print("Program Counter: "+str(p))
-            print("Index: "+str(i))
+            print("Program Counter: "+str(PC))
+            print("Index: "+str(index))
             print("Backstrackstack: "+str(e))
             if PC != "FAIL":
                 print("Instruction: "+str(instructionlist[PC]))
@@ -85,5 +85,10 @@ def run(pattern, inputstring, debug=False):
                 index += 1
             else:
                 PC = "FAIL"
+        elif instruction.name == "span":  # can't fail
+            while (index < len(inputstring)
+                   and inputstring[index] in instruction.charlist):
+                index += 1
+            PC += 1
         else:
             raise Exception("Unknown instruction! "+instruction.name)

@@ -1,5 +1,5 @@
-from subprocess import check_output
-from os import chdir
+from subprocess import check_output, CalledProcessError
+from os import chdir, listdir
 
 
 def charrange(a, b):
@@ -10,15 +10,27 @@ def charrange(a, b):
 
 
 def runlpeg(filename):
-    chdir("./lpeg")  # extremly unsafe.
+    changed = False
+    if "lpeg" in listdir("."):
+        chdir("./lpeg")  # extremly unsafe.
+        changed = True
     # i do this because the lpeg import by lua fails if i don't. no clue why.
-    bytecodestring = check_output(["lua", filename])
-    chdir("..")
+    if filename in listdir("."):
+        try:
+            bytecodestring = check_output(["lua", filename])
+        except CalledProcessError:
+            bytecodestring = None
+    else:
+        bytecodestring = None
+    if changed:
+        chdir("..")
     return bytecodestring
 
 
 def runpattern(pattern):
-    chdir("./lpeg")
+    changed = False
+    if "lpeg" in listdir("."):
+        chdir("./lpeg")
     f = open("temp.lua", "w")
     code = (
         "local lpeg = require(\"lpeg\"); lpeg.match("
@@ -29,6 +41,7 @@ def runpattern(pattern):
     )
     f.write(code)
     f.close()
-    chdir("..")
+    if changed:
+        chdir("..")
     ret = runlpeg("temp.lua")
     return ret

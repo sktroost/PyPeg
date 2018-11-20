@@ -16,7 +16,7 @@ def test_span():
     instr, = parse(input)
     assert instr.label == 21
     assert instr.name == "span"
-    assert instr.charlist[0] == charrange("0", "9")
+    assert instr.charlist == charrange("0", "9")
 
 
 def test_set():
@@ -41,7 +41,7 @@ def test_relabel():
     output = relabel(instructionlist)
     assert output[0] == Instruction(label=0, name="char", character="/")
     assert output[1] == Instruction(label=1, name="span",
-                                    charlist=[charrange("0", "9")])
+                                    charlist=charrange("0", "9"))
     assert output[2] == Instruction(label=2, name="testcode",
                                     charlist=[chr(0x1), chr(0x3), chr(0x39)],
                                     goto=1)

@@ -1,5 +1,6 @@
 from pypeg.utils import charrange, runlpeg, runpattern
 from pypeg.instruction import Instruction
+from os import getcwd
 
 
 def test_charrange():
@@ -12,6 +13,19 @@ def test_charrange():
     assert chr(123) not in chars  # 1 after 'z' in ascii
 
 
+def test_runlpeg():
+    path = getcwd()
+    runlpeg("INVALID FILENAME LOL")
+    assert path == getcwd()
+    assert runlpeg("notarealfile.lua") is None
+
+
 def test_runpattern():
     bytecode = runpattern("lpeg.P\"a\"")
     assert bytecode == "00: char 'a'\n01: end \n"
+
+
+def test_runpattern_2():
+    path = getcwd()
+    runpattern("INVALID PATTERN LOL")
+    assert path == getcwd()

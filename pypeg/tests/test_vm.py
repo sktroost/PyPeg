@@ -51,3 +51,11 @@ def test_testset_partial_commit():  # possible todo: find shorter example
     assert run('(lpeg.P"aa"+lpeg.P"zz")^0', "azazaz") is None
     assert run('(lpeg.P"aa"+lpeg.P"zz")^0', "aaaaaz") is None
     assert run('(lpeg.P"aa"+lpeg.P"zz")^0', "banana") is None
+
+
+def test_span():
+    assert run('(lpeg.P"a"+lpeg.P"b")^0', "") is not None
+    assert run('(lpeg.P"a"+lpeg.P"b")^0', "aaaaa") is not None
+    assert run('(lpeg.P"a"+lpeg.P"b")^0', "b") is not None
+    assert run('(lpeg.P"a"+lpeg.P"b")^0', "aaac") is None
+    assert run('(lpeg.P"a"+lpeg.P"b")^0', "abca") is None

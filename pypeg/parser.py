@@ -33,7 +33,9 @@ def line_to_instruction(line):
                 range2 = int("0x"+rangevalues[1], 16)
                 for i in range(range1, range2 + 1):
                     sublist.append(chr(i))
-                charlist.append(sublist)
+                for j in sublist:
+                    charlist.append(j)
+                #charlist.append(sublist)
             else:
                 charlist.append(chr(int("0x" + element, 16)))
     if "(" in line:  # assuming format simillar to
