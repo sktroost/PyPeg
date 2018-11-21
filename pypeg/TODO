@@ -14,3 +14,4 @@ python -m coverage html
 frage an bolz: was ist mit testchar/testcharset/testany los?
 ^(in der C implementation konsumieren die keinen input. im paper steht sie sollten) (siehe paper S.21)
 
+

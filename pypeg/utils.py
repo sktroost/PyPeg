@@ -31,6 +31,7 @@ def runpattern(pattern):
     changed = False
     if "lpeg" in listdir("."):
         chdir("./lpeg")
+        changed = True
     f = open("temp.lua", "w")
     code = (
         "local lpeg = require(\"lpeg\"); lpeg.match("
