@@ -1,1 +1,1 @@
-local lpeg = require("lpeg"); lpeg.match(lpeg.P"aa"+lpeg.P"ab","aaa")
+local lpeg = require("lpeg"); lpeg.match(lpeg.C"aa"+lpeg.P"ab","aaa")

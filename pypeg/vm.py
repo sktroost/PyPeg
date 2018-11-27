@@ -10,7 +10,7 @@ def run(pattern, inputstring, debug=False):
     pc = 0
     index = 0
     choice_points = []
-    c = "something"  # TODO: find out what that is
+    captures = []
     while True:
         if debug:
             print("-"*10)
@@ -24,7 +24,11 @@ def run(pattern, inputstring, debug=False):
         #ON THE STACK. SEE PAPER, PAGE 15, FAIL CASE BEHAVIOR ("any")
             fail = False
             if len(choice_points):
-                pc, index, c = choice_points.pop()
+                value = choice_points.pop()
+                if type(value) == type(5):  # if int
+                    index = value
+                else:  # type touple
+                    pc, index, c = value
             else:
                 return None
         instruction = instructionlist[pc]
@@ -89,5 +93,13 @@ def run(pattern, inputstring, debug=False):
                    and inputstring[index] in instruction.charlist):
                 index += 1
             pc += 1
+        elif instruction.name == "call":
+            currentlabel = pc
+            choice_points.append(currentlabel+1)
+            pc = instruction.goto
+        elif instruction.name == "ret":
+            pc = choice_points.pop()
+        elif instruction.name == "jmp":
+            pc = instruction.goto
         else:
             raise Exception("Unknown instruction! "+instruction.name)

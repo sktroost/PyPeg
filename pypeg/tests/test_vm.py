@@ -59,3 +59,14 @@ def test_span():
     assert run('(lpeg.P"a"+lpeg.P"b")^0', "b") is not None
     assert run('(lpeg.P"a"+lpeg.P"b")^0', "aaac") is None
     assert run('(lpeg.P"a"+lpeg.P"b")^0', "abca") is None
+
+
+def test_grammar_call_jmp_ret():
+    grammar = """lpeg.P{
+    "a";
+    a = lpeg.V("b") * lpeg.V("c"),
+    b = lpeg.P("b"),
+    c = lpeg.P("c")}"""
+    assert run(grammar, "bc") is not None
+    assert run(grammar, "") is None
+    assert run(grammar, "b") is None

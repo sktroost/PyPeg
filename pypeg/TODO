@@ -1,17 +1,46 @@
 ---------------
 
--wie funktioniert coverage.py (tool für tests, zeigt was getestet wird) (DONE! thanks cfbolz!)
-
--relabel tests (parse tests anpassen, hinzufügen das neue labels passen müssen)
--statevariablen in vm.py sinnvoll umbenennen
--any, choice, commit bytecode (DONE! ->vm.py)
--alle tests die ich habe brauchen n testcase wo der string unerwartet früh zu ende is (z.b. pattern "ab" input "a", oder pattern "a" input "")
--getesteten prozentsatz des codes (insbesondere parser) erhöhen (siehe coverage und das htmlding)
-
 python -m coverage run  `which py.test`
 python -m coverage html
 
-frage an bolz: was ist mit testchar/testcharset/testany los?
-^(in der C implementation konsumieren die keinen input. im paper steht sie sollten) (siehe paper S.21)
+
+NEUE METHODE: rungrammar (erstellt dateien wie in hello_call.lua und führt die aus, fischt richtige bytecodes raus) (nope)
+bytecodes call, jmp, ret (DONE)
+
+
+
+probleme diese woche:
+tests die bestimmte bytecodes erzeugen zu finden ist schwer (-> testany),
+das vorgesehene verhalten für undokumentierte bytecodes zu finden (wie "fullcapture simple") ist schwer
+
+
+(bonus: capture)
+
+code refactorn
+
+IEnd: done
+IGiveup
+IRet done
+IAny done
+ITestAny 
+IChar done
+ITestChar done
+ISet done
+ITestSet done
+IBehind ?
+ISpan: done
+IJmp done
+IChoice: done
+ICall done
+ICommit: done
+IPartialCommit: done
+IBackCommit?
+IFailTwice
+IFail 
+ICloseRunTime?
+ICloseCapture?
+IOpenCapture?
+IFullCapture?
+
 
 
