@@ -173,11 +173,15 @@ def search(instructions, s):
 
 
 def processcaptures(captures, inputstring):
+    #refactor: wird langsam mal zeit das "vm" ne klasse wird.
     returnlist = []
     for capture in captures:
         size = capture[1]
         index = capture[2]
-        capturedstring = inputstring[index-size:index]
+        newindex = index-size
+        assert newindex >= 0
+        assert index >= 0
+        capturedstring = inputstring[newindex:index]
         returnlist.append(capturedstring)
     return returnlist
 

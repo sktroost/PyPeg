@@ -3,13 +3,16 @@ from sys import argv
 from os import chdir
 from instruction import Instruction
 from utils import runlpeg, charrange
+from rpython.rlib.rstring import replace
 
 
 def line_to_instruction(line):
     labelsplit = line.split(":")
     label = int(labelsplit[0])
     line = labelsplit[1]
-    goto = charlist = idx = size = character = None
+    charlist = None
+    character = "\0"
+    goto  = idx = size = -1
     if "->" in line:  # assuming format of "stuff -> int"
         gotosplit = line.split("->")
         goto = int(gotosplit[1])
@@ -18,6 +21,8 @@ def line_to_instruction(line):
         #assuming format similar to "labelname [(stuff)(stuff)]"
         cut1 = line.find("[")
         cut2 = line.find("]") + 1
+        assert cut1 >= 0
+        assert cut2 >= 0
         bracketline = line[cut1:cut2]
         line = line[:cut1] + line[cut2:]
         bracketsplit = bracketline.split(")(")
@@ -29,15 +34,15 @@ def line_to_instruction(line):
             if "-" in element:  # describes a range of values
                 sublist = []
                 rangevalues = element.split("-")
-                range1 = int("0x"+rangevalues[0], 16)
-                range2 = int("0x"+rangevalues[1], 16)
+                range1 = int(rangevalues[0], 16)
+                range2 = int(rangevalues[1], 16)
                 for i in range(range1, range2 + 1):
                     sublist.append(chr(i))
                 for j in sublist:
                     charlist.append(j)
                 #charlist.append(sublist)
             else:
-                charlist.append(chr(int("0x" + element, 16)))
+                charlist.append(chr(int(element, 16)))
     if "(" in line:  # assuming format simillar to
         #"labelname (something = int) (somethingelse = int)"
         parensplit = line.split("(")
@@ -56,7 +61,7 @@ def line_to_instruction(line):
 
     if "\'" in line:  # assuming format of "labelname 'character'"
         character = line[line.find("\'") + 1]
-        line = line.replace("\'"+character+"\'", "")
+        line = replace(line, "\'"+character+"\'", "")
     name = line
     while name[-1] == " ":
         name = name[:-1]
@@ -90,7 +95,7 @@ def relabel(instructionlist):
         #2nd loop relabels the instructions
         currentlabel = instruction.label
         instruction.label = labeldict[currentlabel]
-        if instruction.goto is not None:
+        if instruction.goto != -1:
             currentgoto = instruction.goto
             instruction.goto = labeldict[currentgoto]
     return instructionlist

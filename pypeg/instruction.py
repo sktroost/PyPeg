@@ -1,10 +1,11 @@
 from utils import charrange
 
 
+
 class Instruction(object):
     def __init__(self, name, label,
-                 goto=None, charlist=None, idx=None,
-                 size=None, character=None):
+                 goto=-1, charlist=None, idx=-1,
+                 size=-1, character="\0"):
         self.name = name
         self.label = label
         self.goto = goto
@@ -28,13 +29,13 @@ class Instruction(object):
                 else:
                     templist.append(sublist)
             ret += ", Charlist:"+str(templist)
-        if self.goto is not None:
+        if self.goto != -1:
             ret += ", Goto:"+str(self.goto)
-        if self.idx is not None:
+        if self.idx != -1:
             ret += ", idx:"+str(self.idx)
-        if self.size is not None:
+        if self.size != -1:
             ret += ", size:"+str(self.size)
-        if self.character is not None:
+        if self.character != "\0":
             ret += ", character:"+str(self.character)
         return ret+")"
 

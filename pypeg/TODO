@@ -3,20 +3,13 @@
 python -m coverage run  `which py.test`
 python -m coverage html
 
-
-NEUE METHODE: rungrammar (erstellt dateien wie in hello_call.lua und führt die aus, fischt richtige bytecodes raus) (nope)
-bytecodes call, jmp, ret (DONE)
-
-
-
-probleme diese woche:
-tests die bestimmte bytecodes erzeugen zu finden ist schwer (-> testany),
-das vorgesehene verhalten für undokumentierte bytecodes zu finden (wie "fullcapture simple") ist schwer
-
 ----------------
 
+python ~/pypeg_git/pypy/rpython/bin/rpython target.py
+../../pypy/pytest.py
 
-search implementieren, ma rausfinden wie das gecallt wird (???) (hab jetzt capture support, das is ganz cool)
+
+search implementieren, ma rausfinden wie das gecallt wird (ich glaub damit waren position captures gemeint) (hab jetzt simple capture support, das is ganz cool)
 lies die doku( http://www.inf.puc-rio.br/~roberto/lpeg/ ) (!!!) (hab ich gemacht, und daraus 1000 neue tests für 1000 neue bytecodes extrahiert)
 tests aus den codeschnippseln in der doku machen (s.o., da geht noch mehr)
 helloworld.lua in tests umwandeln (DONE! test_slow in test_vm.py)
@@ -26,12 +19,23 @@ run: instructionlist als parameter, index als parameter (DONE!)
     danach: refactor: aufruf der form "python vm_oderso.py patterndateiname, inputstringdateiname"
 -pypy auschecken ( http://doc.pypy.org/en/latest/build.html bis "run the translation"
 
-'lpeg.C(lpeg.P"a"/0)' ist ein problem. (siehe doku)
+'lpeg.C(lpeg.P"a"/0)' ist ein problem. (-> numbered capture)
 ich versteh pypy noch nich
 das ding wo lua funktionen als semantische aktionen aufgerufen werden hab ich noch nicht geschnallt (vermutlich "/" operator)
 captures sind noch mit tupeln implementiert, vermutlich in eigene klasse auslagern
 captures gehen momentan nur mit "simple captures", 
 andere capture typen beinhalten "argument","back","constant","fold","group","position","substitution","table","string","numbered","query","function","match-time"
+parser bug fixen(behind und capture bytecodes werden nicht anständig geparsed)
+
+-------------
+nachvollziehen wann die opencaptures erzeugt werden
+bug fixen: capture restore bei fail cases
+    --> speicher die capturelistlänge und schmeiß den rest weg
+todo: StackEntry.py zu stackentry.py umbenennen
+todo: choicepoint erbt von returnaddress, returnaddress erbt von nix (stackentry verwerfen)
+herausfinden ob lpeg n limit an captures hat oder dynamisch den stack anpasst
+pypy: portable versuchen, pypy bitbucket 
+vm.py main code in target.py auslagern (pypy konvention)
 
 freitag 14-16 uhr, john erklärt mir wie das mit den prozessen funktioniert
 
@@ -41,7 +45,7 @@ freitag 14-16 uhr, john erklärt mir wie das mit den prozessen funktioniert
 code refactorn
 
 IEnd: done
-IGiveup
+IGiveup ?
 IRet done
 IAny done
 ITestAny done (mega inkonsistent, consumed scheinbar input)
