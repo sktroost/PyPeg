@@ -29,3 +29,7 @@ class TestLLtype(LLJitMixin):
 
     def test_complex(self):
         self.run_string('(lpeg.P"aa"+lpeg.P"zz")^0', "aa"*100 + "zz" * 50 + "aaaa")
+
+    def test_email(self):
+        self.run_string('(lpeg.P{ lpeg.C(lpeg.R("az","AZ","09")^1*lpeg.P("@")*lpeg.R("az","AZ","09")^1*lpeg.P(".de")) + 1 * lpeg.V(1)})^0',
+                        " und es endet mit noch ner mail: fdsa@test.dehier kommt was:, asdfasdf asdf@web.de" * 100)

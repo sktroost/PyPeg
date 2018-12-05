@@ -6,7 +6,11 @@ python -m coverage html
 ----------------
 
 python ~/pypeg_git/pypy/rpython/bin/rpython target.py
+
 ../../pypy/pytest.py
+
+../../pypy/pytest.py -s -k email tests/jit.py
+
 
 
 search implementieren, ma rausfinden wie das gecallt wird (ich glaub damit waren position captures gemeint) (hab jetzt simple capture support, das is ganz cool)
@@ -23,6 +27,7 @@ run: instructionlist als parameter, index als parameter (DONE!)
 ich versteh pypy noch nich
 das ding wo lua funktionen als semantische aktionen aufgerufen werden hab ich noch nicht geschnallt (vermutlich "/" operator)
 captures sind noch mit tupeln implementiert, vermutlich in eigene klasse auslagern
+    -> choicepoints auch (klasse mit backpointer)
 captures gehen momentan nur mit "simple captures", 
 andere capture typen beinhalten "argument","back","constant","fold","group","position","substitution","table","string","numbered","query","function","match-time"
 parser bug fixen(behind und capture bytecodes werden nicht anständig geparsed)
@@ -34,10 +39,20 @@ bug fixen: capture restore bei fail cases
 todo: StackEntry.py zu stackentry.py umbenennen
 todo: choicepoint erbt von returnaddress, returnaddress erbt von nix (stackentry verwerfen)
 herausfinden ob lpeg n limit an captures hat oder dynamisch den stack anpasst
-pypy: portable versuchen, pypy bitbucket 
-vm.py main code in target.py auslagern (pypy konvention)
+pypy: portable versuchen, pypy bitbucket(done)
+vm.py main code in target.py auslagern (pypy konvention) (done)
 partial commit: choicepoint mutaten anstatt runternehmen, neuen erzeugen, draufwerfen (performance)
 span: whileschleife in seperate funktion auslagern
+"in instruction.charlist" in hilfsmethode in Instruction auslagern
+
+neue tests in jit.py die alle bytecodes in schleifenstruktur enthalten
+  - testset/set
+  - call/ret
+
+paper lesen:
+ - dynamo
+ - hotpath
+ - meta-tracing pypy
 
 google python keyword arguments
 
