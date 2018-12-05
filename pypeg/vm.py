@@ -3,6 +3,16 @@ from parser import parse, relabel
 from StackEntry import ChoicePoint, ReturnAddress
 from sys import argv
 
+from rpython.rlib import jit
+
+def get_printable_location(pc, fail, instructionlist):
+    instr = instructionlist[pc].name
+    return str(pc) + " " + instr
+
+driver = jit.JitDriver(reds=["index", "inputstring", "choice_points", "captures"],
+                       greens=["pc", "fail", "instructionlist"],
+                       get_printable_location=get_printable_location)
+
 
 def runbypattern(pattern, inputstring, index=0, debug=False):
     bytecodestring = runpattern(pattern)
@@ -21,6 +31,14 @@ def run(instructionlist, inputstring, index=0, debug=False):
     choice_points = []
     captures = []
     while True:
+        driver.jit_merge_point(instructionlist=instructionlist,
+                               inputstring=inputstring,
+                               index=index,
+                               fail=fail,
+                               pc=pc,
+                               choice_points=choice_points,
+                               captures=captures)
+        
         if debug:
             print("-"*10)
             print("Program Counter: "+str(pc))

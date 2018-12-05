@@ -36,6 +36,10 @@ todo: choicepoint erbt von returnaddress, returnaddress erbt von nix (stackentry
 herausfinden ob lpeg n limit an captures hat oder dynamisch den stack anpasst
 pypy: portable versuchen, pypy bitbucket 
 vm.py main code in target.py auslagern (pypy konvention)
+partial commit: choicepoint mutaten anstatt runternehmen, neuen erzeugen, draufwerfen (performance)
+span: whileschleife in seperate funktion auslagern
+
+google python keyword arguments
 
 freitag 14-16 uhr, john erklärt mir wie das mit den prozessen funktioniert
 

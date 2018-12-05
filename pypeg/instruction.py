@@ -3,6 +3,9 @@ from utils import charrange
 
 
 class Instruction(object):
+
+    _immutable_fields_ = ["name", "character", "goto"]
+
     def __init__(self, name, label,
                  goto=-1, charlist=None, idx=-1,
                  size=-1, character="\0"):
