@@ -1,14 +1,23 @@
 from utils import runpattern
 from parser import parse, relabel
+from StackEntry import ChoicePoint, ReturnAddress
+from sys import argv
 
 
-def run(pattern, inputstring, debug=False):
+def runbypattern(pattern, inputstring, index=0, debug=False):
     bytecodestring = runpattern(pattern)
     instructionlist = parse(bytecodestring)
     instructionlist = relabel(instructionlist)
+    return run(instructionlist, inputstring, index, debug)
+
+
+def run(instructionlist, inputstring, index=0, debug=False):
+    #bytecodestring = runpattern(pattern)
+    #instructionlist = parse(bytecodestring)
+    #instructionlist = relabel(instructionlist)
     fail = False
     pc = 0
-    index = 0
+    #index = 0
     choice_points = []
     captures = []
     while True:
@@ -16,22 +25,36 @@ def run(pattern, inputstring, debug=False):
             print("-"*10)
             print("Program Counter: "+str(pc))
             print("Index: "+str(index))
-            print("Backstrackstack: "+str(choice_points))
+            print("Choicepoints "+str(choice_points))
             print("Instruction: "+str(instructionlist[pc]))
+            print("Captures: "+str(captures))
             if fail:
                 print "FAIL"
-        if fail:  # NOTE: THIS BREAKS AFTER NON TUPLE OBJECTS GO
-        #ON THE STACK. SEE PAPER, PAGE 15, FAIL CASE BEHAVIOR ("any")
+        if fail:
             fail = False
-            if len(choice_points):
-                value = choice_points.pop()
-                if type(value) == type(5):  # if int
-                    index = value
-                else:  # type touple
-                    pc, index, c = value
+            if choice_points != []:
+                entry = choice_points.pop()
+                while isinstance(entry, ReturnAddress):
+                    if choice_points == []:
+                        return None
+                    entry = choice_points.pop()  # remove pending calls
+                if isinstance(entry, ChoicePoint):
+                    pc = entry.pc
+                    index = entry.index
+                    captures = entry.captures
+                    if debug:
+                        print("ChoicePoint Restored!"+str(pc))
+                else:
+                    raise Exception("Unexpected Entry in choice_points! "
+                                    + str(entry))
             else:
                 return None
+        if not isinstance(pc, int):
+            raise Exception("pc is of type "+str(type(pc))
+                            + "with value "+str(pc))
         instruction = instructionlist[pc]
+        if debug:
+            print instruction
         if instruction.name == "char":
             if index >= len(inputstring):
                 fail = True
@@ -42,19 +65,35 @@ def run(pattern, inputstring, debug=False):
                 fail = True
         elif instruction.name == "end":
             if index < len(inputstring):  # not all input consumed
+                if debug:
+                    print("Not all Input consumed at End Bytecode")
                 return None
-            elif not fail:
-                return True
+            if not fail:
+                #TODO: remove all not closed captures
+                return captures  # previously return True
             else:
+                if debug:
+                    print("Failed End Bytecode")
                 return None
         elif instruction.name == "testchar":
             if index >= len(inputstring):
                 pc = instruction.goto
             elif instruction.character == inputstring[index]:
                 pc += 1
-                #i += 1  # is paper page 21 wrong?
+                #doesnt consume input
             else:
                 pc = instruction.goto
+        elif instruction.name == "testany":
+            if index >= len(inputstring):
+                pc = instruction.goto
+            else:
+                pc += 1
+                index += 1  # must be the case because of 'lpeg.P(-1)'
+        elif instruction.name == "fail":
+            fail = True
+        elif instruction.name == "failtwice":
+            fail = True
+            assert isinstance(choice_points.pop(), ReturnAddress)
         elif instruction.name == "testset":
             if index >= len(inputstring):
                 pc = instruction.goto
@@ -68,9 +107,13 @@ def run(pattern, inputstring, debug=False):
             else:
                 pc += 1
                 index += 1  # since n=1
+        elif "behind" in instruction.name:
+            pc += 1
+            #pass  # todo:make this make sense
         elif instruction.name == "choice":
             pc += 1
-            choice_points.append((instruction.goto, index, c))
+            choicepoint = ChoicePoint(instruction.goto, index, captures)
+            choice_points.append(choicepoint)
         elif instruction.name == "commit":
             # commits pop values from the stack
             pc = instruction.goto
@@ -78,8 +121,9 @@ def run(pattern, inputstring, debug=False):
         elif instruction.name == "partial_commit":
             # partial commits modify the stack
             pc = instruction.goto
-            tripel = choice_points.pop()
-            choice_points.append((tripel[0], index, c))  # see paper, p.16
+            choicepoint = choice_points.pop()
+            newchoicepoint = ChoicePoint(choicepoint.pc, index, captures)
+            choice_points.append(newchoicepoint)  # see paper, p.16
         elif instruction.name == "set":
             if index >= len(inputstring):
                 fail = True
@@ -95,11 +139,59 @@ def run(pattern, inputstring, debug=False):
             pc += 1
         elif instruction.name == "call":
             currentlabel = pc
-            choice_points.append(currentlabel+1)
+            returnaddress = ReturnAddress(currentlabel+1)
+            choice_points.append(returnaddress)
             pc = instruction.goto
         elif instruction.name == "ret":
-            pc = choice_points.pop()
+            stacktop = choice_points.pop()
+            assert isinstance(stacktop, ReturnAddress)  # sanity check
+            pc = stacktop.pc
         elif instruction.name == "jmp":
             pc = instruction.goto
+        elif instruction.name == "fullcapture simple":
+            captures.append(("full", instruction.size, index))
+            pc += 1
+            #TODO: find out if only "size" parameter is relevant
+        elif instruction.name == "opencapture simple":
+            captures.append(("open", 0, index))
+            pc += 1
+        elif instruction.name == "closecapture":
+            capture = captures.pop()
+            assert capture[0] == "open"
+            size = index - capture[2]
+            captures.append(("full", size, index))
+            pc += 1
         else:
             raise Exception("Unknown instruction! "+instruction.name)
+
+
+def search(instructions, s):
+    for index in range(len(s)):
+        res = run(instructions, s, index)
+        if res:
+            return index
+
+
+def processcaptures(captures, inputstring):
+    returnlist = []
+    for capture in captures:
+        size = capture[1]
+        index = capture[2]
+        capturedstring = inputstring[index-size:index]
+        returnlist.append(capturedstring)
+    return returnlist
+
+
+if __name__ == "__main__":
+    patternfilename = argv[1]
+    inputfilename = argv[2]
+    patternfile = open(patternfilename, "r")
+    inputfile = open(inputfilename, "r")
+    pattern = patternfile.read()
+    patternfile.close()
+    inputstring = inputfile.read()
+    inputfile.close()
+    inputstring = inputstring.strip()
+    captures = runbypattern(pattern, inputstring)
+    output = processcaptures(captures, inputstring)
+    print output

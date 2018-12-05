@@ -13,6 +13,28 @@ probleme diese woche:
 tests die bestimmte bytecodes erzeugen zu finden ist schwer (-> testany),
 das vorgesehene verhalten für undokumentierte bytecodes zu finden (wie "fullcapture simple") ist schwer
 
+----------------
+
+
+search implementieren, ma rausfinden wie das gecallt wird (???) (hab jetzt capture support, das is ganz cool)
+lies die doku( http://www.inf.puc-rio.br/~roberto/lpeg/ ) (!!!) (hab ich gemacht, und daraus 1000 neue tests für 1000 neue bytecodes extrahiert)
+tests aus den codeschnippseln in der doku machen (s.o., da geht noch mehr)
+helloworld.lua in tests umwandeln (DONE! test_slow in test_vm.py)
+bug call/backtracking vermutlich drin, mehr tests schreiben (bug gefixt, mehr tests müssen noch)
+refactor: tuple/int choicepoint elemente in klasse auslagern, ReturnAddress, ChoicePoint erben von StackEntry(DONE! bin mir unsicher ob das so richtig is)
+run: instructionlist als parameter, index als parameter (DONE!)
+    danach: refactor: aufruf der form "python vm_oderso.py patterndateiname, inputstringdateiname"
+-pypy auschecken ( http://doc.pypy.org/en/latest/build.html bis "run the translation"
+
+'lpeg.C(lpeg.P"a"/0)' ist ein problem. (siehe doku)
+ich versteh pypy noch nich
+das ding wo lua funktionen als semantische aktionen aufgerufen werden hab ich noch nicht geschnallt (vermutlich "/" operator)
+captures sind noch mit tupeln implementiert, vermutlich in eigene klasse auslagern
+captures gehen momentan nur mit "simple captures", 
+andere capture typen beinhalten "argument","back","constant","fold","group","position","substitution","table","string","numbered","query","function","match-time"
+
+freitag 14-16 uhr, john erklärt mir wie das mit den prozessen funktioniert
+
 
 (bonus: capture)
 
@@ -22,12 +44,12 @@ IEnd: done
 IGiveup
 IRet done
 IAny done
-ITestAny 
+ITestAny done (mega inkonsistent, consumed scheinbar input)
 IChar done
 ITestChar done
 ISet done
 ITestSet done
-IBehind ?
+IBehind done (TODO: finde heraus was der bytecode soll)
 ISpan: done
 IJmp done
 IChoice: done
@@ -35,12 +57,10 @@ ICall done
 ICommit: done
 IPartialCommit: done
 IBackCommit?
-IFailTwice
-IFail 
+IFailTwice done
+IFail done
 ICloseRunTime?
-ICloseCapture?
-IOpenCapture?
-IFullCapture?
-
-
+ICloseCapture done
+IOpenCapture done
+IFullCapture done
 
