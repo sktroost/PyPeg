@@ -1,1 +1,0 @@
-local lpeg = require("lpeg"); lpeg.match(lpeg.P"ab"/"ab", "aaa")

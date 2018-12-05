@@ -1,9 +1,0 @@
-TODOS:
--black anschauen
--pep 8 lesen (DONE! lösung: "pep8" installiert, was ein python-programm auf pep8 style kontrolliert und fehler anzeigt, und meinen code danach angepasst)
-
--->datenstruktur weniger scheiße anlegen(DONE! (der lua-teil ist jetzt ein unterordner)
-
--pattern "a" ausführen können (-> am vm emulator anfangen)
-
--instructionpositionen ändern (labels, gotos) (DONE! methode relabel in parser.py)
