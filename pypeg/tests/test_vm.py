@@ -88,7 +88,7 @@ def test_failtwice():  # Matches any String of length 1 or less
 
 
 def test_slow():
-    bignumber = 1*10**6
+    bignumber = 1*10**4
     longstring = "c"*bignumber+"ab"
     assert runbypattern('lpeg.P{ lpeg.P"ab" + 1 * lpeg.V(1) }',
                         longstring) is not None

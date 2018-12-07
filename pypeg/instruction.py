@@ -17,6 +17,9 @@ class Instruction(object):
         self.size = size
         self.character = character
 
+    def incharlist(self,character):
+        return character in self.charlist
+
     def __str__(self):
         ret = "Instruction (Name:"+self.name+", Label:"+str(self.label)
         if self.charlist is not None:

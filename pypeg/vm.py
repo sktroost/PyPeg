@@ -1,6 +1,6 @@
 from utils import runpattern
 from parser import parse, relabel
-from StackEntry import ChoicePoint, ReturnAddress
+from stackentry import ChoicePoint, ReturnAddress
 from sys import argv
 
 from rpython.rlib import jit
@@ -54,12 +54,15 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 entry = choice_points.pop()
                 while isinstance(entry, ReturnAddress):
                     if choice_points == []:
+                        if debug:
+                            print("Choicepointlist empty")
                         return None
                     entry = choice_points.pop()  # remove pending calls
                 if isinstance(entry, ChoicePoint):
                     pc = entry.pc
                     index = entry.index
-                    captures = entry.captures
+                    #captures = captures[0:entry.capturelength]
+                    captures = captures[0:entry.capturelength]
                     if debug:
                         print("ChoicePoint Restored!"+str(pc))
                 else:
@@ -115,7 +118,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "testset":
             if index >= len(inputstring):
                 pc = instruction.goto
-            elif inputstring[index] in instruction.charlist:
+            elif instruction.incharlist(inputstring[index]):
                 pc += 1
             else:
                 pc = instruction.goto
@@ -130,7 +133,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
             #pass  # todo:make this make sense
         elif instruction.name == "choice":
             pc += 1
-            choicepoint = ChoicePoint(instruction.goto, index, captures)
+            choicepoint = ChoicePoint(instruction.goto, index, len(captures))
             choice_points.append(choicepoint)
         elif instruction.name == "commit":
             # commits pop values from the stack
@@ -138,23 +141,24 @@ def run(instructionlist, inputstring, index=0, debug=False):
             choice_points.pop()
         elif instruction.name == "partial_commit":
             # partial commits modify the stack
+            choice_points[-1].index = index
+            choice_points[-1].capturelength = len(captures)
             pc = instruction.goto
-            choicepoint = choice_points.pop()
-            newchoicepoint = ChoicePoint(choicepoint.pc, index, captures)
-            choice_points.append(newchoicepoint)  # see paper, p.16
+            #choicepoint = choice_points.pop()
+            #newchoicepoint = ChoicePoint(choicepoint.pc, index, len(captures))
+            #choice_points.append(newchoicepoint)  # see paper, p.16
         elif instruction.name == "set":
             if index >= len(inputstring):
                 fail = True
-            elif inputstring[index] in instruction.charlist:
+            elif instruction.incharlist(inputstring[index]):
                 pc += 1
                 index += 1
             else:
                 fail = True
         elif instruction.name == "span":  # can't fail
-            while (index < len(inputstring)
-                   and inputstring[index] in instruction.charlist):
-                index += 1
+            index = spanloop(inputstring,index,instruction.charlist)
             pc += 1
+
         elif instruction.name == "call":
             currentlabel = pc
             returnaddress = ReturnAddress(currentlabel+1)
@@ -188,6 +192,11 @@ def search(instructions, s):
         res = run(instructions, s, index)
         if res:
             return index
+
+def spanloop(inputstring, index, charlist):
+    while(index<len(inputstring) and inputstring[index] in charlist):
+        index += 1
+    return index
 
 
 def processcaptures(captures, inputstring):

@@ -34,16 +34,16 @@ parser bug fixen(behind und capture bytecodes werden nicht anständig geparsed)
 
 -------------
 nachvollziehen wann die opencaptures erzeugt werden
-bug fixen: capture restore bei fail cases
-    --> speicher die capturelistlänge und schmeiß den rest weg
-todo: StackEntry.py zu stackentry.py umbenennen
-todo: choicepoint erbt von returnaddress, returnaddress erbt von nix (stackentry verwerfen)
+(DONE)bug fixen: capture restore bei fail cases 
+    --> speicher die capturelistlänge und schmeiß den rest weg(möglicher bug wenn capturelist nicht als stack verwendet wird, weil ich ja nur noch slice)
+(DONE)todo: StackEntry.py zu stackentry.py umbenennen 
+(DONE)todo: choicepoint erbt von returnaddress, returnaddress erbt von nix (vererbung is raus, mag isinstance nicht)
 herausfinden ob lpeg n limit an captures hat oder dynamisch den stack anpasst
-pypy: portable versuchen, pypy bitbucket(done)
-vm.py main code in target.py auslagern (pypy konvention) (done)
-partial commit: choicepoint mutaten anstatt runternehmen, neuen erzeugen, draufwerfen (performance)
-span: whileschleife in seperate funktion auslagern
-"in instruction.charlist" in hilfsmethode in Instruction auslagern
+(DONE)pypy: portable versuchen, pypy bitbucket
+(DONE)vm.py main code in target.py auslagern (pypy konvention)
+(DONE)partial commit: choicepoint mutaten anstatt runternehmen, neuen erzeugen, draufwerfen (performance)
+(DONE)span: whileschleife in seperate funktion auslagern
+(DONE)"in instruction.charlist" in hilfsmethode in Instruction auslagern
 
 neue tests in jit.py die alle bytecodes in schleifenstruktur enthalten
   - testset/set
