@@ -5,6 +5,7 @@ from utils import charrange
 class Instruction(object):
 
     _immutable_fields_ = ["name", "character", "goto"]
+    #indicates to jit that these variables are immutable
 
     def __init__(self, name, label,
                  goto=-1, charlist=None, idx=-1,

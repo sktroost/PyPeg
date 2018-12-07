@@ -10,8 +10,6 @@ class ReturnAddress():
         return("ReturnAddress: "+str(self.pc))
 
 class ChoicePoint(ReturnAddress):
-    #inheritance from returnaddress messes with isinstance
-
     def __init__(self, pc, index, capturelength):
         ReturnAddress.__init__(self,pc)
         self.index = index

@@ -45,8 +45,9 @@ nachvollziehen wann die opencaptures erzeugt werden
 (DONE)partial commit: choicepoint mutaten anstatt runternehmen, neuen erzeugen, draufwerfen (performance)
 (DONE)span: whileschleife in seperate funktion auslagern
 (DONE)"in instruction.charlist" in hilfsmethode in Instruction auslagern
-bug im parser fixen(behind)
+bug im parser fixen(behind)(ggf. opencapture simple)
 charlist in instruction refactorn (ranges cooler abspeichern)
+vmoutput klasse erstellen die alles beinhält was nach vm.run sinnvoll verwendet werden könnte
 
 neue tests in jit.py die alle bytecodes in schleifenstruktur enthalten
   - testset/set
