@@ -153,6 +153,14 @@ def test_fullcapture_simple_2():
     assert runbypattern(pattern, "banana") is None
 
 
+def test_fullcapture_position():
+    pattern = 'lpeg.P"a"^0*lpeg.Cp()'
+    #captures the position of the end of a string of "a"s
+    assert runbypattern(pattern, "a") is not None
+    assert runbypattern(pattern, "b") is None
+    assert runbypattern(pattern, "") is not None
+
+
 def test_opencapture_simple_closecapture():
     pattern = 'lpeg.C(lpeg.R("09")^0)'
     #captures a number
@@ -162,7 +170,7 @@ def test_opencapture_simple_closecapture():
     #TODO: more tests, figure out how to write this elegantly
 
 
-def test_processcapture():
+def test_processcapture_open_simple():
     pattern = 'lpeg.R("09")^0 *  lpeg.C( lpeg.R("az")) * lpeg.R("09")^0'
     #captures a number
     #followed by a letter
@@ -171,3 +179,11 @@ def test_processcapture():
     captures = runbypattern(pattern, inputstring)
     assert processcaptures(captures, inputstring) == ["a"]
     #TODO: more tests, figure out how to write this elegantly
+
+
+def test_processcapture_full_position():
+    pattern = 'lpeg.P"a"^0*lpeg.Cp()'
+    #captures the position of the end of a string of "a"s
+    inputstring = "aaaa"
+    captures = runbypattern(pattern, inputstring)
+    assert processcaptures(captures, inputstring) == [4]

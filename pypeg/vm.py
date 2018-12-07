@@ -172,22 +172,27 @@ def run(instructionlist, inputstring, index=0, debug=False):
             pc = instruction.goto
         elif instruction.name == "fullcapture":
             if instruction.capturetype == "simple":
-                captures.append(("full", instruction.size, index))
+                captures.append(("full","simple", instruction.size, index))
+            elif instruction.capturetype == "position":
+                captures.append(("full","position",index))
             else:
                 raise Exception("Unknown capture type! "+instruction.capturetype)
             pc += 1
             #TODO: find out if only "size" parameter is relevant
         elif instruction.name == "opencapture":
             if instruction.capturetype == "simple":
-                captures.append(("open", 0, index))
+                captures.append(("open", "simple",0, index))
             else:
                 raise Exception("Unknown capture type! "+instruction.capturetype)
             pc += 1
         elif instruction.name == "closecapture":
             capture = captures.pop()
             assert capture[0] == "open"
-            size = index - capture[2]
-            captures.append(("full", size, index))
+            if capture[1] == "simple":
+                size = index - capture[2]
+                captures.append(("full","simple", size, index))
+            else:
+                raise Exception("Unknown capture type! "+capture[1])
             pc += 1
         else:
             raise Exception("Unknown instruction! "+instruction.name)
@@ -205,17 +210,22 @@ def spanloop(inputstring, index, charlist):
     return index
 
 
-def processcaptures(captures, inputstring):
+def processcaptures(captures, inputstring,debug=True):
     #refactor: wird langsam mal zeit das "vm" ne klasse wird.
     returnlist = []
+    if debug:
+        print captures
     for capture in captures:
-        size = capture[1]
-        index = capture[2]
-        newindex = index-size
-        assert newindex >= 0
-        assert index >= 0
-        capturedstring = inputstring[newindex:index]
-        returnlist.append(capturedstring)
+        if capture[1] == "simple":
+            size = capture[2]
+            index = capture[3]
+            newindex = index-size
+            assert newindex >= 0
+            assert index >= 0
+            capturedstring = inputstring[newindex:index]
+            returnlist.append(capturedstring)
+        elif capture[1] == "position": 
+            returnlist.append(capture[2])# might need to make this pypy compatible
     return returnlist
 
 
