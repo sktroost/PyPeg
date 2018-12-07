@@ -10,6 +10,13 @@ def test_char():
     assert instr.character == "+"
     assert instr.name == "char"
 
+def test_behind():
+    input = "00: behind 2"
+    instr, = parse(input)
+    assert instr.label == 0
+    assert instr.name == "behind"
+    assert instr.behindvalue == 2
+
 
 def test_span():
     input = "21: span [(30-39)]"
@@ -31,7 +38,8 @@ def test_opencapture():
     input = "00: opencapture simple (idx = 0)"
     instr, = parse(input)
     assert instr.label == 0
-    assert instr.name == "opencapture simple"
+    assert instr.name == "opencapture"
+    assert instr.capturetype == "simple"
     assert instr.idx == 0
 
 

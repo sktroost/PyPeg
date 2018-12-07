@@ -170,12 +170,18 @@ def run(instructionlist, inputstring, index=0, debug=False):
             pc = stacktop.pc
         elif instruction.name == "jmp":
             pc = instruction.goto
-        elif instruction.name == "fullcapture simple":
-            captures.append(("full", instruction.size, index))
+        elif instruction.name == "fullcapture":
+            if instruction.capturetype == "simple":
+                captures.append(("full", instruction.size, index))
+            else:
+                raise Exception("Unknown capture type! "+instruction.capturetype)
             pc += 1
             #TODO: find out if only "size" parameter is relevant
-        elif instruction.name == "opencapture simple":
-            captures.append(("open", 0, index))
+        elif instruction.name == "opencapture":
+            if instruction.capturetype == "simple":
+                captures.append(("open", 0, index))
+            else:
+                raise Exception("Unknown capture type! "+instruction.capturetype)
             pc += 1
         elif instruction.name == "closecapture":
             capture = captures.pop()

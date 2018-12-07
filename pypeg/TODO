@@ -30,7 +30,7 @@ captures sind noch mit tupeln implementiert, vermutlich in eigene klasse auslage
     -> choicepoints auch (klasse mit backpointer)
 captures gehen momentan nur mit "simple captures", 
 andere capture typen beinhalten "argument","back","constant","fold","group","position","substitution","table","string","numbered","query","function","match-time"
-parser bug fixen(behind und capture bytecodes werden nicht anständig geparsed)
+(DONE)parser bug fixen(behind und capture bytecodes werden nicht anständig geparsed)
 
 -------------
 nachvollziehen wann die opencaptures erzeugt werden

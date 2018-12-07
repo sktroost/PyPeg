@@ -9,7 +9,8 @@ class Instruction(object):
 
     def __init__(self, name, label,
                  goto=-1, charlist=None, idx=-1,
-                 size=-1, character="\0"):
+                 size=-1, character="\0",
+                 behindvalue = -1,capturetype="\0"):
         self.name = name
         self.label = label
         self.goto = goto
@@ -17,6 +18,8 @@ class Instruction(object):
         self.idx = idx
         self.size = size
         self.character = character
+        self.behindvalue = behindvalue
+        self.capturetype = capturetype
 
     def incharlist(self,character):
         return character in self.charlist
@@ -44,6 +47,10 @@ class Instruction(object):
             ret += ", size:"+str(self.size)
         if self.character != "\0":
             ret += ", character:"+str(self.character)
+        if self.behindvalue != -1:
+            ret += ", behindvalue:"+str(self.behindvalue)
+        if self.capturetype != "\0":
+            ret += ", capturetype:"+str(self.capturetype)
         return ret+")"
 
     def __repr__(self):

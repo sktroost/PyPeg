@@ -12,7 +12,8 @@ def line_to_instruction(line):
     line = labelsplit[1]
     charlist = None
     character = "\0"
-    goto  = idx = size = -1
+    capturetype="\0"
+    goto  = idx = size = behindvalue = -1
     if "->" in line:  # assuming format of "stuff -> int"
         gotosplit = line.split("->")
         goto = int(gotosplit[1])
@@ -59,17 +60,29 @@ def line_to_instruction(line):
             elif ")" in element:
                 raise Exception("Unexpected bytecode parameter: " + element)
 
-    if "\'" in line:  # assuming format of "labelname 'character'"
+    if "\'" in line:  # assuming format of "bytecodename 'character'"
         character = line[line.find("\'") + 1]
         line = replace(line, "\'"+character+"\'", "")
-    name = line
-    while name[-1] == " ":
-        name = name[:-1]
-    while name[0] == " ":
-        name = name[1:]
+    #name = line
+    while line[-1] == " ":
+        line = line[:-1]
+    while line[0] == " ":
+        line = line[1:]
+    print line
+    if " " in line: # assuming format of "bytecodename extrainfo"
+        behind_capture_split=line.split(" ")
+        name = behind_capture_split[0]
+        print behind_capture_split[1]
+        if behind_capture_split[1].isdigit():
+            behindvalue = int(behind_capture_split[1])
+        else:
+            capturetype = behind_capture_split[1]
+    else:
+        name=line
     #didnt use strip() method because some bytecodes
     #have spaces in the middle of them
-    return Instruction(name, label, goto, charlist, idx, size, character)
+    return Instruction(name, label, goto, charlist, idx, size,
+                       character,behindvalue,capturetype)
 
 
 def parse(lines):
