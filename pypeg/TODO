@@ -38,12 +38,15 @@ nachvollziehen wann die opencaptures erzeugt werden
     --> speicher die capturelistlänge und schmeiß den rest weg(möglicher bug wenn capturelist nicht als stack verwendet wird, weil ich ja nur noch slice)
 (DONE)todo: StackEntry.py zu stackentry.py umbenennen 
 (DONE)todo: choicepoint erbt von returnaddress, returnaddress erbt von nix (vererbung is raus, mag isinstance nicht)
-herausfinden ob lpeg n limit an captures hat oder dynamisch den stack anpasst
+(DONE)herausfinden ob lpeg n limit an captures hat oder dynamisch den stack anpasst
+    -> methode doublecap in lpvm.c beantwortet die frage
 (DONE)pypy: portable versuchen, pypy bitbucket
 (DONE)vm.py main code in target.py auslagern (pypy konvention)
 (DONE)partial commit: choicepoint mutaten anstatt runternehmen, neuen erzeugen, draufwerfen (performance)
 (DONE)span: whileschleife in seperate funktion auslagern
 (DONE)"in instruction.charlist" in hilfsmethode in Instruction auslagern
+bug im parser fixen(behind)
+charlist in instruction refactorn (ranges cooler abspeichern)
 
 neue tests in jit.py die alle bytecodes in schleifenstruktur enthalten
   - testset/set

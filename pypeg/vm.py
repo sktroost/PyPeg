@@ -52,16 +52,16 @@ def run(instructionlist, inputstring, index=0, debug=False):
             fail = False
             if choice_points != []:
                 entry = choice_points.pop()
-                while isinstance(entry, ReturnAddress):
+                while entry.__class__ == ReturnAddress:
                     if choice_points == []:
                         if debug:
                             print("Choicepointlist empty")
                         return None
                     entry = choice_points.pop()  # remove pending calls
-                if isinstance(entry, ChoicePoint):
+                if entry.__class__ == ChoicePoint:
                     pc = entry.pc
                     index = entry.index
-                    #captures = captures[0:entry.capturelength]
+                    #captures = entry.captures
                     captures = captures[0:entry.capturelength]
                     if debug:
                         print("ChoicePoint Restored!"+str(pc))

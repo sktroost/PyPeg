@@ -9,10 +9,11 @@ class ReturnAddress():
     def __str__(self):
         return("ReturnAddress: "+str(self.pc))
 
-class ChoicePoint():#inheritance messes with isinstance
+class ChoicePoint(ReturnAddress):
+    #inheritance from returnaddress messes with isinstance
 
     def __init__(self, pc, index, capturelength):
-        self.pc = pc
+        ReturnAddress.__init__(self,pc)
         self.index = index
         self.capturelength = capturelength
 
