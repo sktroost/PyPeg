@@ -68,11 +68,11 @@ def line_to_instruction(line):
         line = line[:-1]
     while line[0] == " ":
         line = line[1:]
-    print line
+    #print line
     if " " in line: # assuming format of "bytecodename extrainfo"
         behind_capture_split=line.split(" ")
         name = behind_capture_split[0]
-        print behind_capture_split[1]
+        #print behind_capture_split[1]
         if behind_capture_split[1].isdigit():
             behindvalue = int(behind_capture_split[1])
         else:

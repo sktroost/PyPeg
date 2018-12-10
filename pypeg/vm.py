@@ -210,7 +210,7 @@ def spanloop(inputstring, index, charlist):
     return index
 
 
-def processcaptures(captures, inputstring,debug=True):
+def processcaptures(captures, inputstring,debug=False):
     #refactor: wird langsam mal zeit das "vm" ne klasse wird.
     returnlist = []
     if debug:
