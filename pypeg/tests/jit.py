@@ -1,6 +1,7 @@
 import sys
 from rpython import conftest
 
+
 class o:
     view = False
     viewloops = True
@@ -21,20 +22,23 @@ class TestLLtype(LLJitMixin):
             else:
                 x = ""
             runbypattern(pattern, x)
-            
+
         interp_w(1) # check that it runs
 
         # ast = parse_module(expand_string(str))
         self.meta_interp(interp_w, [1], listcomp=True, listops=True, backendopt=True)
 
     def test_complex(self):
-        self.run_string('(lpeg.P"aa"+lpeg.P"zz")^0', "aa"*100 + "zz" * 50 + "aaaa")
+        pattern = '(lpeg.P"aa"+lpeg.P"zz")^0'
+        input = "aa"*100 + "zz" * 50 + "aaaa"
+        self.run_string(pattern, input)
 
     def test_email(self):
-        self.run_string('(lpeg.P{ lpeg.C(lpeg.R("az","AZ","09")^1*lpeg.P("@")*lpeg.R("az","AZ","09")^1*lpeg.P(".de")) + 1 * lpeg.V(1)})^0',
-                        " und es endet mit noch ner mail: fdsa@test.dehier kommt was:, asdfasdf asdf@web.de" * 100)
+        pattern = '(lpeg.P{ lpeg.C(lpeg.R("az","AZ","09")^1*lpeg.P("@")*lpeg.R("az","AZ","09")^1*lpeg.P(".de")) + 1 * lpeg.V(1)})^0'
+        input = " und es endet mit noch ner mail: fdsa@test.dehier kommt was:, asdfasdf asdf@web.de" * 100
+        self.run_string(pattern, input)
 
     def test_set(self):
         pattern = 'lpeg.P{lpeg.P"c" + (lpeg.P"a"+lpeg.P"z") * lpeg.V(1)}'
         input = "a" * 100 + "c"
-        self.run_string(pattern,input)
+        self.run_string(pattern, input)

@@ -1,7 +1,6 @@
 from utils import charrange
 
 
-
 class Instruction(object):
 
     _immutable_fields_ = ["name", "character", "goto"]
@@ -10,7 +9,7 @@ class Instruction(object):
     def __init__(self, name, label,
                  goto=-1, charlist=None, idx=-1,
                  size=-1, character="\0",
-                 behindvalue = -1,capturetype="\0"):
+                 behindvalue=-1, capturetype="\0"):
         self.name = name
         self.label = label
         self.goto = goto
@@ -21,7 +20,7 @@ class Instruction(object):
         self.behindvalue = behindvalue
         self.capturetype = capturetype
 
-    def incharlist(self,character):
+    def incharlist(self, character):
         return character in self.charlist
 
     def __str__(self):

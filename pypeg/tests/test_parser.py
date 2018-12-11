@@ -10,6 +10,7 @@ def test_char():
     assert instr.character == "+"
     assert instr.name == "char"
 
+
 def test_behind():
     input = "00: behind 2"
     instr, = parse(input)

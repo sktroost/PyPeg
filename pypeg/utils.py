@@ -3,7 +3,6 @@ from os import chdir, listdir
 from rpython.rlib.rfile import create_popen_file
 
 
-
 def charrange(a, b):
     ret = []
     for i in range(ord(a), ord(b) + 1):
@@ -18,14 +17,10 @@ def runlpeg(filename):
         changed = True
     # i do this because the lpeg import by lua fails if i don't. no clue why.
     if filename in listdir("."):
-        #try:
-            #bytecodestring = check_output(["lua", filename])
-            c_str = "lua "+filename
-            file = create_popen_file(c_str, "r") 
-            bytecodestring = file.read()
-            file.close()
-        #except CalledProcessError:
-            #bytecodestring = None
+        c_str = "lua "+filename
+        file = create_popen_file(c_str, "r")
+        bytecodestring = file.read()
+        file.close()
     else:
         bytecodestring = None
     if changed:

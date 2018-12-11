@@ -5,11 +5,13 @@ from sys import argv
 
 from rpython.rlib import jit
 
+
 def get_printable_location(pc, fail, instructionlist):
     instr = instructionlist[pc].name
     return str(pc) + " " + instr
 
-driver = jit.JitDriver(reds=["index", "inputstring", "choice_points", "captures"],
+driver = jit.JitDriver(reds=["index", "inputstring",
+                             "choice_points", "captures"],
                        greens=["pc", "fail", "instructionlist"],
                        get_printable_location=get_printable_location)
 
@@ -38,7 +40,6 @@ def run(instructionlist, inputstring, index=0, debug=False):
                                pc=pc,
                                choice_points=choice_points,
                                captures=captures)
-        
         if debug:
             print("-"*10)
             print("Program Counter: "+str(pc))
@@ -156,7 +157,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
             else:
                 fail = True
         elif instruction.name == "span":  # can't fail
-            index = spanloop(inputstring,index,instruction.charlist)
+            index = spanloop(inputstring, index, instruction.charlist)
             pc += 1
 
         elif instruction.name == "call":
@@ -172,25 +173,27 @@ def run(instructionlist, inputstring, index=0, debug=False):
             pc = instruction.goto
         elif instruction.name == "fullcapture":
             if instruction.capturetype == "simple":
-                captures.append(("full","simple", instruction.size, index))
+                captures.append(("full", "simple", instruction.size, index))
             elif instruction.capturetype == "position":
-                captures.append(("full","position",index))
+                captures.append(("full", "position", index))
             else:
-                raise Exception("Unknown capture type! "+instruction.capturetype)
+                raise Exception("Unknown capture type!"
+                                + instruction.capturetype)
             pc += 1
             #TODO: find out if only "size" parameter is relevant
         elif instruction.name == "opencapture":
             if instruction.capturetype == "simple":
-                captures.append(("open", "simple",0, index))
+                captures.append(("open", "simple", 0, index))
             else:
-                raise Exception("Unknown capture type! "+instruction.capturetype)
+                raise Exception("Unknown capture type!"
+                                + instruction.capturetype)
             pc += 1
         elif instruction.name == "closecapture":
             capture = captures.pop()
             assert capture[0] == "open"
             if capture[1] == "simple":
                 size = index - capture[2]
-                captures.append(("full","simple", size, index))
+                captures.append(("full", "simple", size, index))
             else:
                 raise Exception("Unknown capture type! "+capture[1])
             pc += 1
@@ -204,13 +207,14 @@ def search(instructions, s):
         if res:
             return index
 
+
 def spanloop(inputstring, index, charlist):
-    while(index<len(inputstring) and inputstring[index] in charlist):
+    while(index < len(inputstring) and inputstring[index] in charlist):
         index += 1
     return index
 
 
-def processcaptures(captures, inputstring,debug=False):
+def processcaptures(captures, inputstring, debug=False):
     #refactor: wird langsam mal zeit das "vm" ne klasse wird.
     returnlist = []
     if debug:
@@ -224,8 +228,9 @@ def processcaptures(captures, inputstring,debug=False):
             assert index >= 0
             capturedstring = inputstring[newindex:index]
             returnlist.append(capturedstring)
-        elif capture[1] == "position": 
-            returnlist.append(capture[2])# might need to make this pypy compatible
+        elif capture[1] == "position":
+            returnlist.append(capture[2])
+            # might need to make this pypy compatible (ints and str in list)
     return returnlist
 
 
