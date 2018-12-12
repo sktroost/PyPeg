@@ -24,7 +24,7 @@ class TestLLtype(LLJitMixin):
                 x = ""
             runbypattern(pattern, x)
 
-        interp_w(1) # check that it runs
+        interp_w(1)  # check that it runs
 
         # ast = parse_module(expand_string(str))
         self.meta_interp(interp_w, [1], listcomp=True, listops=True, backendopt=True)
@@ -47,27 +47,24 @@ class TestLLtype(LLJitMixin):
     def test_testset(self):
         #this instructionset should match an arbitrarily long string of
         #'a's and 'b's
-        instructionlist = (
-        [Instruction(name="testset", label=0, goto=2, charlist=["a","b"]),
-         Instruction(name="jmp",label=1, goto=0),
+        instructionlist =
+        [Instruction(name="testset", label=0, goto=2, charlist=["a", "b"]),
+         Instruction(name="jmp", label=1, goto=0),
          Instruction(name="any", label=2),
-         Instruction(name="end", label=3)])
+         Instruction(name="end", label=3)]
         return True
         # await approval from cfbolz. requires vm to run by instructionlist,
         # which requires run_string to change (as far as i understand pypy)
 
     def test_callret(self):
         #instructionset should match a string ending in "a"
-        instructionlist = (
-        [Instruction(name="jmp",label=0,goto=3),
-         Instruction(name="ret",label=1),
-         Instruction(name="any",label=2),
-         Instruction(name="call",label=3,goto=1),
-         Instruction(name="testchar",character="a",label=4,goto=2),
-         Instruction(name="any",label=5),
-         Instruction(name="end",label=6)])
+        instructionlist =
+        [Instruction(name="jmp", label=0, goto=3),
+         Instruction(name="ret", label=1),
+         Instruction(name="any", label=2),
+         Instruction(name="call", label=3, goto=1),
+         Instruction(name="testchar", character="a", label=4, goto=2),
+         Instruction(name="any", label=5),
+         Instruction(name="end", label=6)]
         return True
         #await approval from cfbolz. see test_testset
-         
-
-                  
