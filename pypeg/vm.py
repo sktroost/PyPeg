@@ -25,12 +25,8 @@ def runbypattern(pattern, inputstring, index=0, debug=False):
 
 
 def run(instructionlist, inputstring, index=0, debug=False):
-    #bytecodestring = runpattern(pattern)
-    #instructionlist = parse(bytecodestring)
-    #instructionlist = relabel(instructionlist)
     fail = False
     pc = 0
-    #index = 0
     choice_points = []
     captures = []
     while True:
@@ -87,7 +83,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
             else:
                 fail = True
         elif instruction.name == "end":
-            if index < len(inputstring):  # not all input consumed
+            if index < len(inputstring):
                 if debug:
                     print("Not all Input consumed at End Bytecode")
                 return None
@@ -124,7 +120,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 pc += 1
             else:
                 pc = instruction.goto
-        elif instruction.name == "any":  # assuming this is any with n=1
+        elif instruction.name == "any":  # assuming any with n=1 (see paper)
             if index >= len(inputstring):
                 fail = True
             else:
@@ -146,9 +142,6 @@ def run(instructionlist, inputstring, index=0, debug=False):
             choice_points[-1].index = index
             choice_points[-1].capturelength = len(captures)
             pc = instruction.goto
-            #choicepoint = choice_points.pop()
-            #newchoicepoint = ChoicePoint(choicepoint.pc, index, len(captures))
-            #choice_points.append(newchoicepoint)  # see paper, p.16
         elif instruction.name == "set":
             if index >= len(inputstring):
                 fail = True
@@ -160,7 +153,6 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "span":  # can't fail
             index = spanloop(inputstring, index, instruction.charlist)
             pc += 1
-
         elif instruction.name == "call":
             currentlabel = pc
             returnaddress = ReturnAddress(currentlabel+1)
@@ -184,7 +176,6 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
             pc += 1
-            #TODO: find out if only "size" parameter is relevant
         elif instruction.name == "opencapture":
             if instruction.capturetype == "simple":
                 #captures.append(("open", "simple", 0, index))
@@ -220,7 +211,6 @@ def spanloop(inputstring, index, charlist):
 
 
 def processcaptures(captures, inputstring, debug=False):
-    #refactor: wird langsam mal zeit das "vm" ne klasse wird.
     returnlist = []
     if debug:
         print captures
