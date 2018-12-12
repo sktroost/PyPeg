@@ -4,13 +4,14 @@ from os import chdir
 from instruction import Instruction
 from utils import runlpeg, charrange
 from rpython.rlib.rstring import replace
+from charlistelement import SingleChar, CharRange
 
 
 def line_to_instruction(line):
     labelsplit = line.split(":")
     label = int(labelsplit[0])
     line = labelsplit[1]
-    charlist = None
+    charlist = []
     character = "\0"
     capturetype = "\0"
     goto = idx = size = behindvalue = -1
@@ -37,13 +38,15 @@ def line_to_instruction(line):
                 rangevalues = element.split("-")
                 range1 = int(rangevalues[0], 16)
                 range2 = int(rangevalues[1], 16)
-                for i in range(range1, range2 + 1):
-                    sublist.append(chr(i))
-                for j in sublist:
-                    charlist.append(j)
+                charlist.append(CharRange(chr(range1),chr(range2)))
+                #for i in range(range1, range2 + 1):
+                    #sublist.append(chr(i))
+                #for j in sublist:
+                    #charlist.append(j)
                 #charlist.append(sublist)
-            else:
-                charlist.append(chr(int(element, 16)))
+            else:#describes single value
+                charlist.append(SingleChar(chr(int(element,16))))
+                #charlist.append(chr(int(element, 16)))
     if "(" in line:  # assuming format simillar to
         #"labelname (something = int) (somethingelse = int)"
         parensplit = line.split("(")
@@ -76,7 +79,7 @@ def line_to_instruction(line):
             capturetype = behind_capture_split[1]
     else:
         name = line
-    return Instruction(name, label, goto, charlist, idx, size,
+    return Instruction(name, label, goto, charlist[:], idx, size,
                        character, behindvalue, capturetype)
 
 

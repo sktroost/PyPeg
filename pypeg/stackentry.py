@@ -1,4 +1,4 @@
-class ReturnAddress():
+class ReturnAddress(object):
 
     def __init__(self, pc):
         self.pc = pc

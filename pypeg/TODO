@@ -5,11 +5,12 @@ python -m coverage html
 
 ----------------
 
-python ~/pypeg_git/pypy/rpython/bin/rpython target.py
+python ~/pypeg_git/pypy/rpython/bin/rpython -Ojit target.py
+^mit jit. ohne -Ojit für ohne
 
 ../../pypy/pytest.py
 
-../../pypy/pytest.py -s -k email tests/jit.py
+../../pypy/pytest.py -s -k set tests/jit.py
 
 
 
@@ -37,7 +38,7 @@ nachvollziehen wann die opencaptures erzeugt werden
 (DONE)bug fixen: capture restore bei fail cases 
     --> speicher die capturelistlänge und schmeiß den rest weg(möglicher bug wenn capturelist nicht als stack verwendet wird, weil ich ja nur noch slice)
 (DONE)todo: StackEntry.py zu stackentry.py umbenennen 
-(DONE)todo: choicepoint erbt von returnaddress, returnaddress erbt von nix (vererbung is raus, mag isinstance nicht)
+(DONE)todo: choicepoint erbt von returnaddress, returnaddress erbt von nix
 (DONE)herausfinden ob lpeg n limit an captures hat oder dynamisch den stack anpasst
     -> methode doublecap in lpvm.c beantwortet die frage
 (DONE)pypy: portable versuchen, pypy bitbucket
@@ -45,8 +46,7 @@ nachvollziehen wann die opencaptures erzeugt werden
 (DONE)partial commit: choicepoint mutaten anstatt runternehmen, neuen erzeugen, draufwerfen (performance)
 (DONE)span: whileschleife in seperate funktion auslagern
 (DONE)"in instruction.charlist" in hilfsmethode in Instruction auslagern
-(DONE)bug im parser fixen(behind)(ggf. opencapture simple)
-charlist in instruction refactorn (ranges cooler abspeichern)
+(DONE)bug im parser fixen(behind)(ggf. opencapture simple
 vmoutput klasse erstellen die alles beinhält was nach vm.run sinnvoll verwendet werden könnte
 
 neue tests in jit.py die alle bytecodes in schleifenstruktur enthalten
@@ -69,14 +69,29 @@ sachen die ich mittwoch machen will:
 frage :wir haben letzte woche über einfach verkettete listen für captures/choicepoints gesprochen, liegt das noch aufm tisch)
     ->(glaube motivation dafür war der capture restore bug den ich momentan mit listenslicing gefixt habe)
 frage: wie viele capturetypes wollen wir supporten (gibt noch ne ganze menge, siehe "capture typen")?
-    ->blick auf rosie, wie viel vom bytecode wird mitgenutzt
+    ->blick auf rosie, wie läuft die abkopplung von parser/interpreter
 unbekannte bytecodes igiveup, ibackcommit, icloseruntime, sind die wichtig, wenn ja wie komm ich an patterns die die erzeugen?
 
+
+-------------
+charlist in instruction refactorn(done)
+
+zum span refactoring: (done)
+    aktueller zustand ist tausend equals mit genau einem guard am ende
+    gewünschter zustand ist <1000 geq/leq mit genau einem guard am ende
+
+
+infrastruktur benchmarking
+    -> skript was in lua lpeg / unser pypeg als exe (mit und ohne jit)
+        (in ferner zukunft: lpeg ohne debug installieren)
+        parametrisierbar mit inputfiles und patternfiles
+    -> mehrfach ausführen, times messen, ergebnisse in json datei speichern
+(4.-9. februar pypy arbeitswoche, da kann ich pypy lernen / an der BA arbeiten)
+danach: mehr tests wie das email ding, für coolere benchmarks
+jit test capture
+
+
 google python keyword arguments
-
-(bonus: capture)
-
-code refactorn
 
 IEnd: done
 IGiveup ?

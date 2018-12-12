@@ -1,6 +1,7 @@
 from pypeg.parser import parse, relabel
 from pypeg.utils import charrange
 from pypeg.instruction import Instruction
+from pypeg.charlistelement import SingleChar, CharRange
 
 
 def test_char():
@@ -24,15 +25,17 @@ def test_span():
     instr, = parse(input)
     assert instr.label == 21
     assert instr.name == "span"
-    assert instr.charlist == charrange("0", "9")
-
+    assert instr.charlist == [CharRange("0","9")]
 
 def test_set():
     input = "27: set [(30)(33)(35)]"
     instr, = parse(input)
     assert instr.label == 27
     assert instr.name == "set"
-    assert instr.charlist == ["0", "3", "5"]
+    assert instr.charlist == [
+    SingleChar("0"),
+    SingleChar("3"),
+    SingleChar("5")]
 
 
 def test_opencapture():
@@ -50,7 +53,10 @@ def test_relabel():
     output = relabel(instructionlist)
     assert output[0] == Instruction(label=0, name="char", character="/")
     assert output[1] == Instruction(label=1, name="span",
-                                    charlist=charrange("0", "9"))
+                                    charlist=[CharRange("0", "9")])
     assert output[2] == Instruction(label=2, name="testcode",
-                                    charlist=[chr(0x1), chr(0x3), chr(0x39)],
+                                    charlist=[
+                                    SingleChar(chr(0x1)),
+                                    SingleChar(chr(0x3)),
+                                    SingleChar(chr(0x39))],
                                     goto=1)

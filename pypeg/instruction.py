@@ -1,13 +1,15 @@
 from utils import charrange
+from charlistelement import SingleChar, CharRange
 
+from rpython.rlib import jit
 
 class Instruction(object):
 
-    _immutable_fields_ = ["name", "character", "goto"]
-    #indicates to jit that these variables are immutable
+    _immutable_fields_ = ["name", "character", "goto", "charlist[*]","capturetype"]
+    #indicates to jit that these variables are immutable. performance!
 
     def __init__(self, name, label,
-                 goto=-1, charlist=None, idx=-1,
+                 goto=-1, charlist=[], idx=-1,
                  size=-1, character="\0",
                  behindvalue=-1, capturetype="\0"):
         self.name = name
@@ -20,12 +22,22 @@ class Instruction(object):
         self.behindvalue = behindvalue
         self.capturetype = capturetype
 
+    @jit.unroll_safe
     def incharlist(self, character):
-        return character in self.charlist
+        #for char in self.charlist:
+        #    if char == character:
+        #        return True
+        #return False
+        result = False
+        #for char in self.charlist:
+         #   result = result | (char == character)
+        for element in self.charlist:
+            result = result | element.is_match(character)
+        return result
 
     def __str__(self):
         ret = "Instruction (name:"+self.name+", label:"+str(self.label)
-        if self.charlist is not None:
+        if self.charlist != []:
             templist = []  # code to make the list look more pretty.
             #instead of outputting [a,b,c,...,z] it should output [a-z]
             for sublist in self.charlist:

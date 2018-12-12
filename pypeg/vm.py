@@ -25,6 +25,7 @@ def runbypattern(pattern, inputstring, index=0, debug=False):
 
 
 def run(instructionlist, inputstring, index=0, debug=False):
+    #instructionlist = instructionlist[:] # todo: remove this line and properly fix the jit error
     fail = False
     pc = 0
     choice_points = []
@@ -50,17 +51,18 @@ def run(instructionlist, inputstring, index=0, debug=False):
             fail = False
             if choice_points != []:
                 entry = choice_points.pop()
-                while entry.__class__ == ReturnAddress:
+                while type(entry) is ReturnAddress:
                     if choice_points == []:
                         if debug:
                             print("Choicepointlist empty")
                         return None
                     entry = choice_points.pop()  # remove pending calls
-                if entry.__class__ == ChoicePoint:
-                    pc = entry.pc
+                if type(entry) is ChoicePoint:
+                    pc = jit.promote(entry.pc)
                     index = entry.index
                     #captures = entry.captures
-                    captures = captures[0:entry.capturelength]
+                    if len(captures) != entry.capturelength:
+                        captures = captures[:entry.capturelength]
                     if debug:
                         print("ChoicePoint Restored!"+str(pc))
                 else:
@@ -71,7 +73,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
         if not isinstance(pc, int):
             raise Exception("pc is of type "+str(type(pc))
                             + "with value "+str(pc))
-        instruction = instructionlist[pc]
+        instruction = instructionlist[jit.promote(pc)]
         if debug:
             print instruction
         if instruction.name == "char":
@@ -139,8 +141,9 @@ def run(instructionlist, inputstring, index=0, debug=False):
             choice_points.pop()
         elif instruction.name == "partial_commit":
             # partial commits modify the stack
-            choice_points[-1].index = index
-            choice_points[-1].capturelength = len(captures)
+            top = choice_points[-1]
+            top.index = index
+            top.capturelength = len(captures)
             pc = instruction.goto
         elif instruction.name == "set":
             if index >= len(inputstring):
@@ -151,7 +154,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
             else:
                 fail = True
         elif instruction.name == "span":  # can't fail
-            index = spanloop(inputstring, index, instruction.charlist)
+            index = spanloop(inputstring, index, instruction)
             pc += 1
         elif instruction.name == "call":
             currentlabel = pc
@@ -160,7 +163,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
             pc = instruction.goto
         elif instruction.name == "ret":
             stacktop = choice_points.pop()
-            assert isinstance(stacktop, ReturnAddress)  # sanity check
+            #assert isinstance(stacktop, ReturnAddress)  # sanity check
             pc = stacktop.pc
         elif instruction.name == "jmp":
             pc = instruction.goto
@@ -191,7 +194,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 size = index - capture.index
                 captures.append(Capture("full", "simple", size, index))
             else:
-                raise Exception("Unknown capture type! "+capture[1])
+                raise Exception("Unknown capture type! "+capture.kind)
             pc += 1
         else:
             raise Exception("Unknown instruction! "+instruction.name)
@@ -204,9 +207,18 @@ def search(instructions, s):
             return index
 
 
-def spanloop(inputstring, index, charlist):
-    while(index < len(inputstring) and inputstring[index] in charlist):
+def get_printable_location2(instruction):
+    return "SPAN" + str(instruction.charlist)
+
+spanloopdriver = jit.JitDriver(reds=["index", "inputstring"],
+                       greens=["instruction"],
+                       get_printable_location=get_printable_location2)
+
+
+def spanloop(inputstring, index, instruction):
+    while(index < len(inputstring) and instruction.incharlist(inputstring[index])):
         index += 1
+        spanloopdriver.jit_merge_point(index=index, inputstring=inputstring, instruction=instruction)
     return index
 
 
