@@ -13,7 +13,7 @@ python ~/pypeg_git/pypy/rpython/bin/rpython target.py
 
 
 
-search implementieren, ma rausfinden wie das gecallt wird (ich glaub damit waren position captures gemeint) (hab jetzt simple capture support, das is ganz cool)
+search implementieren, ma rausfinden wie das gecallt wird (ich glaub damit waren position captures gemeint)
 lies die doku( http://www.inf.puc-rio.br/~roberto/lpeg/ ) (!!!) (hab ich gemacht, und daraus 1000 neue tests für 1000 neue bytecodes extrahiert)
 tests aus den codeschnippseln in der doku machen (s.o., da geht noch mehr)
 helloworld.lua in tests umwandeln (DONE! test_slow in test_vm.py)
@@ -57,6 +57,17 @@ paper lesen:
  - dynamo
  - hotpath
  - meta-tracing pypy
+
+sachen die ich mittwoch machen will:
+-span optimieren (dafür wurde vm.spanloop angelegt)
+-"in instruction.charlist" optimieren (dafür wurde instruction.incharlist angelegt)
+    -> ggf. "char ranges" als klasse abspeichern um "in charrange" abfragen optimieren zu können
+-jit tests besprechen (insbesondere testset/call/ret die recht "experimentelle" tests sind)
+    ->jit tests optimieren
+(ich hab mir zwar die befehle geben lassen für das coole pygame interface zu step by step jitting aber ich bin da (noch) zu blöd für)
+    ->nächstes mal mitschreiben was die kryptischen zwischencodes machen und welche operationen zu vermeiden sind
+wir haben letzte woche über einfach verkettete listen für captures/choicepoints gesprochen, liegt das noch aufm tisch
+    ->(glaube motivation dafür war der capture restore bug den ich momentan mit listenslicing gefixt habe)
 
 google python keyword arguments
 
