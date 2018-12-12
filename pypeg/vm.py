@@ -1,6 +1,7 @@
 from utils import runpattern
 from parser import parse, relabel
 from stackentry import ChoicePoint, ReturnAddress
+from captures import Capture
 from sys import argv
 
 from rpython.rlib import jit
@@ -173,9 +174,12 @@ def run(instructionlist, inputstring, index=0, debug=False):
             pc = instruction.goto
         elif instruction.name == "fullcapture":
             if instruction.capturetype == "simple":
-                captures.append(("full", "simple", instruction.size, index))
+                #captures.append(("full", "simple", instruction.size, index))
+                captures.append(Capture("full", "simple",
+                                        instruction.size, index))
             elif instruction.capturetype == "position":
-                captures.append(("full", "position", index))
+                #captures.append(("full", "position", index))
+                captures.append(Capture("full", "position", index=index))
             else:
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
@@ -183,17 +187,18 @@ def run(instructionlist, inputstring, index=0, debug=False):
             #TODO: find out if only "size" parameter is relevant
         elif instruction.name == "opencapture":
             if instruction.capturetype == "simple":
-                captures.append(("open", "simple", 0, index))
+                #captures.append(("open", "simple", 0, index))
+                captures.append(Capture("open", "simple", index=index))
             else:
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
             pc += 1
         elif instruction.name == "closecapture":
             capture = captures.pop()
-            assert capture[0] == "open"
-            if capture[1] == "simple":
-                size = index - capture[2]
-                captures.append(("full", "simple", size, index))
+            assert capture.status == "open"
+            if capture.kind == "simple":
+                size = index - capture.index
+                captures.append(Capture("full", "simple", size, index))
             else:
                 raise Exception("Unknown capture type! "+capture[1])
             pc += 1
@@ -220,16 +225,16 @@ def processcaptures(captures, inputstring, debug=False):
     if debug:
         print captures
     for capture in captures:
-        if capture[1] == "simple":
-            size = capture[2]
-            index = capture[3]
+        if capture.kind == "simple":
+            size = capture.size
+            index = capture.index
             newindex = index-size
             assert newindex >= 0
             assert index >= 0
             capturedstring = inputstring[newindex:index]
             returnlist.append(capturedstring)
-        elif capture[1] == "position":
-            returnlist.append(capture[2])
+        elif capture.kind == "position":
+            returnlist.append(capture.index)
             # might need to make this pypy compatible (ints and str in list)
     return returnlist
 
