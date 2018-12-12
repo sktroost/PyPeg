@@ -50,8 +50,8 @@ charlist in instruction refactorn (ranges cooler abspeichern)
 vmoutput klasse erstellen die alles beinhält was nach vm.run sinnvoll verwendet werden könnte
 
 neue tests in jit.py die alle bytecodes in schleifenstruktur enthalten
-  - testset/set (set done)
-  - call/ret
+  - testset/set (done, cfbolz fragen ob das so darf)
+  - call/ret (done, cfbolz fragen ob das so darf)
 
 paper lesen:
  - dynamo

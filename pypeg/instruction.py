@@ -24,7 +24,7 @@ class Instruction(object):
         return character in self.charlist
 
     def __str__(self):
-        ret = "Instruction (Name:"+self.name+", Label:"+str(self.label)
+        ret = "Instruction (name:"+self.name+", label:"+str(self.label)
         if self.charlist is not None:
             templist = []  # code to make the list look more pretty.
             #instead of outputting [a,b,c,...,z] it should output [a-z]
@@ -37,9 +37,9 @@ class Instruction(object):
                     templist.append(["0-9"])
                 else:
                     templist.append(sublist)
-            ret += ", Charlist:"+str(templist)
+            ret += ", charlist:"+str(templist)
         if self.goto != -1:
-            ret += ", Goto:"+str(self.goto)
+            ret += ", goto:"+str(self.goto)
         if self.idx != -1:
             ret += ", idx:"+str(self.idx)
         if self.size != -1:
