@@ -11,4 +11,5 @@ class Capture():
         return str(self)
 
     def __str__(self):
-        return(status+"capture "+kind+" size:"+str(size)+"index: "+str(index))
+        return(self.status + "capture " + self.kind
+               + " size:"+str(self.size) + "index: " + str(self.index))

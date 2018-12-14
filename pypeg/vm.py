@@ -1,6 +1,7 @@
 from utils import runpattern
 from parser import parse, relabel
 from stackentry import ChoicePoint, ReturnAddress
+from stack import Stack
 from captures import Capture
 from sys import argv
 
@@ -14,7 +15,8 @@ def get_printable_location(pc, fail, instructionlist):
 driver = jit.JitDriver(reds=["index", "inputstring",
                              "choice_points", "captures"],
                        greens=["pc", "fail", "instructionlist"],
-                       get_printable_location=get_printable_location)
+                       get_printable_location=get_printable_location,
+                       is_recursive=True)
 
 
 def runbypattern(pattern, inputstring, index=0, debug=False):
@@ -25,11 +27,10 @@ def runbypattern(pattern, inputstring, index=0, debug=False):
 
 
 def run(instructionlist, inputstring, index=0, debug=False):
-    #instructionlist = instructionlist[:] # todo: remove this line and properly fix the jit error
     fail = False
     pc = 0
     choice_points = []
-    captures = []
+    captures = Stack()
     while True:
         driver.jit_merge_point(instructionlist=instructionlist,
                                inputstring=inputstring,
@@ -61,8 +62,10 @@ def run(instructionlist, inputstring, index=0, debug=False):
                     pc = jit.promote(entry.pc)
                     index = entry.index
                     #captures = entry.captures
-                    if len(captures) != entry.capturelength:
-                        captures = captures[:entry.capturelength]
+                    if captures.index != entry.capturelength:
+                        captures.index = entry.capturelength  # Stack
+                     #   del captures[entry.capturelength:]
+                        #captures = captures[:entry.capturelength]
                     if debug:
                         print("ChoicePoint Restored!"+str(pc))
                 else:
@@ -133,7 +136,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
             #pass  # todo:make this make sense
         elif instruction.name == "choice":
             pc += 1
-            choicepoint = ChoicePoint(instruction.goto, index, len(captures))
+            choicepoint = ChoicePoint(instruction.goto, index, captures.index)
             choice_points.append(choicepoint)
         elif instruction.name == "commit":
             # commits pop values from the stack
@@ -143,7 +146,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
             # partial commits modify the stack
             top = choice_points[-1]
             top.index = index
-            top.capturelength = len(captures)
+            top.capturelength = captures.index
             pc = instruction.goto
         elif instruction.name == "set":
             if index >= len(inputstring):
@@ -211,14 +214,17 @@ def get_printable_location2(instruction):
     return "SPAN" + str(instruction.charlist)
 
 spanloopdriver = jit.JitDriver(reds=["index", "inputstring"],
-                       greens=["instruction"],
-                       get_printable_location=get_printable_location2)
+                               greens=["instruction"],
+                               get_printable_location=get_printable_location2)
 
 
 def spanloop(inputstring, index, instruction):
-    while(index < len(inputstring) and instruction.incharlist(inputstring[index])):
+    while(index < len(inputstring)
+          and instruction.incharlist(inputstring[index])):
         index += 1
-        spanloopdriver.jit_merge_point(index=index, inputstring=inputstring, instruction=instruction)
+        spanloopdriver.jit_merge_point(index=index,
+                                       inputstring=inputstring,
+                                       instruction=instruction)
     return index
 
 
@@ -226,7 +232,10 @@ def processcaptures(captures, inputstring, debug=False):
     returnlist = []
     if debug:
         print captures
-    for capture in captures:
+    #for capture in captures:
+    while captures.index > 0:  # STACK
+        print captures.index
+        capture = captures.pop()  # STACK
         if capture.kind == "simple":
             size = capture.size
             index = capture.index
@@ -236,7 +245,8 @@ def processcaptures(captures, inputstring, debug=False):
             capturedstring = inputstring[newindex:index]
             returnlist.append(capturedstring)
         elif capture.kind == "position":
-            returnlist.append(capture.index)
+            app = "POSITION: "+str(capture.index)
+            returnlist.append(app)
             # might need to make this pypy compatible (ints and str in list)
     return returnlist
 

@@ -5,7 +5,7 @@ python -m coverage html
 
 ----------------
 
-python ~/pypeg_git/pypy/rpython/bin/rpython -Ojit target.py
+python ~/pypeg_git/pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
 ^mit jit. ohne -Ojit für ohne
 
 ../../pypy/pytest.py
@@ -82,7 +82,7 @@ zum span refactoring: (done)
 
 
 infrastruktur benchmarking
-    -> skript was in lua lpeg / unser pypeg als exe (mit und ohne jit)
+    -> skript was (später) in lua lpeg / unser pypeg als exe (mit und ohne jit)
         (in ferner zukunft: lpeg ohne debug installieren)
         parametrisierbar mit inputfiles und patternfiles
     -> mehrfach ausführen, times messen, ergebnisse in json datei speichern

@@ -186,4 +186,4 @@ def test_processcapture_full_position():
     #captures the position of the end of a string of "a"s
     inputstring = "aaaa"
     captures = runbypattern(pattern, inputstring)
-    assert processcaptures(captures, inputstring) == [4]
+    assert processcaptures(captures, inputstring) == ["POSITION: 4"]

@@ -38,15 +38,9 @@ def line_to_instruction(line):
                 rangevalues = element.split("-")
                 range1 = int(rangevalues[0], 16)
                 range2 = int(rangevalues[1], 16)
-                charlist.append(CharRange(chr(range1),chr(range2)))
-                #for i in range(range1, range2 + 1):
-                    #sublist.append(chr(i))
-                #for j in sublist:
-                    #charlist.append(j)
-                #charlist.append(sublist)
-            else:#describes single value
-                charlist.append(SingleChar(chr(int(element,16))))
-                #charlist.append(chr(int(element, 16)))
+                charlist.append(CharRange(chr(range1), chr(range2)))
+            else:  # describes single value
+                charlist.append(SingleChar(chr(int(element, 16))))
     if "(" in line:  # assuming format simillar to
         #"labelname (something = int) (somethingelse = int)"
         parensplit = line.split("(")

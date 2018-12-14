@@ -1,11 +1,12 @@
 from utils import charrange
 from charlistelement import SingleChar, CharRange
-
 from rpython.rlib import jit
+
 
 class Instruction(object):
 
-    _immutable_fields_ = ["name", "character", "goto", "charlist[*]","capturetype"]
+    _immutable_fields_ = ["name", "character",
+                          "goto", "charlist[*]", "capturetype"]
     #indicates to jit that these variables are immutable. performance!
 
     def __init__(self, name, label,
