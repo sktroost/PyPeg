@@ -1,0 +1,73 @@
+{
+    "Name": "pypeg_121218_nojit_spanlooprec_noslice", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.17067606449127198, 
+    "Longest Time": 0.1807708740234375, 
+    "Shortest Time": 0.16490983963012695, 
+    "# of repeats": 10
+}{
+    "Name": "pypeg_121218_nojit_delslice", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.1754218101501465, 
+    "Longest Time": 0.18934893608093262, 
+    "Shortest Time": 0.1658639907836914, 
+    "# of repeats": 10
+}{
+    "Name": "pypeg_121218_jit_noslice", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.1257167100906372, 
+    "Longest Time": 0.13151288032531738, 
+    "Shortest Time": 0.12080812454223633, 
+    "# of repeats": 10
+}{
+    "Name": "pypeg_071218_jit", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.20742428302764893, 
+    "Longest Time": 0.2114870548248291, 
+    "Shortest Time": 0.20001697540283203, 
+    "# of repeats": 10
+}{
+    "Name": "pypeg_121218_nojit_stack", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.10754015445709228, 
+    "Longest Time": 0.11570501327514648, 
+    "Shortest Time": 0.1004638671875, 
+    "# of repeats": 10
+}{
+    "Name": "pypeg_071218_nojit", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.22268881797790527, 
+    "Longest Time": 0.22756695747375488, 
+    "Shortest Time": 0.2155461311340332, 
+    "# of repeats": 10
+}{
+    "Name": "pypeg_121218_jit_spanlooprec_noslice", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.12762279510498048, 
+    "Longest Time": 0.13315606117248535, 
+    "Shortest Time": 0.12058401107788086, 
+    "# of repeats": 10
+}{
+    "Name": "pypeg_121218_jit_stack", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.05655491352081299, 
+    "Longest Time": 0.0635371208190918, 
+    "Shortest Time": 0.05242609977722168, 
+    "# of repeats": 10
+}{
+    "Name": "LUAFILE", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.05973639488220215, 
+    "Longest Time": 0.06587386131286621, 
+    "Shortest Time": 0.05210614204406738, 
+    "# of repeats": 10
+}
