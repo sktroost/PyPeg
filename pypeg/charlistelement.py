@@ -5,7 +5,7 @@ class SingleChar(object):
         self.value = value
 
     def __repr__(self):
-        return "'"+str(self)+"'"
+        return "Singlechar '"+str(self)+"'"
 
     def __str__(self):
         return self.value

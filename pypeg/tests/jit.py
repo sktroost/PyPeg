@@ -14,6 +14,7 @@ from pypeg.vm import run, runbypattern, processcaptures
 from pypeg.instruction import Instruction
 from pypeg.parser import parse, relabel
 from pypeg.utils import runpattern
+from pypeg.charlistelement import SingleChar, CharRange
 
 
 class TestLLtype(LLJitMixin):
@@ -55,7 +56,7 @@ class TestLLtype(LLJitMixin):
         #this instructionset should match an arbitrarily long string of
         #'a's and 'b's, terminating with another character
         instructionlist =(
-        [Instruction(name="testset", label=0, goto=3, charlist=["a", "b"]),
+        [Instruction(name="testset", label=0, goto=3, charlist=[CharRange("a","b")]),
          Instruction(name="any", label=1),
          Instruction(name="jmp", label=2, goto=0),
          Instruction(name="any", label=3),

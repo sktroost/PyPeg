@@ -81,7 +81,7 @@ zum span refactoring: (done)
     gewünschter zustand ist <1000 geq/leq mit genau einem guard am ende
 
 
-infrastruktur benchmarking
+infrastruktur benchmarking (done)
     -> skript was (später) in lua lpeg / unser pypeg als exe (mit und ohne jit)
         (in ferner zukunft: lpeg ohne debug installieren)
         parametrisierbar mit inputfiles und patternfiles

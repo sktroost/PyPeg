@@ -192,7 +192,8 @@ def run(instructionlist, inputstring, index=0, debug=False):
             pc += 1
         elif instruction.name == "closecapture":
             capture = captures.pop()
-            assert capture.status == "open"
+            assert capture is not None  # makes pypy happy
+            #assert capture.status == "open"
             if capture.kind == "simple":
                 size = index - capture.index
                 captures.append(Capture("full", "simple", size, index))
