@@ -90,6 +90,12 @@ infrastruktur benchmarking (done)
 danach: mehr tests wie das email ding, für coolere benchmarks
 jit test capture
 
+fix lua quote escaping für ./examples/urlinput
+
+sachen die ich mittwoch fragen will:
+-unsere exes sind nicht sehr portabel weil die immer noch von lua abhängig sind. soll ich mal ne übersetzung von patterns zu bytecodes selber implementieren?
+    ->kann mich zuerst an die naiven ansätze aus dem paper halten und mich ggf. später an die optimierungen machen
+-is_recursive=True frage für den jit driver stellen (meckert wenn keiner der beiden es gesetzt hat, macht von performance keinen unterschied)
 
 google python keyword arguments
 

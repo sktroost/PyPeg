@@ -15,7 +15,7 @@ from collections import OrderedDict
 executable_path = "./"
 pattern_input_path = "./examples/"
 lpeg_path = "./lpeg/"
-repetitions = 10
+repetitions = 2
 output = "./benchmarks.txt"
 blacklisted_executables = ["pypeg_121218_nojit_spanlooprec",
                            "pypeg_121218_nojit",
@@ -80,6 +80,7 @@ def benchmark_lua(patternname, inputname):
         input += line
     chdir(lastcwd)
     input = input.replace("\n", "")
+    input = input.replace('"', "")  # TODO: better string escaping
     luacontent = ('local lpeg = require("lpeg"); lpeg.match('
                   + pattern + ',"' + input + '")')
     chdir(lpeg_path)

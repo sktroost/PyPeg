@@ -39,18 +39,19 @@ class Instruction(object):
     def __str__(self):
         ret = "Instruction (name:"+self.name+", label:"+str(self.label)
         if self.charlist != []:
-            templist = []  # code to make the list look more pretty.
+            #templist = []  # code to make the list look more pretty.
             #instead of outputting [a,b,c,...,z] it should output [a-z]
-            for sublist in self.charlist:
-                if sublist == charrange("a", "z"):
-                    templist.append(["a-z"])
-                elif sublist == charrange("A", "Z"):
-                    templist.append(["A-Z"])
-                elif sublist == charrange("0", "9"):
-                    templist.append(["0-9"])
-                else:
-                    templist.append(sublist)
-            ret += ", charlist:"+str(templist)
+            #for sublist in self.charlist:
+             #   if sublist == charrange("a", "z"):
+              #      templist.append(["a-z"])
+               # elif sublist == charrange("A", "Z"):
+               #     templist.append(["A-Z"])
+               # elif sublist == charrange("0", "9"):
+                #    templist.append(["0-9"])
+                #else:
+                 #   templist.append(sublist)
+            #ret += ", charlist:"+str(templist)
+            ret += "charlist: "+str(self.charlist)
         if self.goto != -1:
             ret += ", goto:"+str(self.goto)
         if self.idx != -1:

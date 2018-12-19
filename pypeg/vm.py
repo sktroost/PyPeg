@@ -19,6 +19,12 @@ driver = jit.JitDriver(reds=["index", "inputstring",
                        is_recursive=True)
 
 
+class VMOutput():
+    def __init__(self, captures, fail):
+        self.captures = captures
+        self.fail = fail
+
+
 def runbypattern(pattern, inputstring, index=0, debug=False):
     bytecodestring = runpattern(pattern)
     instructionlist = parse(bytecodestring)
@@ -56,7 +62,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                     if choice_points == []:
                         if debug:
                             print("Choicepointlist empty")
-                        return None
+                        return VMOutput(captures, True)
                     entry = choice_points.pop()  # remove pending calls
                 if type(entry) is ChoicePoint:
                     pc = jit.promote(entry.pc)
@@ -72,7 +78,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                     raise Exception("Unexpected Entry in choice_points! "
                                     + str(entry))
             else:
-                return None
+                return VMOutput(captures, True)
         if not isinstance(pc, int):
             raise Exception("pc is of type "+str(type(pc))
                             + "with value "+str(pc))
@@ -91,14 +97,14 @@ def run(instructionlist, inputstring, index=0, debug=False):
             if index < len(inputstring):
                 if debug:
                     print("Not all Input consumed at End Bytecode")
-                return None
+                return VMOutput(captures, True)
             if not fail:
                 #TODO: remove all not closed captures
-                return captures  # previously return True
+                return VMOutput(captures, False)  # previously return True
             else:
                 if debug:
                     print("Failed End Bytecode")
-                return None
+                return VMOutput(captures, True)
         elif instruction.name == "testchar":
             if index >= len(inputstring):
                 pc = instruction.goto
@@ -235,7 +241,7 @@ def processcaptures(captures, inputstring, debug=False):
         print captures
     #for capture in captures:
     while captures.index > 0:  # STACK
-        print captures.index
+        #print captures.index
         capture = captures.pop()  # STACK
         if capture.kind == "simple":
             size = capture.size
