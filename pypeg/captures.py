@@ -1,7 +1,14 @@
-class Capture():
+
+
+class Capture(object):
 #possible refactor: inherit by kind, may or may not be useful
 
-    def __init__(self, status="\0", kind="\n", size=-1, index=-1):
+    SIMPLEKIND = 0
+    POSITIONKIND = 1
+    OPENSTATUS = 0
+    FULLSTATUS = 1
+
+    def __init__(self, status=-1, kind=-1, size=-1, index=-1):
         self.status = status  # "open" or "full"
         self.kind = kind  # "simple" or "position" (more in the future)
         self.size = size

@@ -1,7 +1,9 @@
 class ReturnAddress(object):
+    _attrs_ = ["pc", "prev"]
 
-    def __init__(self, pc):
+    def __init__(self, pc, prev=None):
         self.pc = pc
+        self.prev = prev
 
     def __repr__(self):
         return str(self)
@@ -11,8 +13,8 @@ class ReturnAddress(object):
 
 
 class ChoicePoint(ReturnAddress):
-    def __init__(self, pc, index, capturelength):
-        ReturnAddress.__init__(self, pc)
+    def __init__(self, pc, index, capturelength, prev=None):
+        ReturnAddress.__init__(self, pc, prev)
         self.index = index
         self.capturelength = capturelength
 

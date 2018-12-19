@@ -10,7 +10,7 @@ from rpython.rlib import jit
 
 def get_printable_location(pc, fail, instructionlist):
     instr = instructionlist[pc].name
-    return str(pc) + " " + instr
+    return str(pc) + " " + instr + " FAIL" * fail
 
 driver = jit.JitDriver(reds=["index", "inputstring",
                              "choice_points", "captures"],
@@ -35,7 +35,7 @@ def runbypattern(pattern, inputstring, index=0, debug=False):
 def run(instructionlist, inputstring, index=0, debug=False):
     fail = False
     pc = 0
-    choice_points = []
+    choice_points = None
     captures = Stack()
     while True:
         driver.jit_merge_point(instructionlist=instructionlist,
@@ -56,14 +56,18 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 print "FAIL"
         if fail:
             fail = False
-            if choice_points != []:
-                entry = choice_points.pop()
+            if choice_points:  # if choice_points seems to fail
+                entry = choice_points#.pop()
+                choice_points = choice_points.prev
+
                 while type(entry) is ReturnAddress:
-                    if choice_points == []:
+                    if not choice_points:  # if not choice_points seems to fail
                         if debug:
                             print("Choicepointlist empty")
                         return VMOutput(captures, True)
-                    entry = choice_points.pop()  # remove pending calls
+                    entry = choice_points#.pop()  # remove pending calls
+                    choice_points = choice_points.prev
+
                 if type(entry) is ChoicePoint:
                     pc = jit.promote(entry.pc)
                     index = entry.index
@@ -123,7 +127,11 @@ def run(instructionlist, inputstring, index=0, debug=False):
             fail = True
         elif instruction.name == "failtwice":
             fail = True
-            assert isinstance(choice_points.pop(), ReturnAddress)
+            top = choice_points
+            assert top is not None
+            choice_points = choice_points.prev
+            #assert isinstance(top, ReturnAddress)
+            #assert isinstance(choice_points.pop(), ReturnAddress)
         elif instruction.name == "testset":
             if index >= len(inputstring):
                 pc = instruction.goto
@@ -142,15 +150,16 @@ def run(instructionlist, inputstring, index=0, debug=False):
             #pass  # todo:make this make sense
         elif instruction.name == "choice":
             pc += 1
-            choicepoint = ChoicePoint(instruction.goto, index, captures.index)
-            choice_points.append(choicepoint)
+            choice_points = ChoicePoint(instruction.goto, index, captures.index, choice_points)
         elif instruction.name == "commit":
             # commits pop values from the stack
             pc = instruction.goto
-            choice_points.pop()
+            assert choice_points is not None
+            choice_points = choice_points.prev
         elif instruction.name == "partial_commit":
             # partial commits modify the stack
-            top = choice_points[-1]
+            top = choice_points
+            assert isinstance(top, ChoicePoint)
             top.index = index
             top.capturelength = captures.index
             pc = instruction.goto
@@ -167,11 +176,13 @@ def run(instructionlist, inputstring, index=0, debug=False):
             pc += 1
         elif instruction.name == "call":
             currentlabel = pc
-            returnaddress = ReturnAddress(currentlabel+1)
-            choice_points.append(returnaddress)
+            choice_points = ReturnAddress(currentlabel+1, choice_points)
             pc = instruction.goto
         elif instruction.name == "ret":
-            stacktop = choice_points.pop()
+            stacktop = choice_points
+            assert choice_points is not None
+            choice_points = choice_points.prev
+            #stacktop = choice_points.pop(#)
             #assert isinstance(stacktop, ReturnAddress)  # sanity check
             pc = stacktop.pc
         elif instruction.name == "jmp":
@@ -179,11 +190,11 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "fullcapture":
             if instruction.capturetype == "simple":
                 #captures.append(("full", "simple", instruction.size, index))
-                captures.append(Capture("full", "simple",
+                captures.append(Capture(Capture.FULLSTATUS, Capture.SIMPLEKIND,
                                         instruction.size, index))
             elif instruction.capturetype == "position":
                 #captures.append(("full", "position", index))
-                captures.append(Capture("full", "position", index=index))
+                captures.append(Capture(Capture.FULLSTATUS, Capture.POSITIONKIND, index=index))
             else:
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
@@ -191,21 +202,32 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "opencapture":
             if instruction.capturetype == "simple":
                 #captures.append(("open", "simple", 0, index))
-                captures.append(Capture("open", "simple", index=index))
+                captures.append(Capture(Capture.OPENSTATUS, Capture.SIMPLEKIND, index=index))
             else:
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
             pc += 1
         elif instruction.name == "closecapture":
-            capture = captures.pop()
-            assert capture is not None  # makes pypy happy
-            #assert capture.status == "open"
-            if capture.kind == "simple":
+            capture = captures.storage[captures.index-1]
+            assert capture is not None
+            assert capture.status == Capture.OPENSTATUS  
+            if capture.kind == Capture.SIMPLEKIND:
                 size = index - capture.index
-                captures.append(Capture("full", "simple", size, index))
+                capture.size = size
+                capture.index = index
+                capture.status = Capture.FULLSTATUS
             else:
-                raise Exception("Unknown capture type! "+capture.kind)
+                raise Exception("Unknown capture type! "+str(capture.kind))
             pc += 1
+            #capture = captures.pop()
+            #assert capture is not None  # makes pypy happy
+            #assert capture.status == "open"
+            #if capture.kind == "simple":
+            #    size = index - capture.index
+            #    captures.append(Capture("full", "simple", size, index))
+            #else:
+            #    raise Exception("Unknown capture type! "+capture.kind)
+            #pc += 1
         else:
             raise Exception("Unknown instruction! "+instruction.name)
 
@@ -243,7 +265,7 @@ def processcaptures(captures, inputstring, debug=False):
     while captures.index > 0:  # STACK
         #print captures.index
         capture = captures.pop()  # STACK
-        if capture.kind == "simple":
+        if capture.kind == Capture.SIMPLEKIND:
             size = capture.size
             index = capture.index
             newindex = index-size
@@ -251,7 +273,7 @@ def processcaptures(captures, inputstring, debug=False):
             assert index >= 0
             capturedstring = inputstring[newindex:index]
             returnlist.append(capturedstring)
-        elif capture.kind == "position":
+        elif capture.kind == Capture.POSITIONKIND:
             app = "POSITION: "+str(capture.index)
             returnlist.append(app)
             # might need to make this pypy compatible (ints and str in list)

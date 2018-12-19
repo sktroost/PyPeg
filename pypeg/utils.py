@@ -1,8 +1,9 @@
 from subprocess import check_output, CalledProcessError
-from os import chdir, listdir
+from os import chdir, listdir, path
 from rpython.rlib.rfile import create_popen_file
 
-
+curdir = path.dirname(path.abspath(__file__))  # TODO: use these to increase executable mobility
+lpeg = path.join(curdir, "lpeg")
 def charrange(a, b):
     ret = []
     for i in range(ord(a), ord(b) + 1):

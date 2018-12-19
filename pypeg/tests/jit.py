@@ -8,6 +8,7 @@ class o:
 conftest.option = o
 
 from rpython.rlib.nonconst import NonConstant
+from rpython.rlib import jit
 from rpython.jit.metainterp.test.test_ajit import LLJitMixin
 
 from pypeg.vm import run, runbypattern, processcaptures
@@ -21,6 +22,7 @@ class TestLLtype(LLJitMixin):
     def run_string(self, instructionlist, input):
 
         def interp_w(switch):
+            jit.set_param(None, "disable_unrolling", 5000)
             if switch: # hack to make arguments nicht constant
                 x = instructionlist
                 y = input
@@ -46,6 +48,17 @@ class TestLLtype(LLJitMixin):
         input = " und es endet mit noch ner mail: fds99877jnffhjkllLLa@test.dehier kommt was:, asdfasdf asdf@web.de" * 100
         self.run_string(instructionlist, input)
 
+    def test_url(self):
+        pattern = """lpeg.P{
+"S";
+S = lpeg.V("URL") + lpeg.P(1) * lpeg.V("S"),
+
+URL = lpeg.Cp()*lpeg.C(lpeg.P"http" * lpeg.V("urlchar")^3),
+
+urlchar = lpeg.R("az","AZ","09") + lpeg.S("-._~:/?#@!$&*+,;=")}^0"""
+        instructionlist = relabel(parse(runpattern(pattern)))
+        input = "das hier ist eine url:https://www3.hhu.de/stups/downloads/pdf/BoCuFiRi09_246.pdf und das hier nicht 192.168.13.37"*100
+        self.run_string(instructionlist, input)
     def test_set(self):
         pattern = 'lpeg.P{lpeg.P"c" + (lpeg.P"a"+lpeg.P"z") * lpeg.V(1)}'
         instructionlist=relabel(parse(runpattern(pattern)))

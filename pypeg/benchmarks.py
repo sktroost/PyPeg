@@ -1,5 +1,5 @@
 from time import time
-from subprocess import check_output
+from subprocess import check_output, CalledProcessError
 from json import dumps
 from os import chdir, listdir, getcwd
 from collections import OrderedDict
@@ -12,11 +12,11 @@ from collections import OrderedDict
 #(files in path pattern_input_path that share a prefix
 #and end with "pattern" and "input")
 #writes result to file specified in output constant
-executable_path = "./"
-pattern_input_path = "./examples/"
-lpeg_path = "./lpeg/"
-repetitions = 2
-output = "./benchmarks.txt"
+executable_path = "/home/erkan/pypeg_git/PyPeg/pypeg/"
+pattern_input_path = "/home/erkan/pypeg_git/PyPeg/pypeg/examples/"
+lpeg_path = "/home/erkan/pypeg_git/PyPeg/pypeg/lpeg/"
+repetitions = 30
+output = "/home/erkan/pypeg_git/PyPeg/pypeg/benchmarks.txt"
 blacklisted_executables = ["pypeg_121218_nojit_spanlooprec",
                            "pypeg_121218_nojit",
                            "pypeg_121218_jit"]  # they take sooo long
@@ -35,7 +35,7 @@ def get_executables():  # gets filenames of executables
     filelist = listdir(executable_path)
     ret = []
     for file in filelist:
-        if file[:6] == "pypeg_":
+        if file[:8] == "pypeg_19":
             ret.append(file)
     return ret
 
@@ -53,8 +53,8 @@ def get_patterninputpairs():
 def benchmark_exe(exe, pattern, input):
     starttime = time()
     check_output([executable_path + exe,
-                  pattern_input_path + pattern,
-                  pattern_input_path + input])
+                pattern_input_path + pattern,
+                pattern_input_path + input])
     endtime = time()
     delta = endtime-starttime
     return TimeStamp(exe, delta, pattern, input)
@@ -67,7 +67,12 @@ def benchmark_all_exes():
     for exe in exes:
         if exe not in blacklisted_executables:
             for pattern, input in patterninputs:
-                ret.append(benchmark_exe(exe, pattern, input))
+                cwd = getcwd()
+                try:
+                    ret.append(benchmark_exe(exe, pattern, input))
+                except OSError:
+                    print(exe + " not executed due to an error.")
+                chdir(cwd)
     return ret
 
 
@@ -81,6 +86,7 @@ def benchmark_lua(patternname, inputname):
     chdir(lastcwd)
     input = input.replace("\n", "")
     input = input.replace('"', "")  # TODO: better string escaping
+    input = input.replace('\\', "")
     luacontent = ('local lpeg = require("lpeg"); lpeg.match('
                   + pattern + ',"' + input + '")')
     chdir(lpeg_path)
@@ -98,7 +104,11 @@ def benchmark_all_lua():
     patterninputs = get_patterninputpairs()
     ret = []
     for pattern, input in patterninputs:
-        ret.append(benchmark_lua(pattern, input))
+        try:
+            ret.append(benchmark_lua(pattern, input))
+        except CalledProcessError:
+            print("Lua process for " + pattern + " on " + input + " not executed.")
+            
     return ret
 
 
@@ -114,13 +124,15 @@ def main():
     for i in range(repetitions):
         print(str(i)+" repetitions completed!")
         timestamps.append(benchmark_all())
-    sums = [0] * len(timestamps[0])
+    sums = []
+    for i in range(len(timestamps[0])):
+        sums.append([])  # i hate python for not being able to do [[]]*n
     maxvals = [0] * len(timestamps[0])
     minvals = [9999] * len(timestamps[0])
     for stamplist in timestamps:
         for i in range(len(stamplist)):
             timestamp = stamplist[i]
-            sums[i] += timestamp.delta
+            sums[i].append(timestamp.delta)
             if maxvals[i] < timestamp.delta:
                 maxvals[i] = timestamp.delta
             if minvals[i] > timestamp.delta:
@@ -130,15 +142,17 @@ def main():
         name = timestamp.filename
         pattern = timestamp.patternname
         input = timestamp.inputname
-        average = sums[i] / float(repetitions)
+        average = sum(sums[i]) / float(repetitions)
         maximum = maxvals[i]
         minimum = minvals[i]
+        rawvals = sums[i]
         out = OrderedDict([("Name", name), ("Used Pattern", pattern),
                            ("Used Input", input),
                            ("Average time", average),
                            ("Longest Time", maximum),
                            ("Shortest Time", minimum),
-                           ("# of repeats", repetitions)])
+                           ("# of repeats", repetitions),
+                           ("raw values", rawvals)])
         outputtext += dumps(out, indent=4)
     outputfile = open(output, "w")
     outputfile.write(outputtext)

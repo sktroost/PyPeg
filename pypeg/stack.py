@@ -9,7 +9,7 @@ class Stack():
         self.storage[self.index] = element
         self.index += 1
 
-    def append(self, element):
+    def append(self, element):  # to improve list compatibility
         self.push(element)
 
     def pop(self):

@@ -87,7 +87,7 @@ infrastruktur benchmarking (done)
         parametrisierbar mit inputfiles und patternfiles
     -> mehrfach ausführen, times messen, ergebnisse in json datei speichern
 (4.-9. februar pypy arbeitswoche, da kann ich pypy lernen / an der BA arbeiten)
-danach: mehr tests wie das email ding, für coolere benchmarks
+danach: mehr tests wie das email ding, für coolere benchmarks(partially done, urltest)
 jit test capture
 
 fix lua quote escaping für ./examples/urlinput
@@ -96,6 +96,25 @@ sachen die ich mittwoch fragen will:
 -unsere exes sind nicht sehr portabel weil die immer noch von lua abhängig sind. soll ich mal ne übersetzung von patterns zu bytecodes selber implementieren?
     ->kann mich zuerst an die naiven ansätze aus dem paper halten und mich ggf. später an die optimierungen machen
 -is_recursive=True frage für den jit driver stellen (meckert wenn keiner der beiden es gesetzt hat, macht von performance keinen unterschied)
+-soll ich die "closecapture" interpretation ähnlich wie "partialcommit" optimieren, dass der Stack mutated wird statt gepopt und wieder gepusht?
+
+benchmarks: rohe daten speichern, (done)
+seperates skript für standardabweichung (95 oder 99% konfidenzinterval mit vortrag aus email)
+        ->mittelwert & konfidenzinterwall für jeden "eintrag" berechnen
+        ->resampling, bootstrapping sind stichworte für statistik
+lua soll den googlesource lesen können ohne abzuschmieren
+    mehr patterns, realistischere inputs cfb wünscht sich json pattern
+
+nach besserer statistik und größeren eingaben gucken ob die heute erarbeiteten executables wirklich langsamer sind
+
+2 implementierungen von capturestack testen:
+    a) stack, mit captures statt mit nones initialisiert, sodass zur laufzeit keine neuen captures (in vm.py) erzeugt sondern felder geändert werden 
+    b) verkettete liste, wobei "index" jetz ne referenz auf ne liste ist
+
+"string" bytecode einführen: mehrere chars auf einmal
+    -> neuer zwischenschritt nach parsing: bytecodeoptimierung
+
+
 
 google python keyword arguments
 
