@@ -1,0 +1,128 @@
+Name : pypeg_191218_jit_newstackentry_closecapturefix
+Used Pattern : longurlpattern
+Used Input : longurlinput
+Mean : 0.0699956821321
+Standard Deviation : 5.75906067465e-07
+5% Confident Interval:0.0688215812047
+95% Confident Interval:0.0713129838308
+
+Name : pypeg_191218_jit_newstackentry_closecapturefix
+Used Pattern : emailpattern
+Used Input : emailinput
+Mean : 0.0585044852414
+Standard Deviation : 4.83997941535e-07
+5% Confident Interval:0.0573546965917
+95% Confident Interval:0.0596416632334
+
+Name : pypeg_191218_jit_newstackentry_closecapturefix
+Used Pattern : longemailpattern
+Used Input : longemailinput
+Mean : 0.297630695685
+Standard Deviation : 4.38874554455e-06
+5% Confident Interval:0.29426976045
+95% Confident Interval:0.301145633062
+
+Name : pypeg_191218_jit_newstackentry_closecapturefix
+Used Pattern : urlpattern
+Used Input : urlinput
+Mean : 0.0179363766195
+Standard Deviation : 6.70402379113e-07
+5% Confident Interval:0.0166191736857
+95% Confident Interval:0.0193059364955
+
+Name : pypeg_191218_jit_newstackentry
+Used Pattern : longurlpattern
+Used Input : longurlinput
+Mean : 0.0744061574111
+Standard Deviation : 3.46813174367e-07
+5% Confident Interval:0.0734502156576
+95% Confident Interval:0.0753940025965
+
+Name : pypeg_191218_jit_newstackentry
+Used Pattern : emailpattern
+Used Input : emailinput
+Mean : 0.0557218873127
+Standard Deviation : 4.35686006496e-07
+5% Confident Interval:0.0546645641327
+95% Confident Interval:0.0568258285522
+
+Name : pypeg_191218_jit_newstackentry
+Used Pattern : longemailpattern
+Used Input : longemailinput
+Mean : 0.309636873822
+Standard Deviation : 7.03098062521e-06
+5% Confident Interval:0.305342682203
+95% Confident Interval:0.314088996251
+
+Name : pypeg_191218_jit_newstackentry
+Used Pattern : urlpattern
+Used Input : urlinput
+Mean : 0.0172358995434
+Standard Deviation : 5.88906183945e-07
+5% Confident Interval:0.0159823815028
+95% Confident Interval:0.0185086886088
+
+Name : pypeg_191218_jit
+Used Pattern : longurlpattern
+Used Input : longurlinput
+Mean : 0.0698493173687
+Standard Deviation : 3.5293800703e-07
+5% Confident Interval:0.0688720226288
+95% Confident Interval:0.0708228905996
+
+Name : pypeg_191218_jit
+Used Pattern : emailpattern
+Used Input : emailinput
+Mean : 0.0425116825309
+Standard Deviation : 7.20144158595e-07
+5% Confident Interval:0.0411386330922
+95% Confident Interval:0.0439319054286
+
+Name : pypeg_191218_jit
+Used Pattern : longemailpattern
+Used Input : longemailinput
+Mean : 0.211134238907
+Standard Deviation : 1.25014317385e-06
+5% Confident Interval:0.209382176399
+95% Confident Interval:0.213054259618
+
+Name : pypeg_191218_jit
+Used Pattern : urlpattern
+Used Input : urlinput
+Mean : 0.0231604244463
+Standard Deviation : 1.13878749032e-06
+5% Confident Interval:0.0214017311732
+95% Confident Interval:0.0249255736669
+
+Name : lUAFIlE
+Used Pattern : longurlpattern
+Used Input : longurlinput
+Mean : 0.376423414025
+Standard Deviation : 4.3255797605e-07
+5% Confident Interval:0.375343426069
+95% Confident Interval:0.377512494723
+
+Name : lUAFIlE
+Used Pattern : emailpattern
+Used Input : emailinput
+Mean : 0.0615455258368
+Standard Deviation : 2.4983402299e-07
+5% Confident Interval:0.0606948693593
+95% Confident Interval:0.0623363097509
+
+Name : lUAFIlE
+Used Pattern : longemailpattern
+Used Input : longemailinput
+Mean : 0.46477677234
+Standard Deviation : 1.08503654135e-05
+5% Confident Interval:0.459548521042
+95% Confident Interval:0.470337001483
+
+Name : lUAFIlE
+Used Pattern : urlpattern
+Used Input : urlinput
+Mean : 0.0195770263912
+Standard Deviation : 1.40236739728e-07
+5% Confident Interval:0.0189453840256
+95% Confident Interval:0.0201800743739
+
