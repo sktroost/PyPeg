@@ -57,17 +57,15 @@ def run(instructionlist, inputstring, index=0, debug=False):
         if fail:
             fail = False
             if choice_points:  # if choice_points seems to fail
-                entry = choice_points#.pop()
+                entry = choice_points  # .pop()
                 choice_points = choice_points.prev
-
                 while type(entry) is ReturnAddress:
-                    if not choice_points:  # if not choice_points seems to fail
+                    if not choice_points:
                         if debug:
                             print("Choicepointlist empty")
                         return VMOutput(captures, True)
-                    entry = choice_points#.pop()  # remove pending calls
+                    entry = choice_points
                     choice_points = choice_points.prev
-
                 if type(entry) is ChoicePoint:
                     pc = jit.promote(entry.pc)
                     index = entry.index
@@ -150,7 +148,8 @@ def run(instructionlist, inputstring, index=0, debug=False):
             #pass  # todo:make this make sense
         elif instruction.name == "choice":
             pc += 1
-            choice_points = ChoicePoint(instruction.goto, index, captures.index, choice_points)
+            choice_points = ChoicePoint(instruction.goto, index,
+                                        captures.index, choice_points)
         elif instruction.name == "commit":
             # commits pop values from the stack
             pc = instruction.goto
@@ -194,7 +193,8 @@ def run(instructionlist, inputstring, index=0, debug=False):
                                         instruction.size, index))
             elif instruction.capturetype == "position":
                 #captures.append(("full", "position", index))
-                captures.append(Capture(Capture.FULLSTATUS, Capture.POSITIONKIND, index=index))
+                captures.append(Capture(Capture.FULLSTATUS,
+                                Capture.POSITIONKIND, index=index))
             else:
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
@@ -202,7 +202,8 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "opencapture":
             if instruction.capturetype == "simple":
                 #captures.append(("open", "simple", 0, index))
-                captures.append(Capture(Capture.OPENSTATUS, Capture.SIMPLEKIND, index=index))
+                captures.append(Capture(Capture.OPENSTATUS,
+                                Capture.SIMPLEKIND, index=index))
             else:
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
@@ -210,7 +211,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "closecapture":
             capture = captures.storage[captures.index-1]
             assert capture is not None
-            assert capture.status == Capture.OPENSTATUS  
+            assert capture.status == Capture.OPENSTATUS
             if capture.kind == Capture.SIMPLEKIND:
                 size = index - capture.index
                 capture.size = size

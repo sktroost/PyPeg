@@ -8,7 +8,12 @@ from charlistelement import SingleChar, CharRange
 
 
 def line_to_instruction(line):
-    labelsplit = line.split(":")
+    if "':'" in line:  # escape before split
+        line = replace(line, "':'", "'#'")
+        labelsplit = line.split(":")
+        line = replace(line, "'#'", "':'")
+    else:
+        labelsplit = line.split(":")
     label = int(labelsplit[0])
     line = labelsplit[1]
     charlist = []
@@ -43,7 +48,12 @@ def line_to_instruction(line):
                 charlist.append(SingleChar(chr(int(element, 16))))
     if "(" in line:  # assuming format simillar to
         #"labelname (something = int) (somethingelse = int)"
-        parensplit = line.split("(")
+        if "'('" in line:  # escape parent character as parameter before split
+            line = replace(line, "'('", "'#'")
+            parensplit = line.split("(")
+            line = replace(line, "'#'", "'('")
+        else:
+            parensplit = line.split("(")
         line = parensplit[0]
         for element in parensplit:
             number = ""

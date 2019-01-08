@@ -99,10 +99,10 @@ sachen die ich mittwoch fragen will:
 -soll ich die "closecapture" interpretation ähnlich wie "partialcommit" optimieren, dass der Stack mutated wird statt gepopt und wieder gepusht?
 
 benchmarks: rohe daten speichern, (done)
-seperates skript für standardabweichung (95 oder 99% konfidenzinterval mit vortrag aus email)
+seperates skript für standardabweichung (95 oder 99% konfidenzinterval mit vortrag aus email) (done, benchmarkanalyzer.py)
         ->mittelwert & konfidenzinterwall für jeden "eintrag" berechnen
         ->resampling, bootstrapping sind stichworte für statistik
-lua soll den googlesource lesen können ohne abzuschmieren
+lua soll den googlesource lesen können ohne abzuschmieren (done, nesting quotes via [[ ]])
     mehr patterns, realistischere inputs cfb wünscht sich json pattern
 
 nach besserer statistik und größeren eingaben gucken ob die heute erarbeiteten executables wirklich langsamer sind

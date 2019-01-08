@@ -15,11 +15,12 @@ from collections import OrderedDict
 executable_path = "/home/erkan/pypeg_git/PyPeg/pypeg/"
 pattern_input_path = "/home/erkan/pypeg_git/PyPeg/pypeg/examples/"
 lpeg_path = "/home/erkan/pypeg_git/PyPeg/pypeg/lpeg/"
-repetitions = 30
+repetitions = 1000
 output = "/home/erkan/pypeg_git/PyPeg/pypeg/benchmarks.txt"
 blacklisted_executables = ["pypeg_121218_nojit_spanlooprec",
                            "pypeg_121218_nojit",
                            "pypeg_121218_jit"]  # they take sooo long
+blacklisted_patterns = []
 
 
 class TimeStamp():
@@ -46,15 +47,16 @@ def get_patterninputpairs():
     for file in filelist:
         if file[-5:] == "input":
             if file[:-5] + "pattern" in filelist:
-                ret.append((file[:-5]+"pattern", file))
+                if file[:-5] not in blacklisted_patterns:
+                    ret.append((file[:-5]+"pattern", file))
     return ret
 
 
 def benchmark_exe(exe, pattern, input):
     starttime = time()
     check_output([executable_path + exe,
-                pattern_input_path + pattern,
-                pattern_input_path + input])
+                 pattern_input_path + pattern,
+                 pattern_input_path + input])
     endtime = time()
     delta = endtime-starttime
     return TimeStamp(exe, delta, pattern, input)
@@ -84,11 +86,13 @@ def benchmark_lua(patternname, inputname):
     for line in open(inputname, "r").readlines():
         input += line
     chdir(lastcwd)
-    input = input.replace("\n", "")
-    input = input.replace('"', "")  # TODO: better string escaping
-    input = input.replace('\\', "")
+    #input = input.replace("\n", "")
+    #input = input.replace('"', "")  # TODO: better string escaping
+    #input = input.replace('\\', "\\\\")
+    #input = input.replace('"','\"')
+    #input = input.replace("\n","")
     luacontent = ('local lpeg = require("lpeg"); lpeg.match('
-                  + pattern + ',"' + input + '")')
+                  + pattern + ',[====[' + input + ']====])')
     chdir(lpeg_path)
     luafile = open("temp.lua", "w")
     luafile.write(luacontent)
@@ -107,8 +111,9 @@ def benchmark_all_lua():
         try:
             ret.append(benchmark_lua(pattern, input))
         except CalledProcessError:
-            print("Lua process for " + pattern + " on " + input + " not executed.")
-            
+            print("Lua process for " + pattern + " on "
+                  + input + " not executed.")
+            exit()
     return ret
 
 
@@ -119,7 +124,7 @@ def benchmark_all():
 
 
 def main():
-    outputtext = ""
+    outputtext = "["
     timestamps = []  # list of lists of timestamps
     for i in range(repetitions):
         print(str(i)+" repetitions completed!")
@@ -153,9 +158,10 @@ def main():
                            ("Shortest Time", minimum),
                            ("# of repeats", repetitions),
                            ("raw values", rawvals)])
-        outputtext += dumps(out, indent=4)
+        outputtext += dumps(out, indent=4)+","
+    outputtext = outputtext[:-1]  # remove last ","
     outputfile = open(output, "w")
-    outputfile.write(outputtext)
+    outputfile.write(outputtext+"]")
     outputfile.close
     print("Benchmarking complete!")
 
