@@ -1,0 +1,7 @@
+lpeg.P{
+"S";
+S = lpeg.V("URL") + lpeg.P(1) * lpeg.V("S"),
+
+URL = lpeg.Cp()*lpeg.C(lpeg.P"http" * lpeg.V("urlchar")^3),
+
+urlchar = lpeg.R("az","AZ","09") + lpeg.S("-._~:/?#@!$&*+,;=")}^0

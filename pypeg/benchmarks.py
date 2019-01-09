@@ -15,7 +15,7 @@ from collections import OrderedDict
 executable_path = "/home/erkan/pypeg_git/PyPeg/pypeg/"
 pattern_input_path = "/home/erkan/pypeg_git/PyPeg/pypeg/examples/"
 lpeg_path = "/home/erkan/pypeg_git/PyPeg/pypeg/lpeg/"
-repetitions = 1000
+repetitions = 30
 output = "/home/erkan/pypeg_git/PyPeg/pypeg/benchmarks.txt"
 blacklisted_executables = ["pypeg_121218_nojit_spanlooprec",
                            "pypeg_121218_nojit",

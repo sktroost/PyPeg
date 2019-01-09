@@ -11,7 +11,8 @@ def line_to_instruction(line):
     if "':'" in line:  # escape before split
         line = replace(line, "':'", "'#'")
         labelsplit = line.split(":")
-        line = replace(line, "'#'", "':'")
+        for i in range(len(labelsplit)):
+            labelsplit[i] = replace(labelsplit[i], "'#'", "':'")
     else:
         labelsplit = line.split(":")
     label = int(labelsplit[0])
@@ -51,7 +52,8 @@ def line_to_instruction(line):
         if "'('" in line:  # escape parent character as parameter before split
             line = replace(line, "'('", "'#'")
             parensplit = line.split("(")
-            line = replace(line, "'#'", "'('")
+            for i in range(len(parensplit)):
+                parensplit[i] = replace(parensplit[i], "'#'", "'('")
         else:
             parensplit = line.split("(")
         line = parensplit[0]

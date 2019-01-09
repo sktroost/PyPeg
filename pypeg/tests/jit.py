@@ -90,4 +90,17 @@ urlchar = lpeg.R("az","AZ","09") + lpeg.S("-._~:/?#@!$&*+,;=")}^0"""
          Instruction(name="end", label=6)]
         input="b"*100+"a"
         self.run_string(instructionlist,input)
-        #await approval from cfbolz. see test_testset
+    def test_falseloop(self):
+        instructionlist = [
+        Instruction(name="call", label=0, goto=5)
+        Instruction(name="call", label=1, goto=5)
+        Instruction(name="testchar", character="1", label=2, goto=4)
+        Instruction(name="jmp",label=3,goto=0)
+        Instruction(name="end",label=4)
+        Instruction(name="char",character="1",label=5)
+        Instruction(name="ret",label=6)]
+        input = "1"*100
+        self.run_string(instructionlist,input)
+        #parsed sowas wie MEMBER = VALUE *  VALUE
+        # VALUE = '1'
+        #S = MEMBER^0

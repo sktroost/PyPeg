@@ -1,0 +1,221 @@
+[{
+    "Name": "pypeg_191218_jit_newstackentry_closecapturefix", 
+    "Used Pattern": "longurlpattern", 
+    "Used Input": "longurlinput", 
+    "Average time": 0.08441305160522461, 
+    "Longest Time": 0.08441305160522461, 
+    "Shortest Time": 0.08441305160522461, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.08441305160522461
+    ]
+},{
+    "Name": "pypeg_191218_jit_newstackentry_closecapturefix", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.04909515380859375, 
+    "Longest Time": 0.04909515380859375, 
+    "Shortest Time": 0.04909515380859375, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.04909515380859375
+    ]
+},{
+    "Name": "pypeg_191218_jit_newstackentry_closecapturefix", 
+    "Used Pattern": "longemailpattern", 
+    "Used Input": "longemailinput", 
+    "Average time": 0.3282320499420166, 
+    "Longest Time": 0.3282320499420166, 
+    "Shortest Time": 0.3282320499420166, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.3282320499420166
+    ]
+},{
+    "Name": "pypeg_191218_jit_newstackentry_closecapturefix", 
+    "Used Pattern": "urlpattern", 
+    "Used Input": "urlinput", 
+    "Average time": 0.012066841125488281, 
+    "Longest Time": 0.012066841125488281, 
+    "Shortest Time": 0.012066841125488281, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.012066841125488281
+    ]
+},{
+    "Name": "pypeg_191218_jit_newstackentry_closecapturefix", 
+    "Used Pattern": "jsonpattern", 
+    "Used Input": "jsoninput", 
+    "Average time": 0.013016939163208008, 
+    "Longest Time": 0.013016939163208008, 
+    "Shortest Time": 0.013016939163208008, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.013016939163208008
+    ]
+},{
+    "Name": "pypeg_191218_jit_newstackentry", 
+    "Used Pattern": "longurlpattern", 
+    "Used Input": "longurlinput", 
+    "Average time": 0.07886004447937012, 
+    "Longest Time": 0.07886004447937012, 
+    "Shortest Time": 0.07886004447937012, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.07886004447937012
+    ]
+},{
+    "Name": "pypeg_191218_jit_newstackentry", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.0535581111907959, 
+    "Longest Time": 0.0535581111907959, 
+    "Shortest Time": 0.0535581111907959, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.0535581111907959
+    ]
+},{
+    "Name": "pypeg_191218_jit_newstackentry", 
+    "Used Pattern": "longemailpattern", 
+    "Used Input": "longemailinput", 
+    "Average time": 0.32627296447753906, 
+    "Longest Time": 0.32627296447753906, 
+    "Shortest Time": 0.32627296447753906, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.32627296447753906
+    ]
+},{
+    "Name": "pypeg_191218_jit_newstackentry", 
+    "Used Pattern": "urlpattern", 
+    "Used Input": "urlinput", 
+    "Average time": 0.024396181106567383, 
+    "Longest Time": 0.024396181106567383, 
+    "Shortest Time": 0.024396181106567383, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.024396181106567383
+    ]
+},{
+    "Name": "pypeg_191218_jit_newstackentry", 
+    "Used Pattern": "jsonpattern", 
+    "Used Input": "jsoninput", 
+    "Average time": 0.01018214225769043, 
+    "Longest Time": 0.01018214225769043, 
+    "Shortest Time": 0.01018214225769043, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.01018214225769043
+    ]
+},{
+    "Name": "pypeg_191218_jit", 
+    "Used Pattern": "longurlpattern", 
+    "Used Input": "longurlinput", 
+    "Average time": 0.07693600654602051, 
+    "Longest Time": 0.07693600654602051, 
+    "Shortest Time": 0.07693600654602051, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.07693600654602051
+    ]
+},{
+    "Name": "pypeg_191218_jit", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.044859886169433594, 
+    "Longest Time": 0.044859886169433594, 
+    "Shortest Time": 0.044859886169433594, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.044859886169433594
+    ]
+},{
+    "Name": "pypeg_191218_jit", 
+    "Used Pattern": "longemailpattern", 
+    "Used Input": "longemailinput", 
+    "Average time": 0.2198338508605957, 
+    "Longest Time": 0.2198338508605957, 
+    "Shortest Time": 0.2198338508605957, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.2198338508605957
+    ]
+},{
+    "Name": "pypeg_191218_jit", 
+    "Used Pattern": "urlpattern", 
+    "Used Input": "urlinput", 
+    "Average time": 0.032707929611206055, 
+    "Longest Time": 0.032707929611206055, 
+    "Shortest Time": 0.032707929611206055, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.032707929611206055
+    ]
+},{
+    "Name": "pypeg_191218_jit", 
+    "Used Pattern": "jsonpattern", 
+    "Used Input": "jsoninput", 
+    "Average time": 0.01073598861694336, 
+    "Longest Time": 0.01073598861694336, 
+    "Shortest Time": 0.01073598861694336, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.01073598861694336
+    ]
+},{
+    "Name": "LUAFILE", 
+    "Used Pattern": "longurlpattern", 
+    "Used Input": "longurlinput", 
+    "Average time": 0.3789958953857422, 
+    "Longest Time": 0.3789958953857422, 
+    "Shortest Time": 0.3789958953857422, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.3789958953857422
+    ]
+},{
+    "Name": "LUAFILE", 
+    "Used Pattern": "emailpattern", 
+    "Used Input": "emailinput", 
+    "Average time": 0.06524300575256348, 
+    "Longest Time": 0.06524300575256348, 
+    "Shortest Time": 0.06524300575256348, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.06524300575256348
+    ]
+},{
+    "Name": "LUAFILE", 
+    "Used Pattern": "longemailpattern", 
+    "Used Input": "longemailinput", 
+    "Average time": 0.5224840641021729, 
+    "Longest Time": 0.5224840641021729, 
+    "Shortest Time": 0.5224840641021729, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.5224840641021729
+    ]
+},{
+    "Name": "LUAFILE", 
+    "Used Pattern": "urlpattern", 
+    "Used Input": "urlinput", 
+    "Average time": 0.01613616943359375, 
+    "Longest Time": 0.01613616943359375, 
+    "Shortest Time": 0.01613616943359375, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.01613616943359375
+    ]
+},{
+    "Name": "LUAFILE", 
+    "Used Pattern": "jsonpattern", 
+    "Used Input": "jsoninput", 
+    "Average time": 0.004042148590087891, 
+    "Longest Time": 0.004042148590087891, 
+    "Shortest Time": 0.004042148590087891, 
+    "# of repeats": 1, 
+    "raw values": [
+        0.004042148590087891
+    ]
+}]

@@ -1,0 +1,54 @@
+lpeg.P{
+"JSON";
+JSON = lpeg.V("VALUE"),
+
+VALUE = lpeg.Cp()*lpeg.V("OBJECT")*lpeg.Cp()
+        +lpeg.Cp()*lpeg.V("ARRAY")*lpeg.Cp()
+        +lpeg.V("STRING")+lpeg.V("NUMBER")+lpeg.P("true")+lpeg.P("false")+lpeg.P("null"),
+
+NUMBER = lpeg.V("EXP")+lpeg.V("FLOAT")+lpeg.V("INTEGER"),
+
+INTEGER = lpeg.V("ONENINE")*lpeg.V("DIGITS")
+          +lpeg.V("DIGIT")
+          +lpeg.P"-"*lpeg.V("DIGIT")
+          +lpeg.P"-"*lpeg.V("ONENINE")*lpeg.V("DIGITS"),
+
+ONENINE = lpeg.R("19"),
+
+DIGIT = lpeg.P"0" + lpeg.V("ONENINE"),
+
+DIGITS = lpeg.V("DIGIT")^1,
+
+FLOAT = lpeg.V("INTEGER")*lpeg.P"."*lpeg.V("DIGITS"),
+
+EXP = lpeg.V("FLOAT")*lpeg.P"E"*lpeg.V("SIGN")*lpeg.V("DIGITS")
+      +lpeg.V("FLOAT")*lpeg.P"e"*lpeg.V("SIGN")*lpeg.V("DIGITS"),
+
+SIGN = lpeg.P"+"+lpeg.P"-"+lpeg.P"",
+
+ARRAY = lpeg.P"["*lpeg.V("ELEMENTS")*lpeg.P"]"
+        +lpeg.P"["*lpeg.V("WS")*lpeg.P"]",
+
+ELEMENTS = lpeg.V("ELEMENT")*lpeg.Cp()*lpeg.P","*lpeg.V("ELEMENTS")
+           +lpeg.V("ELEMENT"),
+
+ELEMENT = lpeg.V("WS")*lpeg.V("VALUE")*lpeg.V("WS"),
+
+STRING = lpeg.P'"'*lpeg.V("CHARACTERS")*lpeg.P'"',
+
+CHARACTERS = lpeg.V("CHARACTER")^0,
+
+CHARACTER = (lpeg.S("äöü")+lpeg.R('\032\127'))-lpeg.P'"',
+
+OBJECT = lpeg.P'{'*lpeg.V("MEMBERS")*lpeg.P'}'
+         +lpeg.P'{'*lpeg.V("WS")*lpeg.P'}',
+
+MEMBERS = lpeg.V("MEMBER")*lpeg.Cp()*lpeg.P','*lpeg.V("MEMBERS")
+          +lpeg.V("MEMBER"),
+
+MEMBER = lpeg.V("WS")*lpeg.V("STRING")*lpeg.V("WS")
+         *lpeg.Cp()*lpeg.P":"*lpeg.V("ELEMENT"),
+
+WS = lpeg.S('\32\13\10\9')^0
+}
+

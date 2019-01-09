@@ -105,13 +105,37 @@ seperates skript für standardabweichung (95 oder 99% konfidenzinterval mit vort
 lua soll den googlesource lesen können ohne abzuschmieren (done, nesting quotes via [[ ]])
     mehr patterns, realistischere inputs cfb wünscht sich json pattern
 
+-lua escaped characters für json string chars (oder lpeg.R mit hex werten)
+
+string          <- '"' char* -> {} => final_string '"'
+char            <- unescaped    => normal
+                / '\"'          => escape
+                / "\\"          => escape
+                / "\b"          => escape
+                / "\f"          => escape
+                / "\n"          => escape
+                / "\r"          => escape
+                / "\t"          => escape
+                / "\/"          => escape
+                / (
+                    "\u"
+                    { [0-9A-Fa-f]^4 }  => tou16
+                  )+  -> {}            => unicode
+^-diese regeln in mein json pattern für strings übernehmen
 nach besserer statistik und größeren eingaben gucken ob die heute erarbeiteten executables wirklich langsamer sind
+
+1. json fertig machen, position captures für {}[]:,
 
 2 implementierungen von capturestack testen:
     a) stack, mit captures statt mit nones initialisiert, sodass zur laufzeit keine neuen captures (in vm.py) erzeugt sondern felder geändert werden 
     b) verkettete liste, wobei "index" jetz ne referenz auf ne liste ist
 
-"string" bytecode einführen: mehrere chars auf einmal
+gucken obs lpeg parser für programmiersprachen gibt (lua)
+(csv matching lpeg)
+anfangen paar texte für BA zu schreiben(hintergrund, einführung lpeg, hintergrund pypy)
+jit trace von test_falseloop angucken
+
+(später)"string" bytecode einführen: mehrere chars auf einmal
     -> neuer zwischenschritt nach parsing: bytecodeoptimierung
 
 
