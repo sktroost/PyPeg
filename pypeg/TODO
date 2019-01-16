@@ -3,6 +3,8 @@
 python -m coverage run  `which py.test`
 python -m coverage html
 
+PYTHONPATH=/home/erkan/pypeg_git/pypy/ python
+
 ----------------
 
 python ~/pypeg_git/pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
@@ -10,7 +12,7 @@ python ~/pypeg_git/pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
 
 ../../pypy/pytest.py
 
-../../pypy/pytest.py -s -k set tests/jit.py
+../../pypy/pytest.py -s -k falseloop tests/jit.py
 
 
 
@@ -124,10 +126,11 @@ char            <- unescaped    => normal
 ^-diese regeln in mein json pattern für strings übernehmen
 nach besserer statistik und größeren eingaben gucken ob die heute erarbeiteten executables wirklich langsamer sind
 
-1. json fertig machen, position captures für {}[]:,
+1. json fertig machen, position captures für {}[]:,(done)
 
 2 implementierungen von capturestack testen:
     a) stack, mit captures statt mit nones initialisiert, sodass zur laufzeit keine neuen captures (in vm.py) erzeugt sondern felder geändert werden 
+    (done, pypeg_110118_jit_fullcapturestack
     b) verkettete liste, wobei "index" jetz ne referenz auf ne liste ist
 
 gucken obs lpeg parser für programmiersprachen gibt (lua)

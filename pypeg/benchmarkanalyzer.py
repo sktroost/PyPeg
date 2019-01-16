@@ -71,7 +71,7 @@ def analyzebenchmarks(filename="benchmarks.txt", bignumber=50000):
         outputfile.write("Standard Deviation : " + str(analysis[1])+"\n")
         outputfile.write("5% Confident Interval:" + str(analysis[2])+"\n")
         outputfile.write("95% Confident Interval:" + str(analysis[3])+"\n\n")
-        print(benchmark["Name"] + "analyzed with pattern"
+        print(benchmark["Name"] + " analyzed with pattern "
               + benchmark["Used Pattern"])
     outputfile.close()
 

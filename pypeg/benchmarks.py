@@ -36,7 +36,7 @@ def get_executables():  # gets filenames of executables
     filelist = listdir(executable_path)
     ret = []
     for file in filelist:
-        if file[:8] == "pypeg_19":
+        if file[:6] == "pypeg_":
             ret.append(file)
     return ret
 
@@ -113,7 +113,7 @@ def benchmark_all_lua():
         except CalledProcessError:
             print("Lua process for " + pattern + " on "
                   + input + " not executed.")
-            exit()
+            #exit()
     return ret
 
 

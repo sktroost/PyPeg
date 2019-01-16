@@ -1,7 +1,7 @@
 from utils import runpattern
 from parser import parse, relabel
 from stackentry import ChoicePoint, ReturnAddress
-from stack import Stack
+from stack import Stack, CaptureStack, CaptureList
 from captures import Capture
 from sys import argv
 
@@ -36,7 +36,9 @@ def run(instructionlist, inputstring, index=0, debug=False):
     fail = False
     pc = 0
     choice_points = None
-    captures = Stack()
+    #captures = CaptureStack()
+    captures = CaptureList(Capture())
+    #captures_index = captures
     while True:
         driver.jit_merge_point(instructionlist=instructionlist,
                                inputstring=inputstring,
@@ -70,10 +72,10 @@ def run(instructionlist, inputstring, index=0, debug=False):
                     pc = jit.promote(entry.pc)
                     index = entry.index
                     #captures = entry.captures
-                    if captures.index != entry.capturelength:
-                        captures.index = entry.capturelength  # Stack
-                     #   del captures[entry.capturelength:]
-                        #captures = captures[:entry.capturelength]
+                    if captures is not entry.capturelength:  #capturelist
+                        assert isinstance(captures, CaptureList)
+                        assert isinstance(entry.capturelength, CaptureList)
+                        captures = entry.capturelength  # Stack
                     if debug:
                         print("ChoicePoint Restored!"+str(pc))
                 else:
@@ -120,7 +122,12 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 pc = instruction.goto
             else:
                 pc += 1
-                index += 1  # must be the case because of 'lpeg.P(-1)'
+                index += 1
+                #testany DOES consume input
+                #bug in bytecode for pattern
+                #'lpeg.P{ lpeg.C(lpeg.R("09")^1) + 1 * lpeg.V(1)}^0'
+                #(because if testany didnt consume input, lpeg.P(-2) code
+                #would not make any sense
         elif instruction.name == "fail":
             fail = True
         elif instruction.name == "failtwice":
@@ -149,7 +156,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "choice":
             pc += 1
             choice_points = ChoicePoint(instruction.goto, index,
-                                        captures.index, choice_points)
+                                        captures, choice_points)#capturelist
         elif instruction.name == "commit":
             # commits pop values from the stack
             pc = instruction.goto
@@ -160,7 +167,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
             top = choice_points
             assert isinstance(top, ChoicePoint)
             top.index = index
-            top.capturelength = captures.index
+            top.capturelength = captures#capturelist
             pc = instruction.goto
         elif instruction.name == "set":
             if index >= len(inputstring):
@@ -189,12 +196,22 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "fullcapture":
             if instruction.capturetype == "simple":
                 #captures.append(("full", "simple", instruction.size, index))
-                captures.append(Capture(Capture.FULLSTATUS, Capture.SIMPLEKIND,
-                                        instruction.size, index))
+                #captures.append(Capture.FULLSTATUS, Capture.SIMPLEKIND,
+                                        #instruction.size, index)
+                appendee = Capture(Capture.FULLSTATUS, Capture.SIMPLEKIND,
+                                   instruction.size, index)
+                assert isinstance(captures, CaptureList)
+                captures = CaptureList(appendee, captures)
+                #captures_index = captures
             elif instruction.capturetype == "position":
                 #captures.append(("full", "position", index))
-                captures.append(Capture(Capture.FULLSTATUS,
-                                Capture.POSITIONKIND, index=index))
+                #captures.append(Capture.FULLSTATUS,
+                                #Capture.POSITIONKIND, -1,index=index)
+                appendee = Capture(Capture.FULLSTATUS, Capture.POSITIONKIND,
+                                   size=-1, index=index)
+                assert isinstance(captures, CaptureList)
+                captures = CaptureList(appendee, captures)
+                #captures_index = captures
             else:
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
@@ -202,15 +219,21 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "opencapture":
             if instruction.capturetype == "simple":
                 #captures.append(("open", "simple", 0, index))
-                captures.append(Capture(Capture.OPENSTATUS,
-                                Capture.SIMPLEKIND, index=index))
+                #captures.append(Capture.OPENSTATUS,
+                                #Capture.SIMPLEKIND, -1,index)
+                appendee = Capture(Capture.OPENSTATUS, Capture.SIMPLEKIND,
+                                   size=-1, index=index)
+                assert isinstance(captures, CaptureList)
+                captures = CaptureList(appendee, captures)#capturelist
+                #captures_index = captures
             else:
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
             pc += 1
         elif instruction.name == "closecapture":
-            capture = captures.storage[captures.index-1]
-            assert capture is not None
+            #capture = captures.storage[captures.index-1]
+            capture = captures.capture  # capturelist, previously captures_index
+            assert capture is not Capture()  # previously none
             assert capture.status == Capture.OPENSTATUS
             if capture.kind == Capture.SIMPLEKIND:
                 size = index - capture.index
@@ -220,15 +243,6 @@ def run(instructionlist, inputstring, index=0, debug=False):
             else:
                 raise Exception("Unknown capture type! "+str(capture.kind))
             pc += 1
-            #capture = captures.pop()
-            #assert capture is not None  # makes pypy happy
-            #assert capture.status == "open"
-            #if capture.kind == "simple":
-            #    size = index - capture.index
-            #    captures.append(Capture("full", "simple", size, index))
-            #else:
-            #    raise Exception("Unknown capture type! "+capture.kind)
-            #pc += 1
         else:
             raise Exception("Unknown instruction! "+instruction.name)
 
@@ -263,9 +277,13 @@ def processcaptures(captures, inputstring, debug=False):
     if debug:
         print captures
     #for capture in captures:
-    while captures.index > 0:  # STACK
+    #while captures.index > 0:  # STACK
+#    while captures != Capture():  # capturelist
+    while captures is not None:
         #print captures.index
-        capture = captures.pop()  # STACK
+        #capture = captures.pop()  # STACK
+        capture = captures.capture  # capturelist
+        
         if capture.kind == Capture.SIMPLEKIND:
             size = capture.size
             index = capture.index
@@ -277,7 +295,7 @@ def processcaptures(captures, inputstring, debug=False):
         elif capture.kind == Capture.POSITIONKIND:
             app = "POSITION: "+str(capture.index)
             returnlist.append(app)
-            # might need to make this pypy compatible (ints and str in list)
+        captures = captures.prev  # capturelist
     return returnlist
 
 
