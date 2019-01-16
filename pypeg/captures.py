@@ -8,8 +8,8 @@ class Capture(object):
     OPENSTATUS = 0
     FULLSTATUS = 1
 
-    statusdict={1:"Full",0:"Open",-1:"Error"}
-    kinddict={0:"Simple",1:"Position",-1:"Error"}
+    statusdict = {1: "Full", 0: "Open", -1: "Error"}
+    kinddict = {0: "Simple", 1: "Position", -1: "Error"}
 
     def __init__(self, status=-1, kind=-1, size=-1, index=-1):
         self.status = status  # "open" or "full"
@@ -26,5 +26,3 @@ class Capture(object):
         return(self.statusdict[self.status]
                + "capture " + self.kinddict[self.kind]
                + " size:"+str(self.size) + "index: " + str(self.index))
-
-

@@ -72,7 +72,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                     pc = jit.promote(entry.pc)
                     index = entry.index
                     #captures = entry.captures
-                    if captures is not entry.capturelength:  #capturelist
+                    if captures is not entry.capturelength:  # capturelist
                         assert isinstance(captures, CaptureList)
                         assert isinstance(entry.capturelength, CaptureList)
                         captures = entry.capturelength  # Stack
@@ -156,7 +156,8 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "choice":
             pc += 1
             choice_points = ChoicePoint(instruction.goto, index,
-                                        captures, choice_points)#capturelist
+                                        captures, choice_points)
+            #capturelist
         elif instruction.name == "commit":
             # commits pop values from the stack
             pc = instruction.goto
@@ -167,7 +168,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
             top = choice_points
             assert isinstance(top, ChoicePoint)
             top.index = index
-            top.capturelength = captures#capturelist
+            top.capturelength = captures  # capturelist
             pc = instruction.goto
         elif instruction.name == "set":
             if index >= len(inputstring):
@@ -224,7 +225,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 appendee = Capture(Capture.OPENSTATUS, Capture.SIMPLEKIND,
                                    size=-1, index=index)
                 assert isinstance(captures, CaptureList)
-                captures = CaptureList(appendee, captures)#capturelist
+                captures = CaptureList(appendee, captures)  # capturelist
                 #captures_index = captures
             else:
                 raise Exception("Unknown capture type!"
@@ -232,7 +233,8 @@ def run(instructionlist, inputstring, index=0, debug=False):
             pc += 1
         elif instruction.name == "closecapture":
             #capture = captures.storage[captures.index-1]
-            capture = captures.capture  # capturelist, previously captures_index
+            capture = captures.capture  # capturelist
+            #previously captures_index
             assert capture is not Capture()  # previously none
             assert capture.status == Capture.OPENSTATUS
             if capture.kind == Capture.SIMPLEKIND:
@@ -283,7 +285,6 @@ def processcaptures(captures, inputstring, debug=False):
         #print captures.index
         #capture = captures.pop()  # STACK
         capture = captures.capture  # capturelist
-        
         if capture.kind == Capture.SIMPLEKIND:
             size = capture.size
             index = capture.index

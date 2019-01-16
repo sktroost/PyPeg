@@ -1,4 +1,6 @@
 from captures import Capture
+
+
 class Stack(object):
     def __init__(self):
         self.storage = [None]*128
@@ -53,11 +55,13 @@ class CaptureStack(Stack):
     def doublestack(self):
         self.storage.extend([Capture()]*len(self.storage))
 
-    def append(self, status, kind, size, index):  # to improve list compatibility
+    def append(self, status, kind, size, index):
+        #to improve list compatibility
         self.push(status, kind, size, index)
 
+
 class CaptureList(object):
-    def __init__(self,capture=Capture(), prev=None):
+    def __init__(self, capture=Capture(), prev=None):
         self.capture = capture
         self.prev = prev
 
@@ -66,4 +70,3 @@ class CaptureList(object):
 
     def __str__(self):
         return str(self.capture)+", "+str(self.prev)
-
