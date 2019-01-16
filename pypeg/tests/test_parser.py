@@ -5,7 +5,7 @@ from pypeg.charlistelement import SingleChar, CharRange
 
 
 def test_char():
-    input = "44: char '+'"
+    input = "44: char '2b'"
     instr, = parse(input)
     assert instr.label == 44
     assert instr.character == "+"
@@ -48,7 +48,7 @@ def test_opencapture():
 
 
 def test_relabel():
-    input = "01: char '/'\n13: span [(30-39)]\n37: testcode [(1)(3)(39)] -> 13"
+    input = "01: char '2f'\n13: span [(30-39)]\n37: testcode [(1)(3)(39)] -> 13"
     instructionlist = parse(input)
     output = relabel(instructionlist)
     assert output[0] == Instruction(label=0, name="char", character="/")

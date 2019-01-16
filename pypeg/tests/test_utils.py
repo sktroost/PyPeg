@@ -21,8 +21,8 @@ def test_runlpeg():
 
 
 def test_runpattern():
-    bytecode = runpattern("lpeg.P\"a\"")
-    assert bytecode == "00: char 'a'\n01: end \n"
+    bytecode = runpattern("lpeg.P'a'")
+    assert bytecode == "00: char '61'\n01: end \n"
 
 
 def test_runpattern_2():

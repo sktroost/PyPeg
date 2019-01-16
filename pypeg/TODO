@@ -138,6 +138,23 @@ gucken obs lpeg parser für programmiersprachen gibt (lua)
 anfangen paar texte für BA zu schreiben(hintergrund, einführung lpeg, hintergrund pypy)
 jit trace von test_falseloop angucken
 
+
+lpprint.c hex escape via 02x bei printinst case ITestChar und ähnliche 
+printf("'%02x'", p->i.aux); printjmp(op, p);(done, siehe lpprint.c)
+bug in end-bytecode (oder failtwice) (oder choicepoints)
+gegentesten mit "print" in lua(done, war tatsächlich in "end")
+
+CaptureList/Capture objekte mergen (es gibt nur ein "Listen" objekt, das einzelne element is dann ne liste mit previous=None)
+(siehe stackentry.py choicepoints)
+json mit großen input zum laufen bringen (mind. 1 usb-stick beispiel sollte laufen)
+
+benchmarkanalyzer: zu jedem benchmark speed relativ zu lua hinzufügen(wenn lua 2s braucht in pypeg_whatever 1s dann ist der speedup 0.5)
+benchmarkanalyzer: am anfang der datei geometrisches mittel aller speedups einer datei (pypeg_1 ist im schnitt so viel schneller, pypeg_2 so viel, ...)
+
+auf jeden fall: outline BA (gliederung)
+
+
+
 (später)"string" bytecode einführen: mehrere chars auf einmal
     -> neuer zwischenschritt nach parsing: bytecodeoptimierung
 

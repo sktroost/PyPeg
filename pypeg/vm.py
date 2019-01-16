@@ -8,21 +8,22 @@ from sys import argv
 from rpython.rlib import jit
 
 
-def get_printable_location(pc, fail, instructionlist):
+def get_printable_location(pc, prev_pc, fail, instructionlist):
     instr = instructionlist[pc].name
-    return str(pc) + " " + instr + " FAIL" * fail
+    return "%s (%s)" % (pc, prev_pc) + " " + instr + " FAIL" * fail
 
 driver = jit.JitDriver(reds=["index", "inputstring",
                              "choice_points", "captures"],
-                       greens=["pc", "fail", "instructionlist"],
+                       greens=["pc", "prev_pc", "fail", "instructionlist"],
                        get_printable_location=get_printable_location,
                        is_recursive=True)
 
 
 class VMOutput():
-    def __init__(self, captures, fail):
+    def __init__(self, captures, fail, index):
         self.captures = captures
         self.fail = fail
+        self.index = index
 
 
 def runbypattern(pattern, inputstring, index=0, debug=False):
@@ -35,6 +36,7 @@ def runbypattern(pattern, inputstring, index=0, debug=False):
 def run(instructionlist, inputstring, index=0, debug=False):
     fail = False
     pc = 0
+    prev_pc = 0
     choice_points = None
     #captures = CaptureStack()
     captures = CaptureList(Capture())
@@ -45,6 +47,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                                index=index,
                                fail=fail,
                                pc=pc,
+                               prev_pc=prev_pc,
                                choice_points=choice_points,
                                captures=captures)
         if debug:
@@ -65,7 +68,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                     if not choice_points:
                         if debug:
                             print("Choicepointlist empty")
-                        return VMOutput(captures, True)
+                        return VMOutput(captures, True, index )
                     entry = choice_points
                     choice_points = choice_points.prev
                 if type(entry) is ChoicePoint:
@@ -82,7 +85,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                     raise Exception("Unexpected Entry in choice_points! "
                                     + str(entry))
             else:
-                return VMOutput(captures, True)
+                return VMOutput(captures, True, index )
         if not isinstance(pc, int):
             raise Exception("pc is of type "+str(type(pc))
                             + "with value "+str(pc))
@@ -90,6 +93,9 @@ def run(instructionlist, inputstring, index=0, debug=False):
         if debug:
             print instruction
         if instruction.name == "char":
+            # if next n bytecode is char:
+                # if check both chars at the same time
+                    # continue with pc += 2
             if index >= len(inputstring):
                 fail = True
             elif instruction.character == inputstring[index]:
@@ -101,14 +107,14 @@ def run(instructionlist, inputstring, index=0, debug=False):
             if index < len(inputstring):
                 if debug:
                     print("Not all Input consumed at End Bytecode")
-                return VMOutput(captures, True)
+                return VMOutput(captures, False, index )  # DEBUG: FALSE ODER TRUE?
             if not fail:
                 #TODO: remove all not closed captures
-                return VMOutput(captures, False)  # previously return True
+                return VMOutput(captures, False, index )  # previously return True
             else:
                 if debug:
                     print("Failed End Bytecode")
-                return VMOutput(captures, True)
+                return VMOutput(captures, True, index )
         elif instruction.name == "testchar":
             if index >= len(inputstring):
                 pc = instruction.goto
@@ -122,7 +128,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 pc = instruction.goto
             else:
                 pc += 1
-                index += 1
+                #index += 1
                 #testany DOES consume input
                 #bug in bytecode for pattern
                 #'lpeg.P{ lpeg.C(lpeg.R("09")^1) + 1 * lpeg.V(1)}^0'
@@ -150,7 +156,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
             else:
                 pc += 1
                 index += 1  # since n=1
-        elif "behind" in instruction.name:
+        elif instruction.name == "behind":
             pc += 1
             #pass  # todo:make this make sense
         elif instruction.name == "choice":
@@ -182,6 +188,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
             index = spanloop(inputstring, index, instruction)
             pc += 1
         elif instruction.name == "call":
+            prev_pc = pc
             currentlabel = pc
             choice_points = ReturnAddress(currentlabel+1, choice_points)
             pc = instruction.goto

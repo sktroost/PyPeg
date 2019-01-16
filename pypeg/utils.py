@@ -51,3 +51,23 @@ def runpattern(pattern):
         chdir("..")
     ret = runlpeg("temp.lua")
     return ret
+
+def checklpegoutput(pattern, input):
+    changed = False
+    if "lpeg" in listdir("."):
+        chdir("./lpeg")
+        changed = True
+    f = open("temp.lua", "w")
+    code = (
+        "local lpeg = require(\"lpeg\"); print(lpeg.match("
+        + pattern
+        + ", \""
+        + input  # inputstring is irrelevant for bytecode generation
+        + "\"))"
+    )
+    f.write(code)
+    f.close()
+    if changed:
+        chdir("..")
+    ret = runlpeg("temp.lua").splitlines()[-1]
+    return ret

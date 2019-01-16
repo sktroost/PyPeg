@@ -6,7 +6,6 @@ from utils import runlpeg, charrange
 from rpython.rlib.rstring import replace
 from charlistelement import SingleChar, CharRange
 
-
 def line_to_instruction(line):
     if "':'" in line:  # escape before split
         line = replace(line, "':'", "'#'")
@@ -15,6 +14,7 @@ def line_to_instruction(line):
             labelsplit[i] = replace(labelsplit[i], "'#'", "':'")
     else:
         labelsplit = line.split(":")
+    print labelsplit
     label = int(labelsplit[0])
     line = labelsplit[1]
     charlist = []
@@ -70,8 +70,8 @@ def line_to_instruction(line):
                 raise Exception("Unexpected bytecode parameter: " + element)
 
     if "\'" in line:  # assuming format of "bytecodename 'character'"
-        character = line[line.find("\'") + 1]
-        line = replace(line, "\'"+character+"\'", "")
+        character = line.split("'")[1]
+        character = chr(int(character,16))
     while line[-1] == " ":
         line = line[:-1]
     while line[0] == " ":
@@ -90,12 +90,15 @@ def line_to_instruction(line):
 
 
 def parse(lines):
+    lines = replace(lines, "'\n'", "'###'")
     lines = lines.splitlines()
     instructionlist = []
     for line in lines:
         if line.strip():  # if line is not empty
-            instruction = line_to_instruction(line)
-            instructionlist.append(instruction)
+            line = replace(line, "'###'", "'\n'")
+            if line != "'":
+                instruction = line_to_instruction(line)
+                instructionlist.append(instruction)
     return instructionlist
 
 

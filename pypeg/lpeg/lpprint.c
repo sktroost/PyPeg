@@ -65,11 +65,11 @@ void printinst (const Instruction *op, const Instruction *p) {
   printf("%02ld: %s ", (long)(p - op), names[p->i.code]);
   switch ((Opcode)p->i.code) {
     case IChar: {
-      printf("'%c'", p->i.aux);
+      printf("'%02x'", p->i.aux);
       break;
     }
     case ITestChar: {
-      printf("'%c'", p->i.aux); printjmp(op, p);
+      printf("'%02x'", p->i.aux); printjmp(op, p);
       break;
     }
     case IFullCapture: {
