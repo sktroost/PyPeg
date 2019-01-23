@@ -1,280 +1,424 @@
-Name : pypeg_191218_jit_newstackentry_closecapturefix
-Used Pattern : longurlpattern
-Used Input : longurlinput
-Mean : 0.0984653423052
-Standard Deviation : 0.000557370935398
-5% Confident Interval:0.0735116799672
-95% Confident Interval:0.147139445941
-
-Name : pypeg_191218_jit_newstackentry_closecapturefix
-Used Pattern : emailpattern
-Used Input : emailinput
-Mean : 0.0566110928427
-Standard Deviation : 1.56465557904e-06
-5% Confident Interval:0.0547142664591
-95% Confident Interval:0.0587930123011
-
-Name : pypeg_191218_jit_newstackentry_closecapturefix
-Used Pattern : longemailpattern
-Used Input : longemailinput
-Mean : 0.318589516972
-Standard Deviation : 4.09976669611e-05
-5% Confident Interval:0.308717544874
-95% Confident Interval:0.329782056808
-
-Name : pypeg_191218_jit_newstackentry_closecapturefix
-Used Pattern : longjsonpattern
-Used Input : longjsoninput
-Mean : 0.0141605152527
-Standard Deviation : 5.04131207835e-06
-5% Confident Interval:0.0113564252853
-95% Confident Interval:0.0184965054194
-
-Name : pypeg_191218_jit_newstackentry_closecapturefix
-Used Pattern : urlpattern
-Used Input : urlinput
-Mean : 0.0249487989206
-Standard Deviation : 3.18156658115e-06
-5% Confident Interval:0.0225117365519
-95% Confident Interval:0.0282582998276
-
-Name : pypeg_191218_jit_newstackentry_closecapturefix
-Used Pattern : jsonpattern
-Used Input : jsoninput
-Mean : 0.0130438649391
-Standard Deviation : 1.93225714211e-06
-5% Confident Interval:0.0111508131027
-95% Confident Interval:0.0156402508418
-
-Name : pypeg_191218_jit_newstackentry
-Used Pattern : longurlpattern
-Used Input : longurlinput
-Mean : 0.0858210993152
-Standard Deviation : 0.000145725000532
-5% Confident Interval:0.0727363586426
-95% Confident Interval:0.110221441587
-
-Name : pypeg_191218_jit_newstackentry
-Used Pattern : emailpattern
-Used Input : emailinput
-Mean : 0.0562820022046
-Standard Deviation : 9.60789663883e-07
-5% Confident Interval:0.0546566009521
-95% Confident Interval:0.0578818798065
-
-Name : pypeg_191218_jit_newstackentry
-Used Pattern : longemailpattern
-Used Input : longemailinput
-Mean : 0.328515873763
-Standard Deviation : 1.1659578681e-05
-5% Confident Interval:0.322936201096
-95% Confident Interval:0.334181642532
-
-Name : pypeg_191218_jit_newstackentry
-Used Pattern : longjsonpattern
-Used Input : longjsoninput
-Mean : 0.0108704312038
-Standard Deviation : 1.90702972872e-07
-5% Confident Interval:0.0102092663447
-95% Confident Interval:0.0116430044174
-
-Name : pypeg_191218_jit_newstackentry
-Used Pattern : urlpattern
-Used Input : urlinput
-Mean : 0.0239711166727
-Standard Deviation : 8.30459763016e-07
-5% Confident Interval:0.0224385023117
-95% Confident Interval:0.0254493077596
-
-Name : pypeg_191218_jit_newstackentry
-Used Pattern : jsonpattern
-Used Input : jsoninput
-Mean : 0.0114987975831
-Standard Deviation : 2.66780543742e-07
-5% Confident Interval:0.0106588840485
-95% Confident Interval:0.0123587210973
-
-Name : pypeg_191218_jit
-Used Pattern : longurlpattern
-Used Input : longurlinput
-Mean : 0.0741256973171
-Standard Deviation : 1.95904895674e-05
-5% Confident Interval:0.0687727133433
-95% Confident Interval:0.0828393777212
-
-Name : pypeg_191218_jit
-Used Pattern : emailpattern
-Used Input : emailinput
-Mean : 0.0437960523114
-Standard Deviation : 9.8219801374e-07
-5% Confident Interval:0.0422143538793
-95% Confident Interval:0.0454742908478
-
-Name : pypeg_191218_jit
-Used Pattern : longemailpattern
-Used Input : longemailinput
-Mean : 0.219424041857
-Standard Deviation : 7.53503589591e-06
-5% Confident Interval:0.215213036537
-95% Confident Interval:0.224242758751
-
-Name : pypeg_191218_jit
-Used Pattern : longjsonpattern
-Used Input : longjsoninput
-Mean : 0.0148255296839
-Standard Deviation : 5.62464189833e-07
-5% Confident Interval:0.013587252299
-95% Confident Interval:0.0160627444585
-
-Name : pypeg_191218_jit
-Used Pattern : urlpattern
-Used Input : urlinput
-Mean : 0.0243142187807
-Standard Deviation : 8.23321247268e-07
-5% Confident Interval:0.0228152513504
-95% Confident Interval:0.0257846355438
-
-Name : pypeg_191218_jit
-Used Pattern : jsonpattern
-Used Input : jsoninput
-Mean : 0.0114939404639
-Standard Deviation : 2.76337400195e-07
-5% Confident Interval:0.0106212298075
-95% Confident Interval:0.0123484770457
-
-Name : pypeg_111019_jit_capturelist
-Used Pattern : longurlpattern
-Used Input : longurlinput
-Mean : 0.0729383336751
-Standard Deviation : 1.03446315723e-06
-5% Confident Interval:0.0712784290314
-95% Confident Interval:0.0746299107869
-
-Name : pypeg_111019_jit_capturelist
-Used Pattern : emailpattern
-Used Input : emailinput
-Mean : 0.0529992654589
-Standard Deviation : 4.68879118062e-07
-5% Confident Interval:0.0518604596456
-95% Confident Interval:0.0541168292363
-
-Name : pypeg_111019_jit_capturelist
-Used Pattern : longemailpattern
-Used Input : longemailinput
-Mean : 0.294216199223
-Standard Deviation : 2.13014526865e-05
-5% Confident Interval:0.286827222506
-95% Confident Interval:0.30199593703
-
-Name : pypeg_111019_jit_capturelist
-Used Pattern : longjsonpattern
-Used Input : longjsoninput
-Mean : 0.282425566554
-Standard Deviation : 1.60207380009e-05
-5% Confident Interval:0.276125987371
-95% Confident Interval:0.28930319945
-
-Name : pypeg_111019_jit_capturelist
-Used Pattern : urlpattern
-Used Input : urlinput
-Mean : 0.0174844974192
-Standard Deviation : 7.27186660262e-07
-5% Confident Interval:0.0160988648733
-95% Confident Interval:0.0189077774684
-
-Name : pypeg_111019_jit_capturelist
-Used Pattern : jsonpattern
-Used Input : jsoninput
-Mean : 0.0295699843451
-Standard Deviation : 5.72264065309e-07
-5% Confident Interval:0.0282875776291
-95% Confident Interval:0.0307755788167
-
-Name : pypeg_110119_jit_fullcapturestack
-Used Pattern : longurlpattern
-Used Input : longurlinput
-Mean : 0.0879718879844
-Standard Deviation : 0.00027290294445
-5% Confident Interval:0.0701327403386
-95% Confident Interval:0.121662274996
-
-Name : pypeg_110119_jit_fullcapturestack
-Used Pattern : emailpattern
-Used Input : emailinput
-Mean : 0.0547341033993
-Standard Deviation : 8.0514095119e-07
-5% Confident Interval:0.0532542705536
-95% Confident Interval:0.0562149206797
-
-Name : pypeg_110119_jit_fullcapturestack
-Used Pattern : longemailpattern
-Used Input : longemailinput
-Mean : 0.302960379143
-Standard Deviation : 2.19934572427e-05
-5% Confident Interval:0.295503012339
-95% Confident Interval:0.310906624794
-
-Name : pypeg_110119_jit_fullcapturestack
-Used Pattern : longjsonpattern
-Used Input : longjsoninput
-Mean : 0.274350686382
-Standard Deviation : 1.53462579747e-05
-5% Confident Interval:0.268159556389
-95% Confident Interval:0.281065869331
-
-Name : pypeg_110119_jit_fullcapturestack
-Used Pattern : urlpattern
-Used Input : urlinput
-Mean : 0.0165389941293
-Standard Deviation : 4.13017759478e-07
-5% Confident Interval:0.0154893795649
-95% Confident Interval:0.0176048994064
-
-Name : pypeg_110119_jit_fullcapturestack
-Used Pattern : jsonpattern
-Used Input : jsoninput
-Mean : 0.0346068473468
-Standard Deviation : 1.30731019446e-05
-5% Confident Interval:0.0297264575958
-95% Confident Interval:0.0412829319636
-
+Average Speedup of pypeg_170119_jit relative to lua : 0.769764755323
+Average Speedup of pypeg_110119_jit_fullcapturestack relative to lua : 0.639863628069
+Average Speedup of pypeg_111019_jit_capturelist relative to lua : 0.644686378304
+Average Speedup of pypeg_191218_jit_newstackentry relative to lua : 0.672614051651
+Average Speedup of pypeg_191218_jit_newstackentry_closecapturefix relative to lua : 0.680531251292
+Average Speedup of pypeg_191218_jit relative to lua : 0.729483075898
 Name : LUAFILE
 Used Pattern : longurlpattern
 Used Input : longurlinput
-Mean : 0.385333824131
-Standard Deviation : 3.37185547677e-06
-5% Confident Interval:0.382482361794
-95% Confident Interval:0.388500348727
+Mean : 0.387554205873
+Standard Deviation : 1.12825025895e-06
+5% Confident Interval:0.385869398117
+95% Confident Interval:0.389352917671
 
 Name : LUAFILE
 Used Pattern : emailpattern
 Used Input : emailinput
-Mean : 0.0669349052815
-Standard Deviation : 2.53053183977e-07
-5% Confident Interval:0.0660920063655
-95% Confident Interval:0.0677444378535
+Mean : 0.0660294228699
+Standard Deviation : 2.34838543602e-07
+5% Confident Interval:0.0652242469788
+95% Confident Interval:0.0668166589737
 
 Name : LUAFILE
 Used Pattern : longemailpattern
 Used Input : longemailinput
-Mean : 0.526293872323
-Standard Deviation : 1.37002591993e-05
-5% Confident Interval:0.520323149363
-95% Confident Interval:0.532523107529
+Mean : 0.524669989267
+Standard Deviation : 8.07069897846e-06
+5% Confident Interval:0.520134663582
+95% Confident Interval:0.529441823959
 
 Name : LUAFILE
 Used Pattern : urlpattern
 Used Input : urlinput
-Mean : 0.0157559442075
-Standard Deviation : 2.15086689993e-07
-5% Confident Interval:0.0150022745132
-95% Confident Interval:0.0165305773417
+Mean : 0.0157329131576
+Standard Deviation : 1.84238963303e-07
+5% Confident Interval:0.0150449228287
+95% Confident Interval:0.016465716362
 
 Name : LUAFILE
 Used Pattern : jsonpattern
 Used Input : jsoninput
-Mean : 0.00725278116957
-Standard Deviation : 1.16664194419e-07
-5% Confident Interval:0.00672055880229
-95% Confident Interval:0.0078450123469
+Mean : 0.00786601001863
+Standard Deviation : 1.14252977361e-07
+5% Confident Interval:0.00733267307281
+95% Confident Interval:0.00843985080719
+
+Name : pypeg_191218_jit_newstackentry_closecapturefix
+Used Pattern : longurlpattern
+Used Input : longurlinput
+Speed relative to lua : 0.227821374307
+Mean : 0.0882931318007
+Standard Deviation : 0.00024781116713
+5% Confident Interval:0.0715221595764
+95% Confident Interval:0.120127325058
+
+Name : pypeg_191218_jit_newstackentry_closecapturefix
+Used Pattern : emailpattern
+Used Input : emailinput
+Speed relative to lua : 0.680531251292
+Mean : 0.0449350857677
+Standard Deviation : 3.87061760057e-07
+5% Confident Interval:0.0439133882523
+95% Confident Interval:0.0459608745575
+
+Name : pypeg_191218_jit_newstackentry_closecapturefix
+Used Pattern : longemailpattern
+Used Input : longemailinput
+Speed relative to lua : 0.335938312216
+Mean : 0.176256750665
+Standard Deviation : 1.07229429546e-05
+5% Confident Interval:0.171852312088
+95% Confident Interval:0.182381849289
+
+Name : pypeg_191218_jit_newstackentry_closecapturefix
+Used Pattern : longjsonpattern
+Used Input : longjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.0181174051419
+Standard Deviation : 1.54098384984e-06
+5% Confident Interval:0.016419301033
+95% Confident Interval:0.0204220676422
+
+Name : pypeg_191218_jit_newstackentry_closecapturefix
+Used Pattern : urlpattern
+Used Input : urlinput
+Speed relative to lua : 1.11359610194
+Mean : 0.0175201107644
+Standard Deviation : 2.58645729094e-07
+5% Confident Interval:0.0166844415665
+95% Confident Interval:0.018360490799
+
+Name : pypeg_191218_jit_newstackentry_closecapturefix
+Used Pattern : jsonpattern
+Used Input : jsoninput
+Speed relative to lua : 1.54257471165
+Mean : 0.0121339081364
+Standard Deviation : 2.04539818968e-07
+5% Confident Interval:0.0113895368576
+95% Confident Interval:0.0128742694855
+
+Name : pypeg_191218_jit_newstackentry_closecapturefix
+Used Pattern : verylongjsonpattern
+Used Input : verylongjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.246136303042
+Standard Deviation : 7.82621243205e-06
+5% Confident Interval:0.241572828293
+95% Confident Interval:0.250791239738
+
+Name : pypeg_170119_jit
+Used Pattern : longurlpattern
+Used Input : longurlinput
+Speed relative to lua : 0.203363179052
+Mean : 0.0788142553615
+Standard Deviation : 6.03982554992e-07
+5% Confident Interval:0.0775396442413
+95% Confident Interval:0.0800918912888
+
+Name : pypeg_170119_jit
+Used Pattern : emailpattern
+Used Input : emailinput
+Speed relative to lua : 0.769764755323
+Mean : 0.0508271225395
+Standard Deviation : 4.93685480845e-07
+5% Confident Interval:0.0496948385239
+95% Confident Interval:0.0520002889633
+
+Name : pypeg_170119_jit
+Used Pattern : longemailpattern
+Used Input : longemailinput
+Speed relative to lua : 0.556117858626
+Mean : 0.291778350917
+Standard Deviation : 5.56934481953e-06
+5% Confident Interval:0.287916345596
+95% Confident Interval:0.29570505619
+
+Name : pypeg_170119_jit
+Used Pattern : longjsonpattern
+Used Input : longjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.324610330734
+Standard Deviation : 5.5961609509e-06
+5% Confident Interval:0.320698170662
+95% Confident Interval:0.328501644135
+
+Name : pypeg_170119_jit
+Used Pattern : urlpattern
+Used Input : urlinput
+Speed relative to lua : 1.07883256903
+Mean : 0.0169731791201
+Standard Deviation : 2.85611590214e-07
+5% Confident Interval:0.0161185932159
+95% Confident Interval:0.0178820848465
+
+Name : pypeg_170119_jit
+Used Pattern : jsonpattern
+Used Input : jsoninput
+Speed relative to lua : 3.57111852916
+Mean : 0.0280904541281
+Standard Deviation : 2.3694044833e-07
+5% Confident Interval:0.02728515625
+95% Confident Interval:0.0288881921768
+
+Name : pypeg_170119_jit
+Used Pattern : verylongjsonpattern
+Used Input : verylongjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.331379383024
+Standard Deviation : 7.62394690017e-06
+5% Confident Interval:0.326908817291
+95% Confident Interval:0.336002879143
+
+Name : pypeg_191218_jit_newstackentry
+Used Pattern : longurlpattern
+Used Input : longurlinput
+Speed relative to lua : 0.149864733962
+Mean : 0.0580807079592
+Standard Deviation : 5.44533881901e-05
+5% Confident Interval:0.0497848749161
+95% Confident Interval:0.0728221035004
+
+Name : pypeg_191218_jit_newstackentry
+Used Pattern : emailpattern
+Used Input : emailinput
+Speed relative to lua : 0.672614051651
+Mean : 0.0444123176447
+Standard Deviation : 4.43372360367e-07
+5% Confident Interval:0.0433352422714
+95% Confident Interval:0.0455258369446
+
+Name : pypeg_191218_jit_newstackentry
+Used Pattern : longemailpattern
+Used Input : longemailinput
+Speed relative to lua : 0.345663820429
+Mean : 0.181359432954
+Standard Deviation : 2.10354786052e-06
+5% Confident Interval:0.179042282104
+95% Confident Interval:0.183803858757
+
+Name : pypeg_191218_jit_newstackentry
+Used Pattern : longjsonpattern
+Used Input : longjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.0173429362637
+Standard Deviation : 2.20410772064e-07
+5% Confident Interval:0.0165811347961
+95% Confident Interval:0.0181224060059
+
+Name : pypeg_191218_jit_newstackentry
+Used Pattern : urlpattern
+Used Input : urlinput
+Speed relative to lua : 1.12564279508
+Mean : 0.0177096403414
+Standard Deviation : 2.23744382153e-07
+5% Confident Interval:0.0169246768951
+95% Confident Interval:0.0184880495071
+
+Name : pypeg_191218_jit_newstackentry
+Used Pattern : jsonpattern
+Used Input : jsoninput
+Speed relative to lua : 1.64254144563
+Mean : 0.0129202474673
+Standard Deviation : 1.21554501474e-07
+5% Confident Interval:0.0123409938812
+95% Confident Interval:0.0134861135483
+
+Name : pypeg_191218_jit_newstackentry
+Used Pattern : verylongjsonpattern
+Used Input : verylongjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.245737135527
+Standard Deviation : 7.97007766184e-06
+5% Confident Interval:0.241171736717
+95% Confident Interval:0.250415701866
+
+Name : pypeg_191218_jit
+Used Pattern : longurlpattern
+Used Input : longurlinput
+Speed relative to lua : 0.141189325384
+Mean : 0.0547185168771
+Standard Deviation : 5.58232467162e-06
+5% Confident Interval:0.0514980602264
+95% Confident Interval:0.0591055393219
+
+Name : pypeg_191218_jit
+Used Pattern : emailpattern
+Used Input : emailinput
+Speed relative to lua : 0.729483075898
+Mean : 0.0481673464949
+Standard Deviation : 3.71969421889e-07
+5% Confident Interval:0.0471646881104
+95% Confident Interval:0.0491730833054
+
+Name : pypeg_191218_jit
+Used Pattern : longemailpattern
+Used Input : longemailinput
+Speed relative to lua : 0.384751633299
+Mean : 0.201867635313
+Standard Deviation : 1.25451368477e-06
+5% Confident Interval:0.200052599907
+95% Confident Interval:0.203749599457
+
+Name : pypeg_191218_jit
+Used Pattern : longjsonpattern
+Used Input : longjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.0177561621341
+Standard Deviation : 1.6986067519e-07
+5% Confident Interval:0.0170699977875
+95% Confident Interval:0.0184214830399
+
+Name : pypeg_191218_jit
+Used Pattern : urlpattern
+Used Input : urlinput
+Speed relative to lua : 1.23112690402
+Mean : 0.0193692126669
+Standard Deviation : 3.24563170761e-07
+5% Confident Interval:0.0184375143051
+95% Confident Interval:0.020307097435
+
+Name : pypeg_191218_jit
+Used Pattern : jsonpattern
+Used Input : jsoninput
+Speed relative to lua : 1.64290726361
+Mean : 0.0129231249952
+Standard Deviation : 2.07809232918e-07
+5% Confident Interval:0.0121916007996
+95% Confident Interval:0.0136907625198
+
+Name : pypeg_191218_jit
+Used Pattern : verylongjsonpattern
+Used Input : verylongjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.244983169073
+Standard Deviation : 6.07967208096e-06
+5% Confident Interval:0.24092634201
+95% Confident Interval:0.249042029381
+
+Name : pypeg_111019_jit_capturelist
+Used Pattern : longurlpattern
+Used Input : longurlinput
+Speed relative to lua : 0.150127662578
+Mean : 0.0581826070499
+Standard Deviation : 2.88265352937e-05
+5% Confident Interval:0.0516622686386
+95% Confident Interval:0.0686756181717
+
+Name : pypeg_111019_jit_capturelist
+Used Pattern : emailpattern
+Used Input : emailinput
+Speed relative to lua : 0.644686378304
+Mean : 0.0425682694915
+Standard Deviation : 2.82745120097e-07
+5% Confident Interval:0.0416964578629
+95% Confident Interval:0.0434503793716
+
+Name : pypeg_111019_jit_capturelist
+Used Pattern : longemailpattern
+Used Input : longemailinput
+Speed relative to lua : 0.293000852186
+Mean : 0.153728753972
+Standard Deviation : 1.81455740115e-06
+5% Confident Interval:0.151610794067
+95% Confident Interval:0.156023402214
+
+Name : pypeg_111019_jit_capturelist
+Used Pattern : longjsonpattern
+Used Input : longjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.0184658272946
+Standard Deviation : 1.39591911841e-07
+5% Confident Interval:0.0178540277481
+95% Confident Interval:0.0190808868408
+
+Name : pypeg_111019_jit_capturelist
+Used Pattern : urlpattern
+Used Input : urlinput
+Speed relative to lua : 1.06576754927
+Mean : 0.0167676282988
+Standard Deviation : 2.24628905386e-07
+5% Confident Interval:0.0159779310226
+95% Confident Interval:0.0175330257416
+
+Name : pypeg_111019_jit_capturelist
+Used Pattern : jsonpattern
+Used Input : jsoninput
+Speed relative to lua : 1.67728458696
+Mean : 0.0131935373652
+Standard Deviation : 1.89657545572e-07
+5% Confident Interval:0.0124759531021
+95% Confident Interval:0.0139025735855
+
+Name : pypeg_111019_jit_capturelist
+Used Pattern : verylongjsonpattern
+Used Input : verylongjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.245257141874
+Standard Deviation : 8.38375556218e-06
+5% Confident Interval:0.24055539608
+95% Confident Interval:0.250111351013
+
+Name : pypeg_110119_jit_fullcapturestack
+Used Pattern : longurlpattern
+Used Input : longurlinput
+Speed relative to lua : 0.165185009653
+Mean : 0.0640181452384
+Standard Deviation : 0.000128369025956
+5% Confident Interval:0.0516730260849
+95% Confident Interval:0.0867219877243
+
+Name : pypeg_110119_jit_fullcapturestack
+Used Pattern : emailpattern
+Used Input : emailinput
+Speed relative to lua : 0.639863628069
+Mean : 0.0422498260768
+Standard Deviation : 3.52624779951e-07
+5% Confident Interval:0.0412823390961
+95% Confident Interval:0.0432370519638
+
+Name : pypeg_110119_jit_fullcapturestack
+Used Pattern : longemailpattern
+Used Input : longemailinput
+Speed relative to lua : 0.337566146858
+Mean : 0.177110826649
+Standard Deviation : 1.49134203218e-06
+5% Confident Interval:0.175195965767
+95% Confident Interval:0.179204654694
+
+Name : pypeg_110119_jit_fullcapturestack
+Used Pattern : longjsonpattern
+Used Input : longjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.0175692726136
+Standard Deviation : 1.99067294392e-07
+5% Confident Interval:0.0168368053436
+95% Confident Interval:0.0183006668091
+
+Name : pypeg_110119_jit_fullcapturestack
+Used Pattern : urlpattern
+Used Input : urlinput
+Speed relative to lua : 1.13196588874
+Mean : 0.0178091210248
+Standard Deviation : 3.48929192225e-07
+5% Confident Interval:0.0168266057968
+95% Confident Interval:0.0187723064423
+
+Name : pypeg_110119_jit_fullcapturestack
+Used Pattern : jsonpattern
+Used Input : jsoninput
+Speed relative to lua : 1.69575258219
+Mean : 0.0133388068007
+Standard Deviation : 1.15967122464e-07
+5% Confident Interval:0.0127737855911
+95% Confident Interval:0.0138973283768
+
+Name : pypeg_110119_jit_fullcapturestack
+Used Pattern : verylongjsonpattern
+Used Input : verylongjsoninput
+Speed relative to lua : Not Availabe
+Mean : 0.245243231981
+Standard Deviation : 6.07812530942e-06
+5% Confident Interval:0.241234951019
+95% Confident Interval:0.249324879646
 

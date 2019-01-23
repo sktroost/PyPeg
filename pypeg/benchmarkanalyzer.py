@@ -29,6 +29,11 @@ def samplemean(benchmark):  # "ziehen mit zuruecklegen" + mittelwert
 def mean(iterable):
     return float(sum(iterable)) / len(iterable)
 
+def geo_mean(iterable):
+    sortedlist = iterable[:]
+    sortedlist.sort()
+    return sortedlist[len(sortedlist)/2]
+
 
 def standarddeviation(iterable):
     samplemean = mean(iterable)
@@ -62,19 +67,62 @@ def analyzebenchmark(benchmark, bignumber, debug=False):
 def analyzebenchmarks(filename="benchmarks.txt", bignumber=50000):
     data = readbenchmarks()
     outputfile = open(filename + "_analysis", "w")
+    luaspeeddict = {}  # speed of lua file to compare pypeg to
+    postanalysis = {}  # dict of lists of speedups
+    #to build geometric mean of speedups for each file
     for benchmark in data:
-        analysis = analyzebenchmark(benchmark, bignumber)
-        outputfile.write("Name : "+benchmark["Name"]+"\n")
-        outputfile.write("Used Pattern : "+benchmark["Used Pattern"]+"\n")
-        outputfile.write("Used Input : "+benchmark["Used Input"]+"\n")
-        outputfile.write("Mean : " + str(analysis[0])+"\n")
-        outputfile.write("Standard Deviation : " + str(analysis[1])+"\n")
-        outputfile.write("5% Confident Interval:" + str(analysis[2])+"\n")
-        outputfile.write("95% Confident Interval:" + str(analysis[3])+"\n\n")
-        print(benchmark["Name"] + " analyzed with pattern "
-              + benchmark["Used Pattern"])
+        if benchmark["Name"] == "LUAFILE":
+            analysis = analyzebenchmark(benchmark, bignumber)
+            writeanalysis(outputfile, benchmark, analysis)
+            luaspeeddict[benchmark["Used Input"]] = analysis[0]
+            print(benchmark["Name"] + " analyzed with pattern "
+                  + benchmark["Used Pattern"])
+            #^touple of used inputfile (to identify benchmark) and mean value
+    for benchmark in data:  # 2nd loop, this time only catching pypeg
+        if benchmark["Name"] != "LUAFILE":
+            if benchmark["Name"] not in postanalysis.keys():
+                postanalysis[benchmark["Name"]] = []
+            analysis = analyzebenchmark(benchmark, bignumber)
+            if benchmark["Used Input"] in luaspeeddict.keys():
+                luaspeed = luaspeeddict[benchmark["Used Input"]]
+                pypegspeed = analysis[0]
+                speedup = pypegspeed/luaspeed
+                postanalysis[benchmark["Name"]].append(speedup)
+            else:
+                speedup = "Not Availabe"
+            writeanalysis(outputfile, benchmark, analysis, is_lua=False, speedup=speedup)
+        #outputfile.write("Name : "+benchmark["Name"]+"\n")
+        #outputfile.write("Used Pattern : "+benchmark["Used Pattern"]+"\n")
+        #outputfile.write("Used Input : "+benchmark["Used Input"]+"\n")
+        #outputfile.write("Mean : " + str(analysis[0])+"\n")
+        #outputfile.write("Standard Deviation : " + str(analysis[1])+"\n")
+        #outputfile.write("5% Confident Interval:" + str(analysis[2])+"\n")
+        #outputfile.write("95% Confident Interval:" + str(analysis[3])+"\n\n")
+            print(benchmark["Name"] + " analyzed with pattern "
+                  + benchmark["Used Pattern"])
     outputfile.close()
+    postanalyze(filename, postanalysis)
 
+def writeanalysis(outputfile, benchmark, analysis, is_lua=True, speedup=0):
+    outputfile.write("Name : "+benchmark["Name"]+"\n")
+    outputfile.write("Used Pattern : "+benchmark["Used Pattern"]+"\n")
+    outputfile.write("Used Input : "+benchmark["Used Input"]+"\n")
+    if is_lua == False:
+        outputfile.write("Speed relative to lua : " + str(speedup)+"\n")
+    outputfile.write("Mean : " + str(analysis[0])+"\n")
+    outputfile.write("Standard Deviation : " + str(analysis[1])+"\n")
+    outputfile.write("5% Confident Interval:" + str(analysis[2])+"\n")
+    outputfile.write("95% Confident Interval:" + str(analysis[3])+"\n\n")
+
+def postanalyze(filename="benchmarks.txt", postanalysis={}):
+    filename = filename + "_analysis"
+    text = open(filename, "r").read()
+    outputfile = open(filename, "w")
+    for pypeg in postanalysis.keys():
+        outputfile.write("Average Speedup of "+pypeg+" relative to lua : "
+                         +str(geo_mean(postanalysis[pypeg]))+"\n")
+    outputfile.write(text)
+    outputfile.close()
 
 def plotraw():
     data = readbenchmarks()

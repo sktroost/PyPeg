@@ -60,13 +60,18 @@ class CaptureStack(Stack):
         self.push(status, kind, size, index)
 
 
-class CaptureList(object):
-    def __init__(self, capture=Capture(), prev=None):
-        self.capture = capture
+class CaptureList(Capture):
+    def __init__(self, status=-1, kind=-1, size=-1, index=-1, prev=None):
+        Capture.__init__(self, status, kind, size, index)
         self.prev = prev
 
     def __repr__(self):
         return str(self)
 
     def __str__(self):
-        return str(self.capture)+", "+str(self.prev)
+        if self.status == self.kind == self.size == self.index == -1:
+            return("(empty capture)")
+        return(self.statusdict[self.status]
+               + "capture " + self.kinddict[self.kind]
+               + " size:"+str(self.size) + "index: " + str(self.index)
+               +str(self.prev))

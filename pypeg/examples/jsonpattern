@@ -38,7 +38,14 @@ STRING = lpeg.P'"'*lpeg.V("CHARACTERS")*lpeg.P'"',
 
 CHARACTERS = lpeg.V("CHARACTER")^0,
 
-CHARACTER = (lpeg.S("äöü")+lpeg.R('\032\127'))-lpeg.P'"',
+CHARACTER = (lpeg.S("äöü")+lpeg.R('\032\255'))-lpeg.S([[\"]])
+            +lpeg.V("ESCAPED"),
+
+ESCAPED = lpeg.P([[\]]) * lpeg.S([["\/bnrt]])
+         +lpeg.P([[\u]]) * lpeg.V("HEX")* lpeg.V("HEX")
+         *lpeg.V("HEX")* lpeg.V("HEX"),
+
+HEX = lpeg.V("DIGIT") + lpeg.R("af","AF"),
 
 OBJECT = lpeg.P'{'*lpeg.V("MEMBERS")*lpeg.P'}'
          +lpeg.P'{'*lpeg.V("WS")*lpeg.P'}',

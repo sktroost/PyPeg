@@ -39,7 +39,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
     prev_pc = 0
     choice_points = None
     #captures = CaptureStack()
-    captures = CaptureList(Capture())
+    captures = CaptureList()
     #captures_index = captures
     while True:
         driver.jit_merge_point(instructionlist=instructionlist,
@@ -206,19 +206,19 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 #captures.append(("full", "simple", instruction.size, index))
                 #captures.append(Capture.FULLSTATUS, Capture.SIMPLEKIND,
                                         #instruction.size, index)
-                appendee = Capture(Capture.FULLSTATUS, Capture.SIMPLEKIND,
-                                   instruction.size, index)
                 assert isinstance(captures, CaptureList)
-                captures = CaptureList(appendee, captures)
+                captures = CaptureList(Capture.FULLSTATUS,
+                                       Capture.SIMPLEKIND, instruction.size,
+                                       index, captures)  # capturelist
                 #captures_index = captures
             elif instruction.capturetype == "position":
                 #captures.append(("full", "position", index))
                 #captures.append(Capture.FULLSTATUS,
                                 #Capture.POSITIONKIND, -1,index=index)
-                appendee = Capture(Capture.FULLSTATUS, Capture.POSITIONKIND,
-                                   size=-1, index=index)
                 assert isinstance(captures, CaptureList)
-                captures = CaptureList(appendee, captures)
+                captures = CaptureList(Capture.FULLSTATUS,
+                                       Capture.POSITIONKIND,-1,
+                                       index, captures)  # capturelist
                 #captures_index = captures
             else:
                 raise Exception("Unknown capture type!"
@@ -229,10 +229,10 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 #captures.append(("open", "simple", 0, index))
                 #captures.append(Capture.OPENSTATUS,
                                 #Capture.SIMPLEKIND, -1,index)
-                appendee = Capture(Capture.OPENSTATUS, Capture.SIMPLEKIND,
-                                   size=-1, index=index)
                 assert isinstance(captures, CaptureList)
-                captures = CaptureList(appendee, captures)  # capturelist
+                captures = CaptureList(Capture.OPENSTATUS,
+                                       Capture.SIMPLEKIND, -1,
+                                       index, captures)  # capturelist
                 #captures_index = captures
             else:
                 raise Exception("Unknown capture type!"
@@ -240,17 +240,17 @@ def run(instructionlist, inputstring, index=0, debug=False):
             pc += 1
         elif instruction.name == "closecapture":
             #capture = captures.storage[captures.index-1]
-            capture = captures.capture  # capturelist
+            #capture = captures.capture  # capturelist
             #previously captures_index
-            assert capture is not Capture()  # previously none
-            assert capture.status == Capture.OPENSTATUS
-            if capture.kind == Capture.SIMPLEKIND:
-                size = index - capture.index
-                capture.size = size
-                capture.index = index
-                capture.status = Capture.FULLSTATUS
+            #assert capture is not Capture()  # previously none
+            assert captures.status == Capture.OPENSTATUS
+            if captures.kind == Capture.SIMPLEKIND:
+                size = index - captures.index
+                captures.size = size
+                captures.index = index
+                captures.status = Capture.FULLSTATUS
             else:
-                raise Exception("Unknown capture type! "+str(capture.kind))
+                raise Exception("Unknown capture type! "+str(captures.kind))
             pc += 1
         else:
             raise Exception("Unknown instruction! "+instruction.name)
@@ -282,6 +282,7 @@ def spanloop(inputstring, index, instruction):
 
 
 def processcaptures(captures, inputstring, debug=False):
+    #print captures
     returnlist = []
     if debug:
         print captures
@@ -291,18 +292,18 @@ def processcaptures(captures, inputstring, debug=False):
     while captures is not None:
         #print captures.index
         #capture = captures.pop()  # STACK
-        capture = captures.capture  # capturelist
-        if capture.kind == Capture.SIMPLEKIND:
-            size = capture.size
-            index = capture.index
+        #capture = captures.capture  # capturelist
+        if captures.kind == Capture.SIMPLEKIND:
+            size = captures.size
+            index = captures.index
             newindex = index-size
             assert newindex >= 0
             assert index >= 0
             capturedstring = inputstring[newindex:index]
             returnlist.append(capturedstring)
-        elif capture.kind == Capture.POSITIONKIND:
-            app = "POSITION: "+str(capture.index)
-            returnlist.append(app)
+        elif captures.kind == Capture.POSITIONKIND:
+            appendee = "POSITION: "+str(captures.index)
+            returnlist.append(appendee)
         captures = captures.prev  # capturelist
     return returnlist
 
@@ -317,6 +318,6 @@ if __name__ == "__main__":
     inputstring = inputfile.read()
     inputfile.close()
     inputstring = inputstring.strip()
-    captures = runbypattern(pattern, inputstring)
+    captures = runbypattern(pattern, inputstring).captures
     output = processcaptures(captures, inputstring)
     print output
