@@ -4,6 +4,7 @@ from stackentry import ChoicePoint, ReturnAddress
 from stack import Stack, CaptureStack, CaptureList
 from captures import Capture
 from sys import argv
+from flags import Flags
 
 from rpython.rlib import jit
 
@@ -26,20 +27,20 @@ class VMOutput():
         self.index = index
 
 
-def runbypattern(pattern, inputstring, index=0, debug=False):
+def runbypattern(pattern, inputstring, index=0, flags=Flags()):
     bytecodestring = runpattern(pattern)
     instructionlist = parse(bytecodestring)
     instructionlist = relabel(instructionlist)
-    return run(instructionlist, inputstring, index, debug)
+    return run(instructionlist, inputstring, index, flags)
 
 
-def run(instructionlist, inputstring, index=0, debug=False):
+def run(instructionlist, inputstring, index=0, flags=Flags()):
     fail = False
     pc = 0
     prev_pc = 0
     choice_points = None
-    #captures = CaptureStack()
-    captures = CaptureList()
+    captures = CaptureStack()
+    #captures = CaptureList()
     #captures_index = captures
     while True:
         driver.jit_merge_point(instructionlist=instructionlist,
@@ -50,7 +51,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                                prev_pc=prev_pc,
                                choice_points=choice_points,
                                captures=captures)
-        if debug:
+        if flags.debug:
             print("-"*10)
             print("Program Counter: "+str(pc))
             print("Index: "+str(index))
@@ -66,7 +67,7 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 choice_points = choice_points.prev
                 while type(entry) is ReturnAddress:
                     if not choice_points:
-                        if debug:
+                        if flags.debug:
                             print("Choicepointlist empty")
                         return VMOutput(captures, True, index )
                     entry = choice_points
@@ -75,11 +76,13 @@ def run(instructionlist, inputstring, index=0, debug=False):
                     pc = jit.promote(entry.pc)
                     index = entry.index
                     #captures = entry.captures
-                    if captures is not entry.capturelength:  # capturelist
-                        assert isinstance(captures, CaptureList)
-                        assert isinstance(entry.capturelength, CaptureList)
-                        captures = entry.capturelength  # Stack
-                    if debug:
+                    #if captures is not entry.capturelength:  # capturelist
+                    if captures.index != entry.capturelength:
+                        #assert isinstance(captures, CaptureList)
+                        #assert isinstance(entry.capturelength, CaptureList)
+                        #captures = entry.capturelength  # List
+                        captures.index = entry.capturelength
+                    if flags.debug:
                         print("ChoicePoint Restored!"+str(pc))
                 else:
                     raise Exception("Unexpected Entry in choice_points! "
@@ -90,13 +93,15 @@ def run(instructionlist, inputstring, index=0, debug=False):
             raise Exception("pc is of type "+str(type(pc))
                             + "with value "+str(pc))
         instruction = instructionlist[jit.promote(pc)]
-        if debug:
+        if flags.debug:
             print instruction
         if instruction.name == "char":
-            # if next n bytecode is char:
-                # if check both chars at the same time
-                    # continue with pc += 2
-            if index >= len(inputstring):
+            if flags.optimize_chars:
+                n = look_for_chars(instructionlist, pc)
+                if n > 0 and match_many_chars(instructionlist, pc, n, inputstring, index):
+                    pc += n
+                    index += n
+            elif index >= len(inputstring):
                 fail = True
             elif instruction.character == inputstring[index]:
                 pc += 1
@@ -105,14 +110,14 @@ def run(instructionlist, inputstring, index=0, debug=False):
                 fail = True
         elif instruction.name == "end":
             if index < len(inputstring):
-                if debug:
+                if flags.debug:
                     print("Not all Input consumed at End Bytecode")
                 return VMOutput(captures, False, index )  # DEBUG: FALSE ODER TRUE?
             if not fail:
                 #TODO: remove all not closed captures
                 return VMOutput(captures, False, index )  # previously return True
             else:
-                if debug:
+                if flags.debug:
                     print("Failed End Bytecode")
                 return VMOutput(captures, True, index )
         elif instruction.name == "testchar":
@@ -162,8 +167,8 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "choice":
             pc += 1
             choice_points = ChoicePoint(instruction.goto, index,
-                                        captures, choice_points)
-            #capturelist
+                                        captures.index, choice_points)
+            #capturestack, fuer list .index entfernen
         elif instruction.name == "commit":
             # commits pop values from the stack
             pc = instruction.goto
@@ -174,7 +179,8 @@ def run(instructionlist, inputstring, index=0, debug=False):
             top = choice_points
             assert isinstance(top, ChoicePoint)
             top.index = index
-            top.capturelength = captures  # capturelist
+            #top.capturelength = captures  # capturelist
+            top.capturelength = captures.index
             pc = instruction.goto
         elif instruction.name == "set":
             if index >= len(inputstring):
@@ -204,21 +210,21 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "fullcapture":
             if instruction.capturetype == "simple":
                 #captures.append(("full", "simple", instruction.size, index))
-                #captures.append(Capture.FULLSTATUS, Capture.SIMPLEKIND,
-                                        #instruction.size, index)
-                assert isinstance(captures, CaptureList)
-                captures = CaptureList(Capture.FULLSTATUS,
-                                       Capture.SIMPLEKIND, instruction.size,
-                                       index, captures)  # capturelist
+                captures.append(Capture.FULLSTATUS, Capture.SIMPLEKIND,
+                                        instruction.size, index)
+                #assert isinstance(captures, CaptureList)
+                #captures = CaptureList(Capture.FULLSTATUS,
+                                       #Capture.SIMPLEKIND, instruction.size,
+                                       #index, captures)  # capturelist
                 #captures_index = captures
             elif instruction.capturetype == "position":
                 #captures.append(("full", "position", index))
-                #captures.append(Capture.FULLSTATUS,
-                                #Capture.POSITIONKIND, -1,index=index)
-                assert isinstance(captures, CaptureList)
-                captures = CaptureList(Capture.FULLSTATUS,
-                                       Capture.POSITIONKIND,-1,
-                                       index, captures)  # capturelist
+                captures.append(Capture.FULLSTATUS,
+                                Capture.POSITIONKIND, -1,index=index)
+                #assert isinstance(captures, CaptureList)
+                #captures = CaptureList(Capture.FULLSTATUS,
+                                       #Capture.POSITIONKIND,-1,
+                                       #index, captures)  # capturelist
                 #captures_index = captures
             else:
                 raise Exception("Unknown capture type!"
@@ -227,30 +233,31 @@ def run(instructionlist, inputstring, index=0, debug=False):
         elif instruction.name == "opencapture":
             if instruction.capturetype == "simple":
                 #captures.append(("open", "simple", 0, index))
-                #captures.append(Capture.OPENSTATUS,
-                                #Capture.SIMPLEKIND, -1,index)
-                assert isinstance(captures, CaptureList)
-                captures = CaptureList(Capture.OPENSTATUS,
-                                       Capture.SIMPLEKIND, -1,
-                                       index, captures)  # capturelist
+                captures.append(Capture.OPENSTATUS,
+                                Capture.SIMPLEKIND, -1,index)
+                #assert isinstance(captures, CaptureList)
+                #captures = CaptureList(Capture.OPENSTATUS,
+                                       #Capture.SIMPLEKIND, -1,
+                                       #index, captures)  # capturelist
                 #captures_index = captures
             else:
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
             pc += 1
         elif instruction.name == "closecapture":
-            #capture = captures.storage[captures.index-1]
+            capture = captures.storage[captures.index-1]  # STACK
+            #for list remove above line and call capture>s<.stack, etc. below
             #capture = captures.capture  # capturelist
             #previously captures_index
-            #assert capture is not Capture()  # previously none
-            assert captures.status == Capture.OPENSTATUS
-            if captures.kind == Capture.SIMPLEKIND:
-                size = index - captures.index
-                captures.size = size
-                captures.index = index
-                captures.status = Capture.FULLSTATUS
+            assert capture is not Capture()  # previously none
+            assert capture.status == Capture.OPENSTATUS
+            if capture.kind == Capture.SIMPLEKIND:
+                size = index - capture.index
+                capture.size = size
+                capture.index = index
+                capture.status = Capture.FULLSTATUS
             else:
-                raise Exception("Unknown capture type! "+str(captures.kind))
+                raise Exception("Unknown capture type! "+str(capture.kind))
             pc += 1
         else:
             raise Exception("Unknown instruction! "+instruction.name)
@@ -271,7 +278,7 @@ spanloopdriver = jit.JitDriver(reds=["index", "inputstring"],
                                get_printable_location=get_printable_location2)
 
 
-def spanloop(inputstring, index, instruction):
+def spanloop(inputstring, index, instruction):  #span optimization
     while(index < len(inputstring)
           and instruction.incharlist(inputstring[index])):
         index += 1
@@ -280,31 +287,48 @@ def spanloop(inputstring, index, instruction):
                                        instruction=instruction)
     return index
 
+def look_for_chars(instructionlist, pc):
+    count = 0
+    while pc < len(instructionlist) and instructionlist[pc].name == "char":
+        count += 1
+        pc += 1
+    return count  # at least 1 since my own name is "char"
 
-def processcaptures(captures, inputstring, debug=False):
+def match_many_chars(instructionlist, pc, n, inputstring, index):
+    if index + n > len(inputstring):
+        return False
+    ret=True
+    for i in range(n):
+        if instructionlist[pc+i].character != inputstring[index+i]:
+            ret = False
+    return ret
+    
+
+
+def processcaptures(captures, inputstring, flags=Flags()):
     #print captures
     returnlist = []
-    if debug:
+    if flags.debug:
         print captures
     #for capture in captures:
-    #while captures.index > 0:  # STACK
-#    while captures != Capture():  # capturelist
-    while captures is not None:
+    while captures.index > 0:  # STACK
+    #while captures is not None:  # capturelist
         #print captures.index
-        #capture = captures.pop()  # STACK
+        capture = captures.pop()  # STACK
+        #for list write capture = captures or access capture>s<.kind etc
         #capture = captures.capture  # capturelist
-        if captures.kind == Capture.SIMPLEKIND:
-            size = captures.size
-            index = captures.index
+        if capture.kind == Capture.SIMPLEKIND:
+            size = capture.size
+            index = capture.index
             newindex = index-size
             assert newindex >= 0
             assert index >= 0
             capturedstring = inputstring[newindex:index]
             returnlist.append(capturedstring)
-        elif captures.kind == Capture.POSITIONKIND:
-            appendee = "POSITION: "+str(captures.index)
+        elif capture.kind == Capture.POSITIONKIND:
+            appendee = "POSITION: "+str(capture.index)
             returnlist.append(appendee)
-        captures = captures.prev  # capturelist
+        #captures = captures.prev  # capturelist
     return returnlist
 
 

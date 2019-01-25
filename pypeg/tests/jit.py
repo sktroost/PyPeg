@@ -90,6 +90,7 @@ urlchar = lpeg.R("az","AZ","09") + lpeg.S("-._~:/?#@!$&*+,;=")}^0"""
          Instruction(name="end", label=6)]
         input="b"*100+"a"
         self.run_string(instructionlist,input)
+
     def test_falseloop(self):
         instructionlist = [
         Instruction(name="call", label=0, goto=5),
@@ -104,3 +105,12 @@ urlchar = lpeg.R("az","AZ","09") + lpeg.S("-._~:/?#@!$&*+,;=")}^0"""
         #parsed sowas wie MEMBER = VALUE *  VALUE
         # VALUE = '1'
         #S = MEMBER^0
+
+    def test_bug(self):
+        with open("examples/jsonpattern") as f:
+            p = f.read()
+        with open("examples/jsoninput") as f:
+            i = f.read()
+        instructionlist=relabel(parse(runpattern(p)))
+        self.run_string(instructionlist, i)
+

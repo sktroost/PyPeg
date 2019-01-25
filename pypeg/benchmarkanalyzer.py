@@ -1,12 +1,10 @@
-from simplejson import load
+from json import load
 from random import randint  # i trust the "random" module to be random.
-from matplotlib import pyplot as plt
+import sys
 
-
-def readbenchmarks(filename="benchmarks.txt"):
-    file = open(filename, "r")
-    data = load(file)
-    file.close()
+def readbenchmarks(filename):
+    with open(filename, "r") as file:
+        data = load(file)
     return data  # list of dicts. 1 dict is the benchmark for 1 file.
 
 
@@ -30,10 +28,10 @@ def mean(iterable):
     return float(sum(iterable)) / len(iterable)
 
 def geo_mean(iterable):
-    sortedlist = iterable[:]
-    sortedlist.sort()
-    return sortedlist[len(sortedlist)/2]
-
+    prod = 1.0
+    for x in iterable:
+        prod *= x
+    return prod ** (1.0 / len(iterable))
 
 def standarddeviation(iterable):
     samplemean = mean(iterable)
@@ -65,7 +63,7 @@ def analyzebenchmark(benchmark, bignumber, debug=False):
 
 
 def analyzebenchmarks(filename="benchmarks.txt", bignumber=50000):
-    data = readbenchmarks()
+    data = readbenchmarks(filename)
     outputfile = open(filename + "_analysis", "w")
     luaspeeddict = {}  # speed of lua file to compare pypeg to
     postanalysis = {}  # dict of lists of speedups
@@ -125,6 +123,8 @@ def postanalyze(filename="benchmarks.txt", postanalysis={}):
     outputfile.close()
 
 def plotraw():
+    from matplotlib import pyplot as plt
+
     data = readbenchmarks()
     benchmark = data[0]
     rawvals = benchmark["raw values"]
@@ -133,6 +133,7 @@ def plotraw():
 
 
 def plotsamples(bignumber=50000):
+    from matplotlib import pyplot as plt
     data = readbenchmarks()
     benchmark = data[0]
     xvals = []
@@ -144,4 +145,9 @@ def plotsamples(bignumber=50000):
     wtf = plt.hist(xvals, 100)
     plt.grid(True)
     plt.show()
-analyzebenchmarks()
+
+if __name__== "__main__":
+    if len(sys.argv) == 2:
+        analyzebenchmarks(sys.argv[1])
+    else:
+        analyzebenchmarks()

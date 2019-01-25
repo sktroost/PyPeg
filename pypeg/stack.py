@@ -53,7 +53,11 @@ class CaptureStack(Stack):
         self.index += 1
 
     def doublestack(self):
-        self.storage.extend([Capture()]*len(self.storage))
+        extendee = [None]*len(self.storage)
+        for i in range(len(extendee)):
+            extendee[i] = Capture()
+        self.storage.extend(extendee)
+        #self.storage.extend([Capture()]*len(self.storage))
 
     def append(self, status, kind, size, index):
         #to improve list compatibility

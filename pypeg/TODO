@@ -153,10 +153,16 @@ benchmarkanalyzer: am anfang der datei mittleres element aller speedups einer da
 
 (done)auf jeden fall: outline BA (gliederung)(BA_gliederung)
 
+REGEXes zu URLs, emails finden
+latex vorlage BA die carl mir schickt zum laufen bringen
+vor dem Wochenende: files in github so einchecken, dass der pypy bug reproduzierbar ist (zu testen indem ich gucke ob ichs aufm anderen system zum laufen kriege)
 
+mehrere chars auf einmal optimierung einführen
 
-(später)"string" bytecode einführen: mehrere chars auf einmal
-    -> neuer zwischenschritt nach parsing: bytecodeoptimierung
+(wenn ich zeit übrig hab folgende optimierung einführen:)
+    -[label1: testany/testset springt zu any geht zu jmp label1]
+    ^das kann in einem rutsch optimiert werden
+
 
 
 
