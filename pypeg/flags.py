@@ -5,8 +5,8 @@ class Flags:
         self.optimize_chars = optimize_chars
 
     def __str__(self):
-        return ("Flags(Debug: "+str(self.debug)
-               +", optimize_chars: "+str(optimize_chars))
+        return ("Flags(Debug: " + str(self.debug)
+                + ", optimize_chars: " + str(self.optimize_chars) + ")")
 
     def __repr__(self):
         return str(self)

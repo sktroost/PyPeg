@@ -69,7 +69,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                     if not choice_points:
                         if flags.debug:
                             print("Choicepointlist empty")
-                        return VMOutput(captures, True, index )
+                        return VMOutput(captures, True, index)
                     entry = choice_points
                     choice_points = choice_points.prev
                 if type(entry) is ChoicePoint:
@@ -88,7 +88,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                     raise Exception("Unexpected Entry in choice_points! "
                                     + str(entry))
             else:
-                return VMOutput(captures, True, index )
+                return VMOutput(captures, True, index)
         if not isinstance(pc, int):
             raise Exception("pc is of type "+str(type(pc))
                             + "with value "+str(pc))
@@ -98,10 +98,19 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
         if instruction.name == "char":
             if flags.optimize_chars:
                 n = look_for_chars(instructionlist, pc)
-                if n > 0 and match_many_chars(instructionlist, pc, n, inputstring, index):
-                    pc += n
-                    index += n
-            elif index >= len(inputstring):
+                if index + n <= len(inputstring):
+                    if flags.debug:
+                        print("advanced char handling engaged")
+                    if (n > 1 and
+                        match_many_chars(instructionlist, pc, n,
+                                         inputstring, index)):
+                        pc += n
+                        index += n
+                        continue
+                    else:  # optimized fail case. no need to advance chars
+                        fail = True
+                        continue
+            if index >= len(inputstring):
                 fail = True
             elif instruction.character == inputstring[index]:
                 pc += 1
@@ -112,14 +121,13 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             if index < len(inputstring):
                 if flags.debug:
                     print("Not all Input consumed at End Bytecode")
-                return VMOutput(captures, False, index )  # DEBUG: FALSE ODER TRUE?
+                return VMOutput(captures, False, index)
             if not fail:
-                #TODO: remove all not closed captures
-                return VMOutput(captures, False, index )  # previously return True
+                return VMOutput(captures, False, index)
             else:
                 if flags.debug:
                     print("Failed End Bytecode")
-                return VMOutput(captures, True, index )
+                return VMOutput(captures, True, index)
         elif instruction.name == "testchar":
             if index >= len(inputstring):
                 pc = instruction.goto
@@ -211,7 +219,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             if instruction.capturetype == "simple":
                 #captures.append(("full", "simple", instruction.size, index))
                 captures.append(Capture.FULLSTATUS, Capture.SIMPLEKIND,
-                                        instruction.size, index)
+                                instruction.size, index)
                 #assert isinstance(captures, CaptureList)
                 #captures = CaptureList(Capture.FULLSTATUS,
                                        #Capture.SIMPLEKIND, instruction.size,
@@ -220,7 +228,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             elif instruction.capturetype == "position":
                 #captures.append(("full", "position", index))
                 captures.append(Capture.FULLSTATUS,
-                                Capture.POSITIONKIND, -1,index=index)
+                                Capture.POSITIONKIND, -1, index=index)
                 #assert isinstance(captures, CaptureList)
                 #captures = CaptureList(Capture.FULLSTATUS,
                                        #Capture.POSITIONKIND,-1,
@@ -234,7 +242,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             if instruction.capturetype == "simple":
                 #captures.append(("open", "simple", 0, index))
                 captures.append(Capture.OPENSTATUS,
-                                Capture.SIMPLEKIND, -1,index)
+                                Capture.SIMPLEKIND, -1, index)
                 #assert isinstance(captures, CaptureList)
                 #captures = CaptureList(Capture.OPENSTATUS,
                                        #Capture.SIMPLEKIND, -1,
@@ -278,7 +286,7 @@ spanloopdriver = jit.JitDriver(reds=["index", "inputstring"],
                                get_printable_location=get_printable_location2)
 
 
-def spanloop(inputstring, index, instruction):  #span optimization
+def spanloop(inputstring, index, instruction):  # span optimization
     while(index < len(inputstring)
           and instruction.incharlist(inputstring[index])):
         index += 1
@@ -287,6 +295,7 @@ def spanloop(inputstring, index, instruction):  #span optimization
                                        instruction=instruction)
     return index
 
+
 def look_for_chars(instructionlist, pc):
     count = 0
     while pc < len(instructionlist) and instructionlist[pc].name == "char":
@@ -294,15 +303,13 @@ def look_for_chars(instructionlist, pc):
         pc += 1
     return count  # at least 1 since my own name is "char"
 
+
 def match_many_chars(instructionlist, pc, n, inputstring, index):
-    if index + n > len(inputstring):
-        return False
-    ret=True
+    ret = True
     for i in range(n):
         if instructionlist[pc+i].character != inputstring[index+i]:
             ret = False
     return ret
-    
 
 
 def processcaptures(captures, inputstring, flags=Flags()):

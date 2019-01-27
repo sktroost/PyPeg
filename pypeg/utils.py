@@ -52,6 +52,7 @@ def runpattern(pattern):
     ret = runlpeg("temp.lua")
     return ret
 
+
 def checklpegoutput(pattern, input):
     changed = False
     if "lpeg" in listdir("."):

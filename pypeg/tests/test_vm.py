@@ -1,7 +1,7 @@
 from pypeg.vm import run, processcaptures
 from pypeg.vm import runbypattern as pypeg_runbypattern
 from pypeg.parser import parse, relabel
-from pypeg.utils import checklpegoutput
+from pypeg.utils import checklpegoutput, runpattern
 from pypeg.flags import Flags
 
 def runbypattern(pattern, input, flags=Flags()):
@@ -213,14 +213,25 @@ def test_processcapture_full_position(flags=Flags()):
     assert processcaptures(captures, inputstring) == ["POSITION: 4"]
 
 
-def test_optimize_chars(flags=Flags(debug=False,optimize_chars=True)):
-    return  # currently this test doesnt work, still needs debugging
+def test_optimize_chars_1(flags=Flags(debug=False, optimize_chars=True)):
+    #tests if the code runs in principle
+    from pypeg.vm import look_for_chars, match_many_chars
     pattern = 'lpeg.P"Hallo"'
-    input = "Ha"
+    bytecode = relabel(parse(runpattern(pattern)))
+    assert look_for_chars(bytecode, 0,) == 5
+    assert match_many_chars(bytecode, 0, 5, "Hallo",0)
+
+def test_optimize_chars(flags=Flags(debug=False,optimize_chars=True)):
+    #return  # currently this test doesnt work, still needs debugging
+    pattern = 'lpeg.P"Hallo"'
+    input = "Hallo"
+    runbypattern(pattern,input,flags=flags)
+    input = "Hallx"
     runbypattern(pattern,input,flags=flags)
     input = "Hal"
     runbypattern(pattern,input,flags=flags)
     input = "Hall"
     runbypattern(pattern,input,flags=flags)
-    input = "Hallo"
+    input = "Halloo"
     runbypattern(pattern,input,flags=flags)
+

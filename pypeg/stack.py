@@ -78,4 +78,4 @@ class CaptureList(Capture):
         return(self.statusdict[self.status]
                + "capture " + self.kinddict[self.kind]
                + " size:"+str(self.size) + "index: " + str(self.index)
-               +str(self.prev))
+               + str(self.prev))

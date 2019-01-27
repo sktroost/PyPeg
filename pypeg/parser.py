@@ -6,6 +6,7 @@ from utils import runlpeg, charrange
 from rpython.rlib.rstring import replace
 from charlistelement import SingleChar, CharRange
 
+
 def line_to_instruction(line):
     if "':'" in line:  # escape before split
         line = replace(line, "':'", "'#'")
@@ -71,7 +72,7 @@ def line_to_instruction(line):
 
     if "\'" in line:  # assuming format of "bytecodename 'character'"
         character = line.split("'")[1]
-        character = chr(int(character,16))
+        character = chr(int(character, 16))
     while line[-1] == " ":
         line = line[:-1]
     while line[0] == " ":
