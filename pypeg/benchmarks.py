@@ -53,6 +53,7 @@ def get_patterninputpairs():
 
 
 def benchmark_exe(exe, pattern, input):
+    print("Running "+exe+" on "+pattern)
     starttime = time()
     check_output([executable_path + exe,
                  pattern_input_path + pattern,

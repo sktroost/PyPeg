@@ -12,7 +12,7 @@ python ~/pypeg_git/pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
 
 ../../pypy/pytest.py
 
-../../pypy/pytest.py -s -k falseloop tests/jit.py
+../../pypy/pytest.py -s -k optimize tests/jit.py
 
 
 
@@ -154,14 +154,22 @@ benchmarkanalyzer: am anfang der datei mittleres element aller speedups einer da
 (done)auf jeden fall: outline BA (gliederung)(BA_gliederung)
 
 REGEXes zu URLs, emails finden
+time cat longemailinput | grep '[a-zA-Z0-9]*@[a-zA-Z0-9]*.de' > /dev/null
+time cat longurlinput | grep 'http[a-zA-Z0-9._~:/?#@!$%*+,;="-]*'
+
 latex vorlage BA die carl mir schickt zum laufen bringen
-vor dem Wochenende: files in github so einchecken, dass der pypy bug reproduzierbar ist (zu testen indem ich gucke ob ichs aufm anderen system zum laufen kriege)
+(done)vor dem Wochenende: files in github so einchecken, dass der pypy bug reproduzierbar ist (zu testen indem ich gucke ob ichs aufm anderen system zum laufen kriege)
 
-mehrere chars auf einmal optimierung einführen
+(done)mehrere chars auf einmal optimierung einführen
 
-(wenn ich zeit übrig hab folgende optimierung einführen:)
-    -[label1: testany/testset springt zu any geht zu jmp label1]
-    ^das kann in einem rutsch optimiert werden
+(done)microbenchmark (testet char optimierung verglichen mit keiner char optimierung)
+(eine jit kompillierung mit, eine ohne char optimierung, patterninputpaar was aggressiv fälle testet wo viele char codes in folge auftreten)
+cfb schreiben wann meine BA frist ist
+
+
+-[label1: testany/testset springt zu any geht zu jmp label1]
+das kann in einem rutsch optimiert werden
+(für testchar: so wie die spanloop nur "andersrum")
 
 
 

@@ -66,7 +66,7 @@ def test_choice_commit(flags=Flags()):
     runbypattern(pattern, 'aa',flags=flags)
     runbypattern(pattern, 'ab',flags=flags)
     runbypattern(pattern, 'aaa',flags=flags) 
-    runbypattern(pattern, '',flags=flags) 
+    runbypattern(pattern, '',flags=Flags(debug=True)) 
 
 
 def test_testset_partial_commit(flags=Flags()):  # possible todo: find shorter example
@@ -213,6 +213,13 @@ def test_processcapture_full_position(flags=Flags()):
     assert processcaptures(captures, inputstring) == ["POSITION: 4"]
 
 
+
+def test_optimize_chars_2(flags=Flags(optimize_chars=True)):
+    pattern = 'lpeg.P"h"'
+    input = "x"
+    runbypattern(pattern, input, flags=flags)
+    input = "h"
+    runbypattern(pattern, input, flags=flags)
 def test_optimize_chars_1(flags=Flags(debug=False, optimize_chars=True)):
     #tests if the code runs in principle
     from pypeg.vm import look_for_chars, match_many_chars
@@ -234,4 +241,9 @@ def test_optimize_chars(flags=Flags(debug=False,optimize_chars=True)):
     runbypattern(pattern,input,flags=flags)
     input = "Halloo"
     runbypattern(pattern,input,flags=flags)
+
+def test_optimize_testchar(flags=Flags(optimize_testchar=True)):
+    pattern = 'lpeg.P{lpeg.P"Hallo" + 1 * lpeg.V(1)}^0'
+    input="z"*20 + "Hallo"
+    runbypattern(pattern, input, flags=flags)
 

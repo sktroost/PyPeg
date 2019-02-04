@@ -9,7 +9,7 @@ class ReturnAddress(object):
         return str(self)
 
     def __str__(self):
-        return("ReturnAddress: "+str(self.pc))
+        return("ReturnAddress: "+str(self.pc)+",\n"+str(self.prev))
 
 
 class ChoicePoint(ReturnAddress):
@@ -24,4 +24,5 @@ class ChoicePoint(ReturnAddress):
     def __str__(self):
         return("Choicepoint(pc:" + str(self.pc)
                + ", index:" + str(self.index)
-               + "capturelength:" + str(self.capturelength)+")")
+               + "capturelength:" + str(self.capturelength)+"),\n"
+               + str(self.prev))

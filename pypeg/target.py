@@ -1,6 +1,7 @@
 import sys
 from rpython.rlib import jit
 from vm import runbypattern, processcaptures
+from flags import Flags
 
 
 def main(argv):
@@ -20,7 +21,8 @@ def main(argv):
     inputstring = inputfile.read()
     inputfile.close()
     inputstring = inputstring.strip()
-    captures = runbypattern(pattern, inputstring).captures
+    flags = Flags(optimize_chars=True)
+    captures = runbypattern(pattern, inputstring, flags=flags).captures
     output = processcaptures(captures, inputstring)
     for line in output:
         print line

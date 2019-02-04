@@ -13,23 +13,28 @@ from rpython.jit.metainterp.test.test_ajit import LLJitMixin
 
 from pypeg.vm import run, runbypattern, processcaptures
 from pypeg.instruction import Instruction
+from pypeg.flags import Flags
 from pypeg.parser import parse, relabel
 from pypeg.utils import runpattern
 from pypeg.charlistelement import SingleChar, CharRange
 
 
 class TestLLtype(LLJitMixin):
-    def run_string(self, instructionlist, input):
+    def run_string(self, instructionlist, input, **flags):
+        flagsobj = Flags(**flags)
 
         def interp_w(switch):
             jit.set_param(None, "disable_unrolling", 5000)
             if switch: # hack to make arguments nicht constant
                 x = instructionlist
                 y = input
+                fl = flagsobj
             else:
                 x = []
                 y = ""
-            run(x, y)
+                fl = Flags()
+
+            run(x, y, flags=fl)
 
         interp_w(1)  # check that it runs
 
@@ -105,6 +110,13 @@ urlchar = lpeg.R("az","AZ","09") + lpeg.S("-._~:/?#@!$&*+,;=")}^0"""
         #parsed sowas wie MEMBER = VALUE *  VALUE
         # VALUE = '1'
         #S = MEMBER^0
+
+    def test_optimize_char(self):
+        pattern = 'lpeg.P{lpeg.P"Hallo" + 1 * lpeg.V(1)}^0'
+        instrs = relabel(parse(runpattern(pattern)))
+        input = "z"*100 + "Hallo"*50
+        self.run_string(instrs, input, optimize_chars=True)
+
 
     def test_bug(self):
         with open("examples/jsonpattern") as f:

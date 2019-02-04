@@ -2,6 +2,7 @@ from json import load
 from random import randint  # i trust the "random" module to be random.
 import sys
 
+
 def readbenchmarks(filename):
     with open(filename, "r") as file:
         data = load(file)
@@ -27,11 +28,13 @@ def samplemean(benchmark):  # "ziehen mit zuruecklegen" + mittelwert
 def mean(iterable):
     return float(sum(iterable)) / len(iterable)
 
+
 def geo_mean(iterable):
     prod = 1.0
     for x in iterable:
         prod *= x
     return prod ** (1.0 / len(iterable))
+
 
 def standarddeviation(iterable):
     samplemean = mean(iterable)
@@ -88,7 +91,8 @@ def analyzebenchmarks(filename="benchmarks.txt", bignumber=50000):
                 postanalysis[benchmark["Name"]].append(speedup)
             else:
                 speedup = "Not Availabe"
-            writeanalysis(outputfile, benchmark, analysis, is_lua=False, speedup=speedup)
+            writeanalysis(outputfile, benchmark, analysis, is_lua=False,
+                          speedup=speedup)
         #outputfile.write("Name : "+benchmark["Name"]+"\n")
         #outputfile.write("Used Pattern : "+benchmark["Used Pattern"]+"\n")
         #outputfile.write("Used Input : "+benchmark["Used Input"]+"\n")
@@ -101,16 +105,18 @@ def analyzebenchmarks(filename="benchmarks.txt", bignumber=50000):
     outputfile.close()
     postanalyze(filename, postanalysis)
 
+
 def writeanalysis(outputfile, benchmark, analysis, is_lua=True, speedup=0):
     outputfile.write("Name : "+benchmark["Name"]+"\n")
     outputfile.write("Used Pattern : "+benchmark["Used Pattern"]+"\n")
     outputfile.write("Used Input : "+benchmark["Used Input"]+"\n")
-    if is_lua == False:
+    if not is_lua:
         outputfile.write("Speed relative to lua : " + str(speedup)+"\n")
     outputfile.write("Mean : " + str(analysis[0])+"\n")
     outputfile.write("Standard Deviation : " + str(analysis[1])+"\n")
     outputfile.write("5% Confident Interval:" + str(analysis[2])+"\n")
     outputfile.write("95% Confident Interval:" + str(analysis[3])+"\n\n")
+
 
 def postanalyze(filename="benchmarks.txt", postanalysis={}):
     filename = filename + "_analysis"
@@ -118,9 +124,10 @@ def postanalyze(filename="benchmarks.txt", postanalysis={}):
     outputfile = open(filename, "w")
     for pypeg in postanalysis.keys():
         outputfile.write("Average Speedup of "+pypeg+" relative to lua : "
-                         +str(geo_mean(postanalysis[pypeg]))+"\n")
+                         + str(geo_mean(postanalysis[pypeg])) + "\n")
     outputfile.write(text)
     outputfile.close()
+
 
 def plotraw():
     from matplotlib import pyplot as plt
@@ -146,7 +153,7 @@ def plotsamples(bignumber=50000):
     plt.grid(True)
     plt.show()
 
-if __name__== "__main__":
+if __name__ == "__main__":
     if len(sys.argv) == 2:
         analyzebenchmarks(sys.argv[1])
     else:
