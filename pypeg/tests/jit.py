@@ -115,7 +115,7 @@ urlchar = lpeg.R("az","AZ","09") + lpeg.S("-._~:/?#@!$&*+,;=")}^0"""
         pattern = 'lpeg.P{lpeg.P"Hallo" + 1 * lpeg.V(1)}^0'
         instrs = relabel(parse(runpattern(pattern)))
         input = "z"*100 + "Hallo"*50
-        self.run_string(instrs, input, optimize_chars=True)
+        self.run_string(instrs, input, optimize_char=True, optimize_testchar=True)
 
 
     def test_bug(self):

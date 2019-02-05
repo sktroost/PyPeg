@@ -21,7 +21,7 @@ def main(argv):
     inputstring = inputfile.read()
     inputfile.close()
     inputstring = inputstring.strip()
-    flags = Flags(optimize_chars=True)
+    flags = Flags(optimize_char=True, optimize_testchar=True)
     captures = runbypattern(pattern, inputstring, flags=flags).captures
     output = processcaptures(captures, inputstring)
     for line in output:

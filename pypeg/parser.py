@@ -15,7 +15,6 @@ def line_to_instruction(line):
             labelsplit[i] = replace(labelsplit[i], "'#'", "':'")
     else:
         labelsplit = line.split(":")
-    print labelsplit
     label = int(labelsplit[0])
     line = labelsplit[1]
     charlist = []
@@ -119,6 +118,8 @@ def relabel(instructionlist):
         if instruction.goto != -1:
             currentgoto = instruction.goto
             instruction.goto = labeldict[currentgoto]
+    for i in instructionlist:
+        print str(i)
     return instructionlist
 
 

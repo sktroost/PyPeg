@@ -167,7 +167,7 @@ latex vorlage BA die carl mir schickt zum laufen bringen
 cfb schreiben wann meine BA frist ist
 
 
--[label1: testany/testset springt zu any geht zu jmp label1]
+(done)-[label1: testchar/testset springt zu any geht zu jmp label1]
 das kann in einem rutsch optimiert werden
 (für testchar: so wie die spanloop nur "andersrum")
 

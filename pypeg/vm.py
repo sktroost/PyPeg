@@ -5,6 +5,7 @@ from stack import Stack, CaptureStack, CaptureList
 from captures import Capture
 from sys import argv
 from flags import Flags
+from os import environ
 
 from rpython.rlib import jit
 
@@ -13,12 +14,17 @@ def get_printable_location(pc, prev_pc, fail, instructionlist, flags):
     instr = instructionlist[pc].name
     return "%s (%s)" % (pc, prev_pc) + " " + instr + " FAIL" * fail
 
+
 driver = jit.JitDriver(reds=["index", "inputstring",
                              "choice_points", "captures"],
                        greens=["pc", "prev_pc", "fail", "instructionlist",
                                "flags"],
                        get_printable_location=get_printable_location,
                        is_recursive=True)
+if 1:
+    jitoptions = environ.get("jitoptions", None)
+    if jitoptions:
+        jit.set_user_param(driver, jitoptions)
 
 
 class VMOutput():
@@ -101,7 +107,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             print instruction
             #sleep(0.1)
         if instruction.name == "char":
-            if flags.optimize_chars:
+            if flags.optimize_char:
                 n = look_for_chars(instructionlist, pc)
                 if index + n <= len(inputstring):
                     if flags.debug:
@@ -148,7 +154,6 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                         fail = True
                         pc = instruction.goto + 1
                     continue
-            #print ("HIER IST DER INDEX "+str(index))
             if instruction.character == inputstring[index]:
                 pc += 1
                 #doesnt consume input
@@ -159,12 +164,6 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                 pc = instruction.goto
             else:
                 pc += 1
-                #index += 1
-                #testany DOES consume input
-                #bug in bytecode for pattern
-                #'lpeg.P{ lpeg.C(lpeg.R("09")^1) + 1 * lpeg.V(1)}^0'
-                #(because if testany didnt consume input, lpeg.P(-2) code
-                #would not make any sense
         elif instruction.name == "fail":
             fail = True
         elif instruction.name == "failtwice":
@@ -177,7 +176,19 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
         elif instruction.name == "testset":
             if index >= len(inputstring):
                 pc = instruction.goto
-            elif instruction.incharlist(inputstring[index]):
+                continue
+            elif flags.optimize_testchar:
+                if flags.debug:
+                    print("advanced testset handling engaged")
+                if testchar_check_optimize(instructionlist, pc):
+                    index = testset_optimize(inputstring, index,
+                                             instruction)
+                    pc += 1
+                    if index == -1:
+                        fail = True
+                        pc = instruction.goto + 1
+                    continue
+            if instruction.incharlist(inputstring[index]):
                 pc += 1
             else:
                 pc = instruction.goto
@@ -327,14 +338,36 @@ def match_many_chars(instructionlist, pc, n, inputstring, index):
     return ret
 
 
+@jit.elidable
 def testchar_check_optimize(instructionlist, pc):
     myself = instructionlist[pc]
     if instructionlist[myself.goto].name == "any":
         nextnextinstr = instructionlist[myself.goto+1]
-        if nextnextinstr.name == "jmp"
-        and nextnextinstr.goto == myself.label:
+        if (nextnextinstr.name == "jmp"
+           and nextnextinstr.goto == myself.label):
             return True
     return False
+
+
+def get_printable_location3(instruction):
+    return "TESTSET" + str(instruction.charlist)
+
+testsetdriver = jit.JitDriver(reds=["index", "inputstring"],
+                              greens=["instruction"],
+                              get_printable_location=
+                              get_printable_location3)
+
+
+def testset_optimize(inputstring, index, instruction):
+    assert index >= 0
+    while index < len(inputstring):
+        if instruction.incharlist(inputstring[index]):
+            return index
+        index += 1
+        testsetdriver.jit_merge_point(index=index,
+                                      inputstring=inputstring,
+                                      instruction=instruction)
+    return -1
 
 
 def testchar_optimize(inputstring, index, char):

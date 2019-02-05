@@ -74,7 +74,7 @@ def test_testset_partial_commit(flags=Flags()):  # possible todo: find shorter e
     #matches arbitrarily many repetitions
     #of either of these 2 strings: "aa","zz"
     runbypattern(pattern, "",flags=flags)
-    runbypattern(pattern, "aazzaa",flags=flags)
+    runbypattern(pattern, "aazzaa",flags=Flags(debug=True))
     runbypattern(pattern, "zzaazz",flags=flags)
     runbypattern(pattern, "azazaz",flags=flags)
     runbypattern(pattern, "aaaaaz",flags=flags)
@@ -213,14 +213,27 @@ def test_processcapture_full_position(flags=Flags()):
     assert processcaptures(captures, inputstring) == ["POSITION: 4"]
 
 
+def test_orderedchoice(flags=Flags()):
+    pattern="lpeg.P{lpeg.P'x'*lpeg.V(1)*lpeg.P'x' + lpeg.P'x'}"
+    input = ""
+    runbypattern(pattern, input, flags=flags)
+    input = "x"
+    runbypattern(pattern, input, flags=flags)
+    input = "xx"
+    runbypattern(pattern, input, flags=flags)
+    input = "xxx"
+    runbypattern(pattern, input, flags=flags)
 
-def test_optimize_chars_2(flags=Flags(optimize_chars=True)):
+
+def test_optimize_char_2(flags=Flags(optimize_char=True)):
     pattern = 'lpeg.P"h"'
     input = "x"
     runbypattern(pattern, input, flags=flags)
     input = "h"
     runbypattern(pattern, input, flags=flags)
-def test_optimize_chars_1(flags=Flags(debug=False, optimize_chars=True)):
+
+
+def test_optimize_char_1(flags=Flags(debug=False, optimize_char=True)):
     #tests if the code runs in principle
     from pypeg.vm import look_for_chars, match_many_chars
     pattern = 'lpeg.P"Hallo"'
@@ -228,7 +241,8 @@ def test_optimize_chars_1(flags=Flags(debug=False, optimize_chars=True)):
     assert look_for_chars(bytecode, 0,) == 5
     assert match_many_chars(bytecode, 0, 5, "Hallo",0)
 
-def test_optimize_chars(flags=Flags(debug=False,optimize_chars=True)):
+
+def test_optimize_char(flags=Flags(debug=False,optimize_char=True)):
     #return  # currently this test doesnt work, still needs debugging
     pattern = 'lpeg.P"Hallo"'
     input = "Hallo"
@@ -241,9 +255,25 @@ def test_optimize_chars(flags=Flags(debug=False,optimize_chars=True)):
     runbypattern(pattern,input,flags=flags)
     input = "Halloo"
     runbypattern(pattern,input,flags=flags)
+    input = ""
+    runbypattern(pattern, input, flags=flags)
+
 
 def test_optimize_testchar(flags=Flags(optimize_testchar=True)):
     pattern = 'lpeg.P{lpeg.P"Hallo" + 1 * lpeg.V(1)}^0'
     input="z"*20 + "Hallo"
     runbypattern(pattern, input, flags=flags)
+    input="unrelated input"
+    runbypattern(pattern, input, flags=flags)
+    input=""
+    runbypattern(pattern, input, flags=flags)
 
+
+def test_optimize_testset(flags=Flags(optimize_testchar=True)):
+    pattern = "lpeg.P{lpeg.S'hH'*lpeg.P'allo' + 1 * lpeg.V(1)}"
+    input = "z"*20 + "Hallo"
+    runbypattern(pattern, input, flags=flags)
+    input="unrelated input"
+    runbypattern(pattern, input, flags=flags)
+    input=""
+    runbypattern(pattern, input, flags=flags)
