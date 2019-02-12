@@ -36,7 +36,7 @@ class TestLLtype(LLJitMixin):
 
             run(x, y, flags=fl)
 
-        interp_w(1)  # check that it runs
+        #interp_w(1)  # check that it runs
 
         # ast = parse_module(expand_string(str))
         self.meta_interp(interp_w, [1], listcomp=True, listops=True, backendopt=True)
@@ -115,6 +115,13 @@ urlchar = lpeg.R("az","AZ","09") + lpeg.S("-._~:/?#@!$&*+,;=")}^0"""
         pattern = 'lpeg.P{lpeg.P"Hallo" + 1 * lpeg.V(1)}^0'
         instrs = relabel(parse(runpattern(pattern)))
         input = "z"*100 + "Hallo"*50
+        self.run_string(instrs, input, optimize_char=True, optimize_testchar=True)
+
+
+    def test_optimize_testset(self):
+        pattern = 'lpeg.P{lpeg.S"hH" * lpeg.P"allo" + 1 * lpeg.V(1)}^0'
+        instrs = relabel(parse(runpattern(pattern)))
+        input = "z"*100 + "Halloyxxddcccxxddffhallojjjjjjgfffdssadgh"*50
         self.run_string(instrs, input, optimize_char=True, optimize_testchar=True)
 
 

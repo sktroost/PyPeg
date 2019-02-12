@@ -150,9 +150,9 @@ def test_fullcapture_simple(flags=Flags()):
     #fullcapture tests for captures of fixed length
     pattern = 'lpeg.C(lpeg.P("a"))'
     #captures exactly the string "a"
-    res = processcaptures(runbypattern(pattern, "a").captures,"a",flags=flags)
+    res = processcaptures(runbypattern(pattern, "a").captures,"a",flags=flags).split()
     assert res == ["a"]
-    res = processcaptures(runbypattern(pattern, "").captures,"",flags=flags)
+    res = processcaptures(runbypattern(pattern, "").captures,"",flags=flags).split()
     assert res == []
 
 
@@ -162,7 +162,7 @@ def test_fullcapture_simple_2(flags=Flags()):
     runbypattern(pattern, "",flags=flags)
     runbypattern(pattern, "a",flags=flags)
     vmout = runbypattern(pattern, "ab",flags=flags)
-    assert processcaptures(vmout.captures,"ab") == ["ab"]
+    assert processcaptures(vmout.captures,"ab").split() == ["ab"]
     runbypattern(pattern, "banana") 
 
 
@@ -170,7 +170,7 @@ def test_fullcapture_position(flags=Flags()):
     pattern = 'lpeg.P"a"^0*lpeg.Cp()'
     #captures the position of the end of a string of "a"s
     vmout = runbypattern(pattern, "a",flags=flags)
-    assert processcaptures(vmout.captures, "a") == ["POSITION: 1"]
+    assert processcaptures(vmout.captures, "a").split() == ["POSITION:1"]
     runbypattern(pattern, "b",flags=flags)
     runbypattern(pattern, "",flags=flags)
 
@@ -180,7 +180,7 @@ def test_opencapture_simple_closecapture(flags=Flags()):
     #captures a number
     captures = runbypattern(pattern, "123").captures
     assert captures is not None
-    assert processcaptures(captures, "123") == ["123"]
+    assert processcaptures(captures, "123").split() == ["123"]
     #TODO: more tests, figure out how to write this elegantly
 
 
@@ -192,7 +192,7 @@ def test_opencapture_simple_closecapture_search(flags=Flags()):  # needs more de
     captures = runbypattern(pattern, input).captures
     #print captures
     assert captures is not None
-    assert processcaptures(captures, input) == ["999","12","1"]
+    assert processcaptures(captures, input).split() == ["999","12","1"]
 
 def test_processcapture_open_simple(flags=Flags()):
     pattern = 'lpeg.R("09")^0 *  lpeg.C( lpeg.R("az")) * lpeg.R("09")^0'
@@ -201,7 +201,7 @@ def test_processcapture_open_simple(flags=Flags()):
     #followed by a number
     inputstring = "123a567"
     captures = runbypattern(pattern, inputstring).captures
-    assert processcaptures(captures, inputstring) == ["a"]
+    assert processcaptures(captures, inputstring).split() == ["a"]
     #TODO: more tests, figure out how to write this elegantly
 
 
@@ -210,7 +210,7 @@ def test_processcapture_full_position(flags=Flags()):
     #captures the position of the end of a string of "a"s
     inputstring = "aaaa"
     captures = runbypattern(pattern, inputstring).captures
-    assert processcaptures(captures, inputstring) == ["POSITION: 4"]
+    assert processcaptures(captures, inputstring).split() == ["POSITION:4"]
 
 
 def test_orderedchoice(flags=Flags()):

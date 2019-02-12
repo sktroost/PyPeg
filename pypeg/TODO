@@ -5,6 +5,12 @@ python -m coverage html
 
 PYTHONPATH=/home/erkan/pypeg_git/pypy/ python
 
+
+jitoptions=vec=1,vec_all=1 PYPYLOG=jit-summary:out ./pypeg_020219_allopt_jitvec ./examples/magiccardspattern ./examples/magiccardsinput > /dev/null
+
+
+PYPYLOG=jit-log-opt:out ./pypeg_060219_newcapturelist_performance ./examples/magiccardspattern ./examples/magiccardsinput > output.txt
+
 ----------------
 
 python ~/pypeg_git/pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
@@ -12,7 +18,7 @@ python ~/pypeg_git/pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
 
 ../../pypy/pytest.py
 
-../../pypy/pytest.py -s -k optimize tests/jit.py
+../../pypy/pytest.py -s -k optimize_testset tests/jit.py
 
 
 
@@ -164,7 +170,7 @@ latex vorlage BA die carl mir schickt zum laufen bringen
 
 (done)microbenchmark (testet char optimierung verglichen mit keiner char optimierung)
 (eine jit kompillierung mit, eine ohne char optimierung, patterninputpaar was aggressiv fälle testet wo viele char codes in folge auftreten)
-cfb schreiben wann meine BA frist ist
+(done)cfb schreiben wann meine BA frist ist
 
 
 (done)-[label1: testchar/testset springt zu any geht zu jmp label1]

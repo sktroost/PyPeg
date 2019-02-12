@@ -1,5 +1,5 @@
 class Flags(object):
-    _immutable_fields_ = ["debug", "optimize_chars", "optimize_testchar"]
+    _immutable_fields_ = ["debug", "optimize_char", "optimize_testchar"]
 
     def __init__(self, debug=False, optimize_char=False,
                  optimize_testchar=False):

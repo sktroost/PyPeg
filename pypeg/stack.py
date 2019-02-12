@@ -1,4 +1,5 @@
 from captures import Capture
+from captures import AbstractCapture, SimpleCapture, PositionCapture
 
 
 class Stack(object):
@@ -79,3 +80,12 @@ class CaptureList(Capture):
                + "capture " + self.kinddict[self.kind]
                + " size:"+str(self.size) + "index: " + str(self.index)
                + str(self.prev))
+
+
+def NewCaptureList(is_simple=False, status=0, size=0, index=0, prev=None):
+        if is_simple:
+            p = SimpleCapture(status, size, index, prev)
+        else:
+            p = PositionCapture(index, prev)
+        #self.capture = capture
+        return p

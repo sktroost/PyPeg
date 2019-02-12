@@ -1,5 +1,6 @@
-class ReturnAddress(object):
+class AbstractReturnAddress(object):
     _attrs_ = ["pc", "prev"]
+    _immutable_fields_ = ["pc", "prev"]
 
     def __init__(self, pc, prev=None):
         self.pc = pc
@@ -12,9 +13,28 @@ class ReturnAddress(object):
         return("ReturnAddress: "+str(self.pc)+",\n"+str(self.prev))
 
 
-class ChoicePoint(ReturnAddress):
+class ReturnAddress(AbstractReturnAddress):
+    pass
+
+
+class ReturnAddressPair(AbstractReturnAddress):
+    _immutable_fields_ = ["pclast"]
+
+    def __init__(self, pc0, pc1, prev=None):
+        self.pclast = pc0
+        AbstractReturnAddress.__init__(self, pc1, prev)
+
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        return("ReturnAddressPair: " + str(self.pclast) + ", " +
+               str(self.pc) + ",\n" + str(self.prev))
+
+
+class ChoicePoint(AbstractReturnAddress):
     def __init__(self, pc, index, capturelength, prev=None):
-        ReturnAddress.__init__(self, pc, prev)
+        AbstractReturnAddress.__init__(self, pc, prev)
         self.index = index
         self.capturelength = capturelength
 

@@ -8,6 +8,7 @@ from charlistelement import SingleChar, CharRange
 
 
 def line_to_instruction(line):
+    print line
     if "':'" in line:  # escape before split
         line = replace(line, "':'", "'#'")
         labelsplit = line.split(":")
@@ -118,8 +119,6 @@ def relabel(instructionlist):
         if instruction.goto != -1:
             currentgoto = instruction.goto
             instruction.goto = labeldict[currentgoto]
-    for i in instructionlist:
-        print str(i)
     return instructionlist
 
 
