@@ -55,6 +55,9 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
     captures = NewCaptureList()
     #captures_index = captures
     while True:
+        #instruction = ...
+        #if instruction.jumptarget:
+        #    driver.can_enter_jit(...)
         driver.jit_merge_point(instructionlist=instructionlist,
                                inputstring=inputstring,
                                index=index,
@@ -308,8 +311,8 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             #capture = captures.storage[captures.index-1]  # capturestack
             #assert capture is not Capture()  # previously none
             #capture = captures.capture  # new capture list
-            assert isinstance(captures, SimpleCapture),
-            "Unknown capture type! "+captures.name
+            assert isinstance(captures, SimpleCapture), \
+                   "Unknown capture type! "+captures.name
             assert captures.get_status() == SimpleCapture.OPENSTATUS
             size = index - captures.index
             captures.set_size(size)

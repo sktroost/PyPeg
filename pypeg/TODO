@@ -18,7 +18,7 @@ python ~/pypeg_git/pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
 
 ../../pypy/pytest.py
 
-../../pypy/pytest.py -s -k optimize_testset tests/jit.py
+../../pypy/pytest.py -s -k json tests/jit.py
 
 
 
@@ -176,6 +176,18 @@ latex vorlage BA die carl mir schickt zum laufen bringen
 (done)-[label1: testchar/testset springt zu any geht zu jmp label1]
 das kann in einem rutsch optimiert werden
 (für testchar: so wie die spanloop nur "andersrum")
+
+-pypy blogpost zu pypeg: bisschen erklärung was ist lpeg/PEGs, nicht in optimierungsdetails eingehen, paar benchmarks showcasen
+-einfache bytecodes der dispatch loop erklären
+beispiel blogpost hier: https://morepypy.blogspot.com/2011/10/more-compact-lists-with-list-strategies.html
+
+-zotero installieren, lpeg paper hinzufügen
+
+-seperate methode in parser: backward jump/call targets finden, instruction klasse um flag isjumptarget erweitern
+
+-choicepointstack bei hinreichend großer länge angucken, wie das verhältnis von choicepoints zu returns in der praxis ist
+
+-objektgraph (2-3) zu stellen im jit trace wo viele news sind aufzeichnen (viele >=3)
 
 
 

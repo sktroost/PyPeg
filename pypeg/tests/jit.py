@@ -125,7 +125,7 @@ urlchar = lpeg.R("az","AZ","09") + lpeg.S("-._~:/?#@!$&*+,;=")}^0"""
         self.run_string(instrs, input, optimize_char=True, optimize_testchar=True)
 
 
-    def test_bug(self):
+    def test_json(self):
         with open("examples/jsonpattern") as f:
             p = f.read()
         with open("examples/jsoninput") as f:
