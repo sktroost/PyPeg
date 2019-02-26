@@ -12,7 +12,8 @@ class Instruction(object):
     def __init__(self, name, label,
                  goto=-1, charlist=[], idx=-1,
                  size=-1, character="\0",
-                 behindvalue=-1, capturetype="\0"):
+                 behindvalue=-1, capturetype="\0",
+                 isjumptarget=False):
         self.name = name
         self.label = label
         self.goto = goto
@@ -22,6 +23,7 @@ class Instruction(object):
         self.character = character
         self.behindvalue = behindvalue
         self.capturetype = capturetype
+        self.isjumptarget = isjumptarget
 
     @jit.unroll_safe
     def incharlist(self, character):
@@ -64,6 +66,8 @@ class Instruction(object):
             ret += ", behindvalue:"+str(self.behindvalue)
         if self.capturetype != "\0":
             ret += ", capturetype:"+str(self.capturetype)
+        if self.isjumptarget:
+            ret +="is jump target"
         return ret+")"
 
     def __repr__(self):

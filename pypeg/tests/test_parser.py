@@ -60,3 +60,12 @@ def test_relabel():
                                     SingleChar(chr(0x3)),
                                     SingleChar(chr(0x39))],
                                     goto=1)
+
+
+def test_jumptargets():
+    input = "01: char '2f'\n13: span [(30-39)]\n37: testcode [(1)(3)(39)] -> 13\n42: jmp -> 37"
+    instructionlist = relabel(parse(input))
+    assert not instructionlist[0].isjumptarget
+    assert instructionlist[1].isjumptarget
+    assert instructionlist[2].isjumptarget
+    assert not instructionlist[3].isjumptarget

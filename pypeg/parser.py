@@ -119,7 +119,22 @@ def relabel(instructionlist):
         if instruction.goto != -1:
             currentgoto = instruction.goto
             instruction.goto = labeldict[currentgoto]
+    targets = findjumptargets(instructionlist)
+    addjumptargets(instructionlist, targets)
     return instructionlist
+
+
+def findjumptargets(instructionlist):
+    targets = []  # list of numbers representing jumptargets by label
+    for instruction in instructionlist:
+        if instruction.goto != -1 and instruction.goto not in targets:
+            targets.append(instruction.goto)
+    return targets
+
+def addjumptargets(instructionlist, targets):
+    for instruction in instructionlist:
+        if instruction.label in targets:
+            instruction.isjumptarget=True
 
 
 if __name__ == "__main__":
