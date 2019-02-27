@@ -1,6 +1,6 @@
 from utils import runpattern
 from parser import parse, relabel
-from stackentry import ChoicePoint, ReturnAddress, ReturnAddressPair
+from stackentry import ChoicePoint, ReturnAddress, Bottom, AbstractReturnAddress
 from stack import Stack, CaptureStack, CaptureList, NewCaptureList
 from captures import Capture, SimpleCapture, PositionCapture, AbstractCapture
 from sys import argv
@@ -48,16 +48,24 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
     fail = False
     pc = 0
     prev_pc = 0
-    choice_points = None
+    choice_points = Bottom()
     #captures = CaptureStack()
     if flags.debug:
         from time import sleep
     captures = NewCaptureList()
     #captures_index = captures
     while True:
-        #instruction = ...
-        #if instruction.jumptarget:
-        #    driver.can_enter_jit(...)
+        instruction = instructionlist[jit.promote(pc)]
+        if instruction.isjumptarget:
+            driver.can_enter_jit(instructionlist=instructionlist,
+                                 inputstring=inputstring,
+                                 index=index,
+                                 fail=fail,
+                                 pc=pc,
+                                 prev_pc=prev_pc,
+                                 choice_points=choice_points,
+                                 captures=captures,
+                                 flags=flags)
         driver.jit_merge_point(instructionlist=instructionlist,
                                inputstring=inputstring,
                                index=index,
@@ -79,33 +87,26 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
         if fail:
             fail = False
             if choice_points:  # if choice_points seems to fail
-                entry = choice_points  # .pop()
-                choice_points = choice_points.prev
-                while (type(entry) is ReturnAddress or
-                       type(entry) is ReturnAddressPair):
-                    if not choice_points:
-                        if flags.debug:
-                            print("Choicepointlist empty")
-                        return VMOutput(captures, True, index)
-                    entry = choice_points
-                    choice_points = choice_points.prev
-                if type(entry) is ChoicePoint:
-                    pc = jit.promote(entry.pc)
-                    index = entry.index
-                    #captures = entry.captures
-                    if captures is not entry.capturelength:  # capturelist
-                    #if captures.index != entry.capturelength:
-                        assert isinstance(captures, AbstractCapture)
-                        #TODO: TEST THAT BRANCHES INTO THIS CODE
-                        assert isinstance(entry.capturelength,
-                                          AbstractCapture)
-                        captures = entry.capturelength  # List
-                        #captures.index = entry.capturelength Stack
+                entry, choice_points = choice_points.find_choice_point()
+                if entry is None:
                     if flags.debug:
-                        print("ChoicePoint Restored!"+str(pc))
-                else:
-                    raise Exception("Unexpected Entry in choice_points! "
-                                    + str(entry))
+                        print("Choicepointlist empty")
+                    return VMOutput(captures, True, index)
+                assert isinstance(entry, AbstractReturnAddress)
+                pc = jit.promote(entry.pc)
+                index = entry.index
+                #captures = entry.captures
+                if captures is not entry.captures:  # capturelist
+                #if captures.index != entry.captures:
+                    assert isinstance(captures, AbstractCapture)
+                    #TODO: TEST THAT BRANCHES INTO THIS CODE
+                    assert isinstance(entry.captures,
+                                      AbstractCapture)
+                    captures = entry.captures  # List
+                    #captures.index = entry.captures Stack
+                if flags.debug:
+                    print("ChoicePoint Restored!"+str(pc))
+
             else:
                 return VMOutput(captures, True, index)
         if not isinstance(pc, int):
@@ -179,7 +180,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             fail = True
             top = choice_points
             assert top is not None
-            choice_points = choice_points.prev
+            choice_points = choice_points.pop()
             #assert isinstance(top, ReturnAddress)
             #assert isinstance(choice_points.pop(), ReturnAddress)
         elif instruction.name == "testset":
@@ -212,21 +213,21 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             #pass  # todo:make this make sense
         elif instruction.name == "choice":
             pc += 1
-            choice_points = ChoicePoint(instruction.goto, index,
-                                        captures, choice_points)
+            choice_points = choice_points.push_choice_point(instruction.goto, index,
+                                        captures)
             #^capturestack, fuer list captures durch captures.index ersetzen
         elif instruction.name == "commit":
             # commits pop values from the stack
             pc = instruction.goto
             assert choice_points is not None
-            choice_points = choice_points.prev
+            choice_points = choice_points.pop()
         elif instruction.name == "partial_commit":
             # partial commits modify the stack
             top = choice_points
             assert isinstance(top, ChoicePoint)
             top.index = index
-            top.capturelength = captures  # capturelist
-            #top.capturelength = captures.index  # capturestack
+            top.captures = captures  # capturelist
+            #top.captures = captures.index  # capturestack
             pc = instruction.goto
         elif instruction.name == "set":
             if index >= len(inputstring):
@@ -242,23 +243,12 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
         elif instruction.name == "call":
             prev_pc = pc
             currentlabel = pc
-            if isinstance(choice_points, ReturnAddress):
-                choice_points = ReturnAddressPair(currentlabel+1,
-                                                  choice_points.pc,
-                                                  choice_points.prev)
-            else:
-                choice_points = ReturnAddress(currentlabel+1, choice_points)
+            choice_points = choice_points.push_return_address(currentlabel + 1)
             pc = instruction.goto
         elif instruction.name == "ret":
             stacktop = choice_points
             assert choice_points is not None
-            if isinstance(choice_points, ReturnAddressPair):
-                pc = choice_points.pclast
-                choice_points = ReturnAddress(choice_points.pc,
-                                              choice_points.prev)
-            else:
-                choice_points = choice_points.prev
-                pc = stacktop.pc
+            pc, choice_points = choice_points.pop_return_address()
         elif instruction.name == "jmp":
             pc = instruction.goto
         elif instruction.name == "fullcapture":

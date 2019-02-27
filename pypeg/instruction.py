@@ -6,7 +6,8 @@ from rpython.rlib import jit
 class Instruction(object):
 
     _immutable_fields_ = ["name", "character",
-                          "goto", "charlist[*]", "capturetype"]
+                          "goto", "charlist[*]", "capturetype",
+                          "isjumptarget"]
     #indicates to jit that these variables are immutable. performance!
 
     def __init__(self, name, label,

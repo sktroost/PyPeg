@@ -20,7 +20,7 @@ output = "/home/erkan/pypeg_git/PyPeg/pypeg/benchmarks.txt"
 blacklisted_executables = ["pypeg_121218_nojit_spanlooprec",
                            "pypeg_121218_nojit",
                            "pypeg_121218_jit"]  # they take sooo long
-blacklisted_patterns = []
+blacklisted_patterns = ["verylongjson"]
 
 
 class TimeStamp():

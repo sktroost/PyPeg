@@ -5,7 +5,7 @@
     "Average time": 0.08441305160522461, 
     "Longest Time": 0.08441305160522461, 
     "Shortest Time": 0.08441305160522461, 
-    "# of repeats": 1, 
+
     "raw values": [
         0.08441305160522461
     ]
@@ -16,7 +16,7 @@
     "Average time": 0.04909515380859375, 
     "Longest Time": 0.04909515380859375, 
     "Shortest Time": 0.04909515380859375, 
-    "# of repeats": 1, 
+
     "raw values": [
         0.04909515380859375
     ]
@@ -27,7 +27,6 @@
     "Average time": 0.3282320499420166, 
     "Longest Time": 0.3282320499420166, 
     "Shortest Time": 0.3282320499420166, 
-    "# of repeats": 1, 
     "raw values": [
         0.3282320499420166
     ]
@@ -43,57 +42,12 @@
         0.012066841125488281
     ]
 },{
-    "Name": "pypeg_191218_jit_newstackentry_closecapturefix", 
-    "Used Pattern": "jsonpattern", 
-    "Used Input": "jsoninput", 
-    "Average time": 0.013016939163208008, 
-    "Longest Time": 0.013016939163208008, 
-    "Shortest Time": 0.013016939163208008, 
-    "# of repeats": 1, 
-    "raw values": [
-        0.013016939163208008
-    ]
-},{
-    "Name": "pypeg_191218_jit_newstackentry", 
-    "Used Pattern": "longurlpattern", 
-    "Used Input": "longurlinput", 
-    "Average time": 0.07886004447937012, 
-    "Longest Time": 0.07886004447937012, 
-    "Shortest Time": 0.07886004447937012, 
-    "# of repeats": 1, 
-    "raw values": [
-        0.07886004447937012
-    ]
-},{
-    "Name": "pypeg_191218_jit_newstackentry", 
-    "Used Pattern": "emailpattern", 
-    "Used Input": "emailinput", 
-    "Average time": 0.0535581111907959, 
-    "Longest Time": 0.0535581111907959, 
-    "Shortest Time": 0.0535581111907959, 
-    "# of repeats": 1, 
-    "raw values": [
-        0.0535581111907959
-    ]
-},{
-    "Name": "pypeg_191218_jit_newstackentry", 
-    "Used Pattern": "longemailpattern", 
-    "Used Input": "longemailinput", 
-    "Average time": 0.32627296447753906, 
-    "Longest Time": 0.32627296447753906, 
-    "Shortest Time": 0.32627296447753906, 
-    "# of repeats": 1, 
-    "raw values": [
-        0.32627296447753906
-    ]
-},{
     "Name": "pypeg_191218_jit_newstackentry", 
     "Used Pattern": "urlpattern", 
     "Used Input": "urlinput", 
     "Average time": 0.024396181106567383, 
     "Longest Time": 0.024396181106567383, 
-    "Shortest Time": 0.024396181106567383, 
-    "# of repeats": 1, 
+    "Shortest Time": 0.024396181106567383,  
     "raw values": [
         0.024396181106567383
     ]
@@ -104,7 +58,6 @@
     "Average time": 0.01018214225769043, 
     "Longest Time": 0.01018214225769043, 
     "Shortest Time": 0.01018214225769043, 
-    "# of repeats": 1, 
     "raw values": [
         0.01018214225769043
     ]

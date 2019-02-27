@@ -183,7 +183,7 @@ beispiel blogpost hier: https://morepypy.blogspot.com/2011/10/more-compact-lists
 
 -zotero installieren, lpeg paper hinzufügen
 
--seperate methode in parser: backward jump/call targets finden, instruction klasse um flag isjumptarget erweitern
+-seperate methode in parser: backward jump/call targets finden, instruction klasse um flag isjumptarget erweitern (done)
 
 -choicepointstack bei hinreichend großer länge angucken, wie das verhältnis von choicepoints zu returns in der praxis ist
 
