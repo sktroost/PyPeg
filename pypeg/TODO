@@ -189,6 +189,18 @@ beispiel blogpost hier: https://morepypy.blogspot.com/2011/10/more-compact-lists
 
 -objektgraph (2-3) zu stellen im jit trace wo viele news sind aufzeichnen (viele >=3)
 
+HA: hypothesis python googeln und für test_stackentry verwenden
+
+blogpost committen(BALD)
+
+grafiken blogpost machen (benchmarks, bytecodes)
+
+cfb liest das, committet kommentare, ich änder den blogpost entsprechend
+
+neues target compilen (neue choice points), benchmarken
+
+
+
 
 
 

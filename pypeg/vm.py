@@ -1,6 +1,6 @@
 from utils import runpattern
 from parser import parse, relabel
-from stackentry import ChoicePoint, ReturnAddress, Bottom, AbstractReturnAddress
+from stackentry import ChoicePoint, Bottom
 from stack import Stack, CaptureStack, CaptureList, NewCaptureList
 from captures import Capture, SimpleCapture, PositionCapture, AbstractCapture
 from sys import argv
@@ -92,8 +92,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                     if flags.debug:
                         print("Choicepointlist empty")
                     return VMOutput(captures, True, index)
-                assert isinstance(entry, AbstractReturnAddress)
-                pc = jit.promote(entry.pc)
+                pc = jit.promote(entry.get_pc())
                 index = entry.index
                 #captures = entry.captures
                 if captures is not entry.captures:  # capturelist

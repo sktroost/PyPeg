@@ -15,12 +15,15 @@ from collections import OrderedDict
 executable_path = "/home/erkan/pypeg_git/PyPeg/pypeg/"
 pattern_input_path = "/home/erkan/pypeg_git/PyPeg/pypeg/examples/"
 lpeg_path = "/home/erkan/pypeg_git/PyPeg/pypeg/lpeg/"
-repetitions = 30
+repetitions = 50
 output = "/home/erkan/pypeg_git/PyPeg/pypeg/benchmarks.txt"
 blacklisted_executables = ["pypeg_121218_nojit_spanlooprec",
                            "pypeg_121218_nojit",
                            "pypeg_121218_jit"]  # they take sooo long
 blacklisted_patterns = ["verylongjson"]
+
+#lua_blacklist=["5_mb_jsonpattern","500_kb_jsonpattern","100_kb_jsonpattern","80_mb_jsonpattern"]
+#^they don't run on LUA and waste time trying
 
 
 class TimeStamp():
@@ -109,11 +112,12 @@ def benchmark_all_lua():
     patterninputs = get_patterninputpairs()
     ret = []
     for pattern, input in patterninputs:
-        try:
-            ret.append(benchmark_lua(pattern, input))
-        except CalledProcessError:
-            print("Lua process for " + pattern + " on "
-                  + input + " not executed.")
+        if pattern not in lua_blacklist:
+                try:
+                    ret.append(benchmark_lua(pattern, input))
+                except CalledProcessError:
+                    print("Lua process for " + pattern + " on "
+                          + input + " not executed.")
             #exit()
     return ret
 
