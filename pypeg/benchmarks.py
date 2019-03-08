@@ -15,14 +15,15 @@ from collections import OrderedDict
 executable_path = "/home/erkan/pypeg_git/PyPeg/pypeg/"
 pattern_input_path = "/home/erkan/pypeg_git/PyPeg/pypeg/examples/"
 lpeg_path = "/home/erkan/pypeg_git/PyPeg/pypeg/lpeg/"
-repetitions = 50
+repetitions = 30
 output = "/home/erkan/pypeg_git/PyPeg/pypeg/benchmarks.txt"
 blacklisted_executables = ["pypeg_121218_nojit_spanlooprec",
                            "pypeg_121218_nojit",
                            "pypeg_121218_jit"]  # they take sooo long
 blacklisted_patterns = ["verylongjson"]
 
-#lua_blacklist=["5_mb_jsonpattern","500_kb_jsonpattern","100_kb_jsonpattern","80_mb_jsonpattern"]
+lua_blacklist = ["5_mb_jsonpattern", "500_kb_jsonpattern",
+                 "100_kb_jsonpattern", "80_mb_jsonpattern"]
 #^they don't run on LUA and waste time trying
 
 
@@ -82,6 +83,17 @@ def benchmark_all_exes():
     return ret
 
 
+def benchmark_shellscript(scriptname, inputname):
+    print("Running "+scriptname+" on "+inputname)
+    lastcwd = getcwd()
+    chdir(executable_path)
+    start = time()
+    check_output([scriptname, "./examples/"+inputname])
+    delta = time() - start
+    chdir(lastcwd)
+    return TimeStamp(scriptname, delta, scriptname, inputname)
+
+
 def benchmark_lua(patternname, inputname):
     lastcwd = getcwd()
     chdir(pattern_input_path)
@@ -105,7 +117,7 @@ def benchmark_lua(patternname, inputname):
     check_output(["lua", "temp.lua"])
     delta = time() - start
     chdir(lastcwd)
-    return TimeStamp("LUAFILE", delta, patternname, inputname)
+    return TimeStamp("LPeg", delta, patternname, inputname)
 
 
 def benchmark_all_lua():
@@ -122,9 +134,25 @@ def benchmark_all_lua():
     return ret
 
 
+def benchmark_all_shellscripts():
+    #only shell script is urlgrep.sh.
+    #in the future this will have to be refactored to be less hardcoded
+    patterninputs = get_patterninputpairs()
+    ret = []
+    for pattern, input in patterninputs:
+        if "url" in input:
+            try:
+                ret.append(benchmark_shellscript("./urlgrep.sh", input))
+            except CalledProcessError:
+                print("urlgrep.sh on "+input+" not executed.")
+    return ret
+
+
 def benchmark_all():
+    #ret = benchmark_all_shellscripts()
     ret = benchmark_all_exes()
     ret.extend(benchmark_all_lua())
+    ret.extend(benchmark_all_shellscripts())
     return ret
 
 

@@ -131,10 +131,11 @@ def findjumptargets(instructionlist):
             targets.append(instruction.goto)
     return targets
 
+
 def addjumptargets(instructionlist, targets):
     for instruction in instructionlist:
         if instruction.label in targets:
-            instruction.isjumptarget=True
+            instruction.isjumptarget = True
 
 
 if __name__ == "__main__":

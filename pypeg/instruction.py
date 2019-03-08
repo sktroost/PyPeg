@@ -68,7 +68,7 @@ class Instruction(object):
         if self.capturetype != "\0":
             ret += ", capturetype:"+str(self.capturetype)
         if self.isjumptarget:
-            ret +="is jump target"
+            ret += "is jump target"
         return ret+")"
 
     def __repr__(self):

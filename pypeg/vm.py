@@ -212,8 +212,8 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             #pass  # todo:make this make sense
         elif instruction.name == "choice":
             pc += 1
-            choice_points = choice_points.push_choice_point(instruction.goto, index,
-                                        captures)
+            choice_points = choice_points.push_choice_point(
+                            instruction.goto, index, captures)
             #^capturestack, fuer list captures durch captures.index ersetzen
         elif instruction.name == "commit":
             # commits pop values from the stack
@@ -252,56 +252,31 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             pc = instruction.goto
         elif instruction.name == "fullcapture":
             if instruction.capturetype == "simple":
-                #captures.append(Capture.FULLSTATUS, Capture.SIMPLEKIND,
-                                #instruction.size, index)  # Capturestack
                 assert isinstance(captures, AbstractCapture)  # not none
                 captures = NewCaptureList(True, SimpleCapture.FULLSTATUS,
                                           instruction.size, index, captures)
-                #captures = CaptureList(Capture.FULLSTATUS,
-                                       #Capture.SIMPLEKIND,
-                                       #instruction.size,
-                                       #index, captures)  # capturelist
-                #captures_index = captures
             elif instruction.capturetype == "position":
-                #captures.append(Capture.FULLSTATUS,  # capturestack
-                                #Capture.POSITIONKIND, -1, index=index)
                 assert isinstance(captures, AbstractCapture)  # not none
                 capture = PositionCapture(index)
                 captures = NewCaptureList(not IS_SIMPLE, index=index,
                                           prev=captures)
-                #captures = CaptureList(Capture.FULLSTATUS,
-                                       #Capture.POSITIONKIND, -1,
-                                       #index, captures)  # capturelist
-                #captures_index = captures
             else:
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
             pc += 1
         elif instruction.name == "opencapture":
             if instruction.capturetype == "simple":
-                #captures.append(Capture.OPENSTATUS,  # capturestack
-                                #Capture.SIMPLEKIND, -1, index)
                 assert isinstance(captures, AbstractCapture)
                 capture = SimpleCapture(SimpleCapture.OPENSTATUS, 0, index)
-                #size=-1 doesnt work because bitshifts
-                #( i am not implementing 2's complement lol)
                 captures = NewCaptureList(IS_SIMPLE,
                                           SimpleCapture.OPENSTATUS,
                                           0, index, captures)
-                #captures = CaptureList(Capture.OPENSTATUS,
-                                       #Capture.SIMPLEKIND, -1,
-                                       #index, captures)  # capturelist
-                #captures_index = captures
             else:
                 raise Exception("Unknown capture type!"
                                 + instruction.capturetype)
             pc += 1
         elif instruction.name == "closecapture":
-            #capture = captures.storage[captures.index-1]  # capturestack
-            #assert capture is not Capture()  # previously none
-            #capture = captures.capture  # new capture list
-            assert isinstance(captures, SimpleCapture), \
-                   "Unknown capture type! "+captures.name
+            assert isinstance(captures, SimpleCapture)
             assert captures.get_status() == SimpleCapture.OPENSTATUS
             size = index - captures.index
             captures.set_size(size)

@@ -1,11 +1,12 @@
 from rpython.rlib import jit
 
+
 class StackEntry(object):
     _attrs_ = []
 
     def push_return_address(self, pc):
         raise NotImplementedError("abstract base class")
-        
+
     def push_choice_point(self, pc, index, captures):
         return ChoicePoint(PcTuple.new(pc), index, captures, self)
 
@@ -17,9 +18,10 @@ class StackEntry(object):
 
     def pop(self):
         raise NotImplementedError("abstract base class")
-        
+
     def get_pc(self):
         raise NotImplementedError("abstract base class")
+
 
 class Bottom(StackEntry):
     def __init__(self, pcs=None):
@@ -29,12 +31,11 @@ class Bottom(StackEntry):
         if self.pcs is None:
             return Bottom(PcTuple.new(pc))
         return Bottom(jit.promote(self.pcs).push(pc))
-        
+
     def pop(self):
         raise Exception("pop from emtpy stack")
 
     def pop_return_address(self):
-        #import pdb;pdb.set_trace()
         pcs = jit.promote(self.pcs)
         if pcs is None:
             raise Exception("pop from emtpy stack")
@@ -47,7 +48,7 @@ class Bottom(StackEntry):
 class PcTuple(object):
     cache = {}
 
-    _immutable_fields_ = ["pc","prev"]
+    _immutable_fields_ = ["pc", "prev"]
 
     def __init__(self, pc, prev):
         self.pc = pc
@@ -66,11 +67,11 @@ class PcTuple(object):
     @staticmethod
     @jit.elidable
     def new_with_cache(pc, prev):
-        key = (pc,prev)
+        key = (pc, prev)
         if key in PcTuple.cache:
             return PcTuple.cache[key]
         else:
-            res = PcTuple.cache[key] = PcTuple(pc,prev)
+            res = PcTuple.cache[key] = PcTuple(pc, prev)
             return res
 
     @jit.elidable
@@ -114,22 +115,21 @@ class ChoicePoint(StackEntry):
 
     def push_return_address(self, pc):
         assert self.pcs is not None
-        return ChoicePoint(jit.promote(self.pcs).push(pc), self.index, self.captures, self.prev)
+        return ChoicePoint(jit.promote(self.pcs).push(pc),
+                           self.index, self.captures, self.prev)
 
     def pop_return_address(self):
         #import pdb;pdb.set_trace()
         pcs = jit.promote(self.pcs)
-        return pcs.pc, ChoicePoint(pcs.prev, self.index, self.captures, self.prev)
+        return pcs.pc, ChoicePoint(pcs.prev,
+                                   self.index, self.captures, self.prev)
 
     def discard_return_addresses(self):
         pcs = jit.promote(self.pcs)
         if pcs.prev is None:
             return self
-        return ChoicePoint(pcs.discard_all_but_one(), self.index, self.captures, self.prev)
+        return ChoicePoint(pcs.discard_all_but_one(),
+                           self.index, self.captures, self.prev)
 
     def find_choice_point(self):
         return self.discard_return_addresses(), self.prev
-
-
-
-

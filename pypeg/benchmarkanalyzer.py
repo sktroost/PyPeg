@@ -93,13 +93,6 @@ def analyzebenchmarks(filename="benchmarks.txt", bignumber=50000):
                 speedup = "Not Availabe"
             writeanalysis(outputfile, benchmark, analysis, is_lua=False,
                           speedup=speedup)
-        #outputfile.write("Name : "+benchmark["Name"]+"\n")
-        #outputfile.write("Used Pattern : "+benchmark["Used Pattern"]+"\n")
-        #outputfile.write("Used Input : "+benchmark["Used Input"]+"\n")
-        #outputfile.write("Mean : " + str(analysis[0])+"\n")
-        #outputfile.write("Standard Deviation : " + str(analysis[1])+"\n")
-        #outputfile.write("5% Confident Interval:" + str(analysis[2])+"\n")
-        #outputfile.write("95% Confident Interval:" + str(analysis[3])+"\n\n")
             print(benchmark["Name"] + " analyzed with pattern "
                   + benchmark["Used Pattern"])
     outputfile.close()
@@ -149,32 +142,32 @@ def plotsamples(bignumber=20000):
             x = samplemean(benchmark)
             xvals.append(x)
             if i % (bignumber/10) == 0:
-                print(str(i)+" means computed.")
-        mycolor="blue"
-        if j>0:
-            mycolor="red"
-        wtf = plt.hist(xvals, 100, histtype="step",color=mycolor)
+                print(str(i) + " means computed.")
+        mycolor = "blue"
+        if j > 0:
+            mycolor = "red"
+        wtf = plt.hist(xvals, 100, histtype="step", color=mycolor)
         plt.grid(False)
-    #plt.axis("off")
     plt.show()
 
-def plotinput(bignumber=20000,input="500_kb_urlinput", show=True):
+
+def plotinput(bignumber=20000, input="500_kb_urlinput", show=True):
     from matplotlib import pyplot as plt
     from matplotlib.patches import Rectangle
-    colors = ["red","blue","green","purple","black","orange","brown"]
+    colors = ["red", "blue", "green", "purple", "black", "orange", "brown"]
     data = readbenchmarks("benchmarks.txt")
-    c=0
+    c = 0
     handles = []
     labels = []
     for benchmark in data:
         if benchmark["Used Input"] == input:
-            handles.append(Rectangle((0,0),1,1,color=colors[c], ec="k"))
+            handles.append(Rectangle((0, 0), 1, 1, color=colors[c], ec="k"))
             labels.append(benchmark["Name"])
             xvals = []
             for i in range(bignumber):
                 x = samplemean(benchmark)
                 xvals.append(x)
-                if i% (bignumber / 10) == 0:
+                if i % (bignumber / 10) == 0:
                     print(str(i)+" means computed.")
             wtf = plt.hist(xvals, 50, histtype="step", color=colors[c])
             plt.grid(False)
@@ -186,9 +179,10 @@ def plotinput(bignumber=20000,input="500_kb_urlinput", show=True):
     if show:
         plt.show()
 
+
 def plotall():
-    inputs=[]
-    data=readbenchmarks("benchmarks.txt")
+    inputs = []
+    data = readbenchmarks("benchmarks.txt")
     for benchmark in data:
         input = benchmark["Used Input"]
         if input not in inputs:
@@ -196,7 +190,7 @@ def plotall():
     for input in inputs:
         print("Calculating plot for "+input)
         plotinput(input=input, show=False)
-            
+
 
 if __name__ == "__main__":
     if "plot" in sys.argv:
