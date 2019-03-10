@@ -6,7 +6,7 @@ The current title for the JIT, "pypeg" might change soon, since "pypeg" is alrea
 
 A more detailed overview of the Project, it's application and results are available under https://github.com/sktroost/PyPeg/blob/master/pypeg/blogpost
 
-however, here is a basic rundown:
+However, here is a basic rundown:
 
 --What is this--
 
