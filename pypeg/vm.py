@@ -49,11 +49,9 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
     pc = 0
     prev_pc = 0
     choice_points = Bottom()
-    #captures = CaptureStack()
     if flags.debug:
         from time import sleep
     captures = NewCaptureList()
-    #captures_index = captures
     while True:
         instruction = instructionlist[jit.promote(pc)]
         if instruction.isjumptarget:
@@ -94,15 +92,12 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                     return VMOutput(captures, True, index)
                 pc = jit.promote(entry.get_pc())
                 index = entry.index
-                #captures = entry.captures
-                if captures is not entry.captures:  # capturelist
-                #if captures.index != entry.captures:
+                if captures is not entry.captures:
                     assert isinstance(captures, AbstractCapture)
                     #TODO: TEST THAT BRANCHES INTO THIS CODE
                     assert isinstance(entry.captures,
                                       AbstractCapture)
                     captures = entry.captures  # List
-                    #captures.index = entry.captures Stack
                 if flags.debug:
                     print("ChoicePoint Restored!"+str(pc))
 
@@ -114,7 +109,6 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
         instruction = instructionlist[jit.promote(pc)]
         if flags.debug:
             print instruction
-            #sleep(0.1)
         if instruction.name == "char":
             if flags.optimize_char:
                 n = look_for_chars(instructionlist, pc)
@@ -180,8 +174,6 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             top = choice_points
             assert top is not None
             choice_points = choice_points.pop()
-            #assert isinstance(top, ReturnAddress)
-            #assert isinstance(choice_points.pop(), ReturnAddress)
         elif instruction.name == "testset":
             if index >= len(inputstring):
                 pc = instruction.goto
@@ -201,20 +193,19 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                 pc += 1
             else:
                 pc = instruction.goto
-        elif instruction.name == "any":  # assuming any with n=1 (see paper)
+        elif instruction.name == "any":
             if index >= len(inputstring):
                 fail = True
             else:
                 pc += 1
-                index += 1  # since n=1
+                index += 1
         elif instruction.name == "behind":
-            pc += 1
-            #pass  # todo:make this make sense
+            pc += 1  # currently broken.
+            assert False
         elif instruction.name == "choice":
             pc += 1
             choice_points = choice_points.push_choice_point(
-                            instruction.goto, index, captures)
-            #^capturestack, fuer list captures durch captures.index ersetzen
+                instruction.goto, index, captures)
         elif instruction.name == "commit":
             # commits pop values from the stack
             pc = instruction.goto
@@ -225,8 +216,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             top = choice_points
             assert isinstance(top, ChoicePoint)
             top.index = index
-            top.captures = captures  # capturelist
-            #top.captures = captures.index  # capturestack
+            top.captures = captures
             pc = instruction.goto
         elif instruction.name == "set":
             if index >= len(inputstring):
@@ -257,7 +247,6 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                                           instruction.size, index, captures)
             elif instruction.capturetype == "position":
                 assert isinstance(captures, AbstractCapture)  # not none
-                capture = PositionCapture(index)
                 captures = NewCaptureList(not IS_SIMPLE, index=index,
                                           prev=captures)
             else:
@@ -267,7 +256,6 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
         elif instruction.name == "opencapture":
             if instruction.capturetype == "simple":
                 assert isinstance(captures, AbstractCapture)
-                capture = SimpleCapture(SimpleCapture.OPENSTATUS, 0, index)
                 captures = NewCaptureList(IS_SIMPLE,
                                           SimpleCapture.OPENSTATUS,
                                           0, index, captures)
@@ -372,23 +360,18 @@ def processcaptures(captures, inputstring, flags=Flags()):
     out = rstring.StringBuilder()
     if flags.debug:
         print captures
-    #while captures.index > 0:  # capturestack
-    while captures.prev is not None:  # capturelist
-        #capture = captures.pop()  # capturestack
+    while captures.prev is not None:
         if isinstance(captures, SimpleCapture):
             size = captures.get_size()
             index = captures.index
             newindex = index-size
             assert newindex >= 0
             assert index >= 0
-            #capturedstring = inputstring[newindex:index]
             out.append_slice(inputstring, newindex, index)
             out.append("\n")
-            #returnlist.append(capturedstring)
         elif isinstance(captures, PositionCapture):
             appendee = "POSITION:"+str(captures.index)
             out.append(appendee + "\n")
-            #returnlist.append(appendee)
         captures = captures.prev  # capturelist
     return out.build()  # returnlist
 

@@ -18,7 +18,7 @@ class SingleChar(object):
 
 
 class CharRange(SingleChar):
-    _immutable_fields_ = ["maxval"]  # maybe +=. ask cfb
+    _immutable_fields_ = ["maxval"]
 
     def __init__(self, minval, maxval):
         SingleChar.__init__(self, minval)

@@ -9,7 +9,7 @@ PYTHONPATH=/home/erkan/pypeg_git/pypy/ python
 jitoptions=vec=1,vec_all=1 PYPYLOG=jit-summary:out ./pypeg_020219_allopt_jitvec ./examples/magiccardspattern ./examples/magiccardsinput > /dev/null
 
 
-PYPYLOG=jit-log-opt:out ./pypeg_060219_newcapturelist_performance ./examples/magiccardspattern ./examples/magiccardsinput > output.txt
+PYPYLOG=jit-log-opt:out ./pypeg_270219_newchoicepoints ./examples/5_mb_jsonpattern ./examples/5_mb_jsoninput > output.txt
 
 ----------------
 
@@ -191,13 +191,50 @@ beispiel blogpost hier: https://morepypy.blogspot.com/2011/10/more-compact-lists
 
 HA: hypothesis python googeln und für test_stackentry verwenden
 
-blogpost committen(BALD)
+blogpost committen(BALD) (done)
 
-grafiken blogpost machen (benchmarks, bytecodes)
+grafiken blogpost machen (benchmarks, bytecodes) (done)
 
 cfb liest das, committet kommentare, ich änder den blogpost entsprechend
 
-neues target compilen (neue choice points), benchmarken
+neues target compilen (neue choice points), benchmarken (done)
+
+-plots: gucken ob origin bei 0,0 ist, wenn nicht machen, dass der origin bei 0,0 ist
+-probieren: rohedaten statt gesampelte plotten, ggf. boxplots statt hists
+-seaborn: plot lib für python, angeblich einfacher und hübscher als matplotlib, ma gucken wie ich drauf klarkomme
+-url pattern für grep von hand schreiben, damit es semantisch meinem lpeg pattern gleicht (http gefolgt von url valid chars)
+-grep kann man mit filename callen, dann spar ich mir die cat geschichte
+-(optional): ripgrep, performantere grep alternative
+
+-privates repo mit latex quelle bachelorarbeit, mich hinzufügen
+
+
+
+- add flag for jumptargets
+- add flag for stack(!), UncompressedBottom erstellt einen naiven stack (mit choicepoints und retaddrs wie ich sie erwarten würde), der
+                         alle calls die der stack hat unterstützt, sodass ich mir spare, jedesmal wenn in der vm was am stack gemacht wird das flag
+                         abzufragen. (optional: flag hat 3 werte, dritter ist für list)
+
+    if flags.compressed_stack:
+        choice_points = Bottom()
+    else:
+        choice_points = UncompressedBottom()
+- NewCaptureList refactoren: umbenennen in new_capture_list, verschieben nach captures.py, nachdenken ob funktion nötig
+- nachdenken: flag für incharlist
+
+paar slides für morgen, ggf libreoffice / google slides.
+
+- ziele:
+    - rpython jit für lpegs
+    - schauen, ob jit auch für string matching geeignet ist
+- kurze einführung lpegs, zwei beispiele!
+    1. hallo welt
+    2. urls
+- bytecode
+    - wird nach bytecode kompiliert
+    - zwei bytecodes, char, choice, mit python code
+- ergebnisse
+    - zwei benchmarks 
 
 
 
