@@ -28,8 +28,8 @@ This speedup is achieved by using PyPy's RPython toolchain, which allows our pyt
 
 Currently, this software requires a lot of dependencies and is not very user friendly. Current requirements include
 
--lua5.2 (as LPeg is used for bytecode generation)
--cffi (pypy requirement)
+-lua5.2 (installed in ubuntu by opening a terminal and typing sudo apt-get install lua5.2)
+-libffi-dev (pypy requirement) (installed in ubuntu by opening a terminal and typing sudo apt-get install libffi-dev)
 -pypy source (https://bitbucket.org/pypy/pypy/src)
 
 A more detailed installation guide will be available soon.
