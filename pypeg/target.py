@@ -37,7 +37,6 @@ def main(argv):
     t1 = time.time()
     captures = runbypattern(pattern, inputstring, flags=flags).captures
     output = processcaptures(captures, inputstring)
-
     t2 = time.time()
     if we_are_translated():
         gct2 = rgc.get_stats(rgc.TOTAL_GC_TIME)
@@ -45,7 +44,6 @@ def main(argv):
         gct2 = 0
 
     print output
-
     if printtime:
         print "time:", t2 - t1
         print "gc time:", (gct2 - gct1) / 1000.    

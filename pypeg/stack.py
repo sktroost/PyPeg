@@ -2,7 +2,7 @@ from captures import Capture
 from captures import AbstractCapture, SimpleCapture, PositionCapture
 
 
-class Stack(object):
+class NOTIMPLEMENTEDStack(object):
     def __init__(self):
         self.storage = [None]*128
         self.index = 0
@@ -37,7 +37,7 @@ class Stack(object):
         return ret
 
 
-class CaptureStack(Stack):
+class NOTIMPLEMENTEDCaptureStack(NOTIMPLEMENTEDStack):
     def __init__(self):
         self.storage = [None]*128
         for i in range(len(self.storage)):
@@ -82,7 +82,7 @@ class CaptureList(Capture):
                + str(self.prev))
 
 
-def NewCaptureList(is_simple=False, status=0, size=0, index=0, prev=None):
+def new_capturelist(is_simple=False, status=0, size=0, index=0, prev=None):
         if is_simple:
             p = SimpleCapture(status, size, index, prev)
         else:

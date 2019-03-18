@@ -1,7 +1,7 @@
 from utils import runpattern
 from parser import parse, relabel
 from stackentry import ChoicePoint, Bottom
-from stack import Stack, CaptureStack, CaptureList, NewCaptureList
+from stack import new_capturelist
 from captures import Capture, SimpleCapture, PositionCapture, AbstractCapture
 from sys import argv
 from flags import Flags
@@ -48,13 +48,16 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
     fail = False
     pc = 0
     prev_pc = 0
-    choice_points = Bottom()
+    if flags.optimize_choicepoints:
+        choice_points = Bottom()
+    else:
+        pass  # todo: naive stack
     if flags.debug:
         from time import sleep
-    captures = NewCaptureList()
+    captures = new_capturelist()
     while True:
         instruction = instructionlist[jit.promote(pc)]
-        if instruction.isjumptarget:
+        if instruction.isjumptarget and flags.jumptargets:
             driver.can_enter_jit(instructionlist=instructionlist,
                                  inputstring=inputstring,
                                  index=index,
@@ -243,11 +246,11 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
         elif instruction.name == "fullcapture":
             if instruction.capturetype == "simple":
                 assert isinstance(captures, AbstractCapture)  # not none
-                captures = NewCaptureList(True, SimpleCapture.FULLSTATUS,
+                captures = new_capturelist(True, SimpleCapture.FULLSTATUS,
                                           instruction.size, index, captures)
             elif instruction.capturetype == "position":
                 assert isinstance(captures, AbstractCapture)  # not none
-                captures = NewCaptureList(not IS_SIMPLE, index=index,
+                captures = new_capturelist(not IS_SIMPLE, index=index,
                                           prev=captures)
             else:
                 raise Exception("Unknown capture type!"
@@ -256,7 +259,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
         elif instruction.name == "opencapture":
             if instruction.capturetype == "simple":
                 assert isinstance(captures, AbstractCapture)
-                captures = NewCaptureList(IS_SIMPLE,
+                captures = new_capturelist(IS_SIMPLE,
                                           SimpleCapture.OPENSTATUS,
                                           0, index, captures)
             else:
