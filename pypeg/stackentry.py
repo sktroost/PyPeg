@@ -124,6 +124,10 @@ class ChoicePoint(StackEntry):
         return pcs.pc, ChoicePoint(pcs.prev,
                                    self.index, self.captures, self.prev)
 
+    def mod_choice_point(self, index, captures):
+        self.index = index
+        self.captures = captures
+
     def discard_return_addresses(self):
         pcs = jit.promote(self.pcs)
         if pcs.prev is None:

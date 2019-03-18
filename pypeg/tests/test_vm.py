@@ -213,7 +213,7 @@ def test_processcapture_full_position(flags=Flags()):
     assert processcaptures(captures, inputstring).split() == ["POSITION:4"]
 
 
-def test_orderedchoice(flags=Flags()):
+def test_orderedchoice(flags=Flags(debug=True, optimize_char=False)):
     pattern="lpeg.P{lpeg.P'x'*lpeg.V(1)*lpeg.P'x' + lpeg.P'x'}"
     input = ""
     runbypattern(pattern, input, flags=flags)

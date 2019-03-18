@@ -1,6 +1,7 @@
 from utils import runpattern
 from parser import parse, relabel
 from stackentry import ChoicePoint, Bottom
+from naive_stack import NaiveBottom
 from stack import new_capturelist
 from captures import Capture, SimpleCapture, PositionCapture, AbstractCapture
 from sys import argv
@@ -51,7 +52,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
     if flags.optimize_choicepoints:
         choice_points = Bottom()
     else:
-        pass  # todo: naive stack
+        choice_points = NaiveBottom()
     if flags.debug:
         from time import sleep
     captures = new_capturelist()
@@ -87,8 +88,11 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                 print "FAIL"
         if fail:
             fail = False
-            if choice_points:  # if choice_points seems to fail
-                entry, choice_points = choice_points.find_choice_point()
+            if choice_points:
+                try:
+                    entry, choice_points = choice_points.find_choice_point()
+                except AttributeError:
+                    import pdb; pdb.set_trace()
                 if entry is None:
                     if flags.debug:
                         print("Choicepointlist empty")
@@ -96,6 +100,8 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                 pc = jit.promote(entry.get_pc())
                 index = entry.index
                 if captures is not entry.captures:
+                    print("RESTORING CAPTURES FROM "+captures)
+                    print("TO "+entry.captures)
                     assert isinstance(captures, AbstractCapture)
                     #TODO: TEST THAT BRANCHES INTO THIS CODE
                     assert isinstance(entry.captures,
@@ -217,9 +223,9 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
         elif instruction.name == "partial_commit":
             # partial commits modify the stack
             top = choice_points
-            assert isinstance(top, ChoicePoint)
-            top.index = index
-            top.captures = captures
+            #assert isinstance(top, ChoicePoint)  # commenting this out might break pypy
+            top.mod_choice_point(index, captures)
+            #re-set index and captures for current CP
             pc = instruction.goto
         elif instruction.name == "set":
             if index >= len(inputstring):
