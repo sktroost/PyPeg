@@ -1,9 +1,12 @@
-class NaiveReturnAddress(object):
+class Nothing(object):
+    pass  # best pypy workaround ever
+
+class NaiveReturnAddress(Nothing):
     def __init__(self, pc):
         self.pc = pc
 
 
-class NaiveChoicePoint(object):
+class NaiveChoicePoint(Nothing):
     def __init__(self, pc, index, captures):
         self.pc = pc
         self.index = index
@@ -55,15 +58,12 @@ class NaiveBottom(NaiveStack):
     def push_return_address(self, pc):
         entry = NaiveReturnAddress(pc)
         self.push(entry)
-        print self
         return self
     def push_choice_point(self, pc, index, captures):
         entry = NaiveChoicePoint(pc, index, captures)
         self.push(entry)
-        print self
         return self
     def pop_return_address(self):
-        print self
         return self.realpop().pc, self
     def mod_choice_point(self, index, captures):
         #assert stacktop is instance choicepoint
@@ -74,5 +74,4 @@ class NaiveBottom(NaiveStack):
         entry = self.realpop()
         while isinstance(entry, NaiveReturnAddress):
             entry = self.realpop()
-        print self
         return entry, self

@@ -89,10 +89,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
         if fail:
             fail = False
             if choice_points:
-                try:
-                    entry, choice_points = choice_points.find_choice_point()
-                except AttributeError:
-                    import pdb; pdb.set_trace()
+                entry, choice_points = choice_points.find_choice_point()
                 if entry is None:
                     if flags.debug:
                         print("Choicepointlist empty")
@@ -100,8 +97,6 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                 pc = jit.promote(entry.get_pc())
                 index = entry.index
                 if captures is not entry.captures:
-                    print("RESTORING CAPTURES FROM "+captures)
-                    print("TO "+entry.captures)
                     assert isinstance(captures, AbstractCapture)
                     #TODO: TEST THAT BRANCHES INTO THIS CODE
                     assert isinstance(entry.captures,
