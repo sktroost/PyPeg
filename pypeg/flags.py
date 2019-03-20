@@ -3,7 +3,7 @@ class Flags(object):
 
     def __init__(self, debug=False, optimize_char=True,
                  optimize_testchar=True, jumptargets=True,
-	             optimize_choicepoints=False):
+	             optimize_choicepoints=True):
         self.debug = debug
         self.optimize_char = optimize_char
         self.optimize_testchar = optimize_testchar

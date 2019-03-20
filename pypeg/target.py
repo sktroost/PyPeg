@@ -28,6 +28,8 @@ def main(argv):
     inputfile.close()
     inputstring = inputstring.strip()
     flags = Flags(optimize_char=True, optimize_testchar=True)
+    if not flags.optimize_choicepoints:
+        jit.set_param(None, "enable_opts", "intbounds:rewrite:virtualize:string:pure:earlyforce:heap")
 
     
     if we_are_translated():

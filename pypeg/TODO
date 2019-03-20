@@ -14,6 +14,7 @@ PYPYLOG=jit-log-opt:out ./pypeg_270219_newchoicepoints ./examples/5_mb_jsonpatte
 ----------------
 
 python ~/pypeg_git/pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
+python ~//pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
 ^mit jit. ohne -Ojit für ohne
 
 ../../pypy/pytest.py
@@ -206,11 +207,11 @@ neues target compilen (neue choice points), benchmarken (done)
 -grep kann man mit filename callen, dann spar ich mir die cat geschichte
 -(optional): ripgrep, performantere grep alternative
 
--privates repo mit latex quelle bachelorarbeit, mich hinzufügen
+-privates repo mit latex quelle bachelorarbeit, cfb hinzufügen
 
 
 
-- add flag for jumptargets
+- add flag for jumptargets(done)
 - add flag for stack(!), UncompressedBottom erstellt einen naiven stack (mit choicepoints und retaddrs wie ich sie erwarten würde), der
                          alle calls die der stack hat unterstützt, sodass ich mir spare, jedesmal wenn in der vm was am stack gemacht wird das flag
                          abzufragen. (optional: flag hat 3 werte, dritter ist für list)

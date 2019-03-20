@@ -122,16 +122,6 @@ def postanalyze(filename="benchmarks.txt", postanalysis={}):
     outputfile.close()
 
 
-def plotraw():
-    from matplotlib import pyplot as plt
-
-    data = readbenchmarks("benchmarks.txt")
-    benchmark = data[0]
-    rawvals = benchmark["raw values"]
-    wtf = plt.hist(rawvals, 100)
-    plt.show()
-
-
 def plotsamples(bignumber=20000):
     from matplotlib import pyplot as plt
     data = readbenchmarks("benchmarks.txt")
@@ -150,8 +140,37 @@ def plotsamples(bignumber=20000):
         plt.grid(False)
     plt.show()
 
+def boxplot(datasets, labels, colors):
+    from pylab import (plot, show, savefig, xlim, figure,
+                       hold, ylim, legend, boxplot, setp, axes)
 
-def plotinput(bignumber=20000, input="500_kb_urlinput", show=True):
+    from matplotlib.patches import Rectangle
+    from matplotlib import pyplot as plt
+    def setBoxColors(bp):
+        for i in range(len(datasets)):
+            setp(bp["boxes"][i], color=colors[i])
+            setp(bp["caps"][2*i], color=colors[i])
+            setp(bp["caps"][2*i+1], color=colors[i])
+            setp(bp["whiskers"][2*i], color=colors[i])
+            setp(bp["whiskers"][2*i+1], color=colors[i])
+            setp(bp["fliers"][2*i], color=colors[i])
+            setp(bp["fliers"][2*i+1], color=colors[i])
+            setp(bp["medians"][i], color=colors[i])
+    fig = figure()
+    ax = axes()
+    hold(True)
+    bp = boxplot(datasets, positions=range(1,len(datasets)+1),
+                 widths=0.6,vert=False)
+    setBoxColors(bp)
+    myhandles, mylabels=[],[]
+    for i in range(len(labels)):
+        myhandles.append(Rectangle((0, 0), 1, 1,
+                       color=colors[i], ec="k"))
+        mylabels.append(labels[i])
+    plt.legend(myhandles, mylabels)
+    show()
+    #return bp()
+def plotinput(bignumber=20000, input="500_kb_urlinput", show=True, plottype="boxplot"):
     from matplotlib import pyplot as plt
     from matplotlib.patches import Rectangle
     colors = ["red", "blue", "green", "purple", "black", "orange", "brown"]
@@ -169,9 +188,17 @@ def plotinput(bignumber=20000, input="500_kb_urlinput", show=True):
                 xvals.append(x)
                 if i % (bignumber / 10) == 0:
                     print(str(i)+" means computed.")
-            wtf = plt.hist(xvals, 50, histtype="step", color=colors[c])
+            if plottype == "boxplot":
+                wtf = plt.boxplot(xvals)
+            else:
+                wtf = plt.hist(xvals, 100, histtype="step", color=colors[c])
             plt.grid(False)
             c += 1
+    ax = plt.gca()
+    top = ax.get_ylim()[1]
+    right = ax.get_xlim()[1]
+    ax.set_ylim(bottom=0, top=top)
+    ax.set_xlim(left=0, right=right)
     plt.legend(handles, labels)
     plt.title("Sampled means for "+input)
     plt.savefig("./plots/plot_"+input+".png")
@@ -179,8 +206,34 @@ def plotinput(bignumber=20000, input="500_kb_urlinput", show=True):
     if show:
         plt.show()
 
-
-def plotall():
+def plotraw(input="500_kb_urlinput", show=True):
+    from matplotlib import pyplot as plt
+    from matplotlib.patches import Rectangle
+    colors = ["red", "blue", "green", "purple", "black", "orange", "brown"]
+    data = readbenchmarks("benchmarks.txt")
+    c = 0
+    handles = []
+    labels = []
+    for benchmark in data:
+        if benchmark["Used Input"] == input:
+            handles.append(Rectangle((0, 0), 1, 1, color=colors[c], ec="k"))
+            labels.append(benchmark["Name"])
+            xvals = benchmark["raw values"]
+            wtf = plt.hist(xvals, 50, histtype="step", color=colors[c])
+            plt.grid(False)
+            c += 1
+    ax = plt.gca()
+    top = ax.get_ylim()[1]
+    right = ax.get_xlim()[1]
+    ax.set_ylim(bottom=0, top=top)
+    ax.set_xlim(left=0, right=right)
+    plt.legend(handles, labels)
+    plt.title("Raw values for "+input)
+    plt.savefig("./plots/rawplot_"+input+".png")
+    plt.figure()
+    if show:
+        plt.show()
+def plotall(raw=False):
     inputs = []
     data = readbenchmarks("benchmarks.txt")
     for benchmark in data:
@@ -189,12 +242,15 @@ def plotall():
             inputs.append(input)
     for input in inputs:
         print("Calculating plot for "+input)
-        plotinput(input=input, show=False)
+        if raw:
+            plotraw(input=input, show=False)
+        else:
+            plotinput(input=input, show=False)
 
 
 if __name__ == "__main__":
     if "plot" in sys.argv:
-        plotall()
+        plotall("raw" in sys.argv)
     elif len(sys.argv) == 2:
         analyzebenchmarks(sys.argv[1])
     else:

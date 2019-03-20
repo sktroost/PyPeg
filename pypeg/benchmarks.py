@@ -1,3 +1,4 @@
+
 from time import time
 from subprocess import check_output, CalledProcessError
 from json import dumps
@@ -12,14 +13,12 @@ from collections import OrderedDict
 #(files in path pattern_input_path that share a prefix
 #and end with "pattern" and "input")
 #writes result to file specified in output constant
-executable_path = "/home/erkan/pypeg_git/PyPeg/pypeg/"
-pattern_input_path = "/home/erkan/pypeg_git/PyPeg/pypeg/examples/"
-lpeg_path = "/home/erkan/pypeg_git/PyPeg/pypeg/lpeg/"
+executable_path = "/home/sktroost/PyPeg/pypeg/"
+pattern_input_path = "/home/sktroost/PyPeg/pypeg/examples/"
+lpeg_path = "/home/sktroost/PyPeg/pypeg/lpeg/"
 repetitions = 30
-output = "/home/erkan/pypeg_git/PyPeg/pypeg/benchmarks.txt"
-blacklisted_executables = ["pypeg_121218_nojit_spanlooprec",
-                           "pypeg_121218_nojit",
-                           "pypeg_121218_jit"]  # they take sooo long
+output = "/home/sktroost/PyPeg/pypeg/benchmarks.txt"
+blacklisted_executables = ["pypeg_180319_nochoicepointopt"]  # broken
 blacklisted_patterns = ["verylongjson"]
 
 lua_blacklist = ["5_mb_jsonpattern", "500_kb_jsonpattern",
