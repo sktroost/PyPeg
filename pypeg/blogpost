@@ -1,5 +1,7 @@
 An RPython JIT for Parsing Expression Grammars
 
+In this Project we have utilized RPython infrastructure to generate a JIT for a non-typical use-case: string pattern matching.
+The work in this Project is heavily based on [Parsing Expression Grammars](bford.info/pub/lang/peg.pdf) and [LPeg](www.inf.puc-rio.br/~roberto/docs/peg.pdf), an implementation of PEGs designed to be used in Lua.
 In this Post i will showcase some of the work that went into this Project, Explain PEGs in general and LPeg, and show some results.
 
 $cf: einleitung eher so: wir verwenden rpython infrastruktur um einen jit für einen interpreter in einem ganz anderen bereich zu kriegen, string pattern matching
@@ -23,14 +25,17 @@ As we will see in the "results" section, this expectation is fulfilled.
 --PARSING EXPRESSION GRAMMARS--
 
 Parsing Expression Grammas (PEGs) are a type of formal grammar similar to context-free grammars, with the main difference being that it is unambiguous.
-This is achieved by redefining the ambiguous choice operator of CFGs (usually noted as "|") as an <em>ordered</em> choice operator.
+This is achieved by redefining the ambiguous choice operator of CFGs (usually noted as "|") as an *ordered* choice operator.
 In practice this means that if a rule in a PEG presents a choice, a PEG parser should prioritize the leftmost choice.
 Practical uses include Parsing and Pattern-searching. In comparison to regular expressions PEGs stand out as being able to be parsed in linear time, being strictly more powerful than REs, as well as being arguably more readable.
 
 
 --LPEG--
 
-LPeg is a PEG Interpreter written in C to be used in the Lua programming language. I use a modified version of LPeg to parse PEGs and pass the generated Intermediate Representation, the LPeg Bytecode, to my VM.
+LPeg an implementation of PEGs written in C to be used in the Lua programming language.
+A crucial detail of this implementation is that it parses high level function calls, translating them to Bytecode, and interpreting that Bytecode.
+Therefore, we are able to improve that implementation by replacing LPegs C-interpreter with an RPython-Jit.
+I use a modified version of LPeg to parse PEGs and pass the generated Intermediate Representation, the LPeg Bytecode, to my VM.
 
 
 --THE LPEG LIBRARY--
@@ -57,10 +62,9 @@ Operation           What it produces
 lpeg.C(pattern)     the match for patten plus all captures made by pattern
 lpeg.Cp()           the current position (matches the empty string)
 
-(Note that these tables are lifted from Roberto Ierusalimschy's website, the creator of LPeg.)
+(tables taken from the [LPeg documentation](http://www.inf.puc-rio.br/~roberto/lpeg/))
 
-$cf erklären, dass lpeg diese patterns in bytecodes übersetzt
-
+These patterns are translated into bytecode by LPeg, at which point we are able to pass them into our own VM.
 
 --The VM--
 
@@ -162,6 +166,62 @@ Sets the top element of the capturestack to full and sets its size value using t
 
 
 --The RPython Implementation--
+
+These, and many more Bytecodes were implemented in an RPython-interpreter.
+By adding jit-hints, we were able to generate an efficient Jit.
+We will now take a closer look at some implementations of bytecodes.
+
+-any-
+
+[...]
+        elif instruction.name == "any":
+            if index >= len(inputstring):
+                fail = True
+            else:
+                pc += 1
+                index += 1
+[...]
+
+The code for the any-bytecode is relatively straight-forward. It either advances the pc and index or sets the VM into the fail-state,
+depending on if the end of the inputstring has been reached or not.
+
+-char-
+
+[...]
+        if instruction.name == "char":
+            if index >= len(inputstring):
+                fail = True
+            elif instruction.character == inputstring[index]:
+                pc += 1
+                index += 1
+            else:
+                fail = True
+[...]
+
+The char-bytecode also looks as one would expect. If the VM's string index is out of range or the character comparison fails, the VM is set into the fail-state,
+otherwise the pc and index are advanced by 1.
+Note that this code-example has been simplified for clarity, since the actual implementation includes a jit-optimization that allows the VM to execute multiple successive char-bytecodes at once.
+
+-jump-
+
+[...]
+        elif instruction.name == "jmp":
+            pc = instruction.goto
+[...]
+$skt JMP erklärung hier
+
+-choice-
+
+[...]
+        elif instruction.name == "choice":
+            pc += 1
+            choice_points = choice_points.push_choice_point(
+                instruction.goto, index, captures)
+[...]
+
+As we can see here, the choice-bytecode puts a choice point onto the stack that may be consumed if the VM is in the fail-state. This choice point consists of a pc to jump to and index and capture values at the time the choice point was created.
+An ongoing topic of jit-optimization is which data structure is best suited to store choice points and return addresses.
+Besides naive implementations of stacks and single-linked lists, more case-specific structures are also being tested for performance.
 
 $cf: erklären, dass du die bytecodes in einem RPython-interpreter implementiert und jit-hints hinzugefügt hast
 - interpreter-code für any, char, choice, jump
