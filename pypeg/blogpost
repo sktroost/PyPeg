@@ -200,6 +200,7 @@ depending on if the end of the inputstring has been reached or not.
 
 The char-bytecode also looks as one would expect. If the VM's string index is out of range or the character comparison fails, the VM is set into the fail-state,
 otherwise the pc and index are advanced by 1.
+As you can see, the character we're comparing the current inputstring to is stored in the instruction object.
 Note that this code-example has been simplified for clarity, since the actual implementation includes a jit-optimization that allows the VM to execute multiple successive char-bytecodes at once.
 
 -jump-
@@ -208,7 +209,8 @@ Note that this code-example has been simplified for clarity, since the actual im
         elif instruction.name == "jmp":
             pc = instruction.goto
 [...]
-$skt JMP erklärung hier
+
+The jmp-bytecode comes with a goto-value which is a pc that is used to overwrite the current pc.
 
 -choice-
 
@@ -253,7 +255,7 @@ This time we are looking at a different pattern, one that parses JSON used on a 
 
 Since LPeg has a defined maximum depth of 400 for the choicepoints and returnaddresses Stack, LPeg by default refuses to parse files as small as 100kb. This raises the question if LPeg was intended to be used for parsing. Until a way to increase LPeg's maximum stack depth is found, no comparisons to LPeg can be performed at this scale. This has been a low priority in the past but may be addressed in the future.
 
-
+To conclude, we see that at sufficiently high filesizes, our JIT outperforms the native LPeg-interpreter. This lower boundary is currently as low as 100kb in filesize.
 $cf: conclusion results: lohnt sich nur, wenn dateien groß genug sind
 
 --CONCLUSION--
