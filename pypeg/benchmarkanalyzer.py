@@ -167,12 +167,18 @@ def boxplot(datasets, labels, colors):
         myhandles.append(Rectangle((0, 0), 1, 1,
                        color=colors[i], ec="k"))
         mylabels.append(labels[i])
-    plt.legend(myhandles, mylabels)
-    show()
-    #return bp()
+    mybox = ax.get_position()
+    ax.set_position([0.025, mybox.y0, mybox.width * 0.6, mybox.height])
+    plt.legend(myhandles, mylabels,loc='center left', bbox_to_anchor=(1, 0.5))
+    #ax = plt.subplot(111)
+    #mybox = ax.get_position()
+    
+    # Put a legend to the right of the current axis
+    #show()
+    return plt
 def plotinput(bignumber=20000, input="500_kb_urlinput", show=True, plottype="boxplot"):
     from matplotlib import pyplot as plt
-    from matplotlib.patches import Rectangle
+    from matplotlib.patches import  Rectangle
     colors = ["red", "blue", "green", "purple", "black", "orange", "brown"]
     data = readbenchmarks("benchmarks.txt")
     c = 0
@@ -205,8 +211,7 @@ def plotinput(bignumber=20000, input="500_kb_urlinput", show=True, plottype="box
     plt.figure()
     if show:
         plt.show()
-
-def plotraw(input="500_kb_urlinput", show=True):
+def plotraw(input="500_kb_urlinput", show=True, box=False):
     from matplotlib import pyplot as plt
     from matplotlib.patches import Rectangle
     colors = ["red", "blue", "green", "purple", "black", "orange", "brown"]
@@ -214,26 +219,35 @@ def plotraw(input="500_kb_urlinput", show=True):
     c = 0
     handles = []
     labels = []
+    boxplotdata, boxplotlabels = [],[]
     for benchmark in data:
-        if benchmark["Used Input"] == input:
-            handles.append(Rectangle((0, 0), 1, 1, color=colors[c], ec="k"))
-            labels.append(benchmark["Name"])
-            xvals = benchmark["raw values"]
-            wtf = plt.hist(xvals, 50, histtype="step", color=colors[c])
-            plt.grid(False)
-            c += 1
+        if box:
+            if benchmark["Used Input"] == input:
+                boxplotdata.append(benchmark["raw values"])
+                boxplotlabels.append(benchmark["Name"])
+        else:
+            if benchmark["Used Input"] == input:
+                handles.append(Rectangle((0, 0), 1, 1, color=colors[c], ec="k"))
+                labels.append(benchmark["Name"])
+                xvals = benchmark["raw values"]
+                wtf = plt.hist(xvals, 50, histtype="step", color=colors[c])
+                plt.grid(False)
+                c += 1
+    if box:
+        boxplot(boxplotdata, boxplotlabels, colors)
     ax = plt.gca()
     top = ax.get_ylim()[1]
     right = ax.get_xlim()[1]
     ax.set_ylim(bottom=0, top=top)
     ax.set_xlim(left=0, right=right)
-    plt.legend(handles, labels)
+    if not box:
+        plt.legend(handles, labels)
     plt.title("Raw values for "+input)
     plt.savefig("./plots/rawplot_"+input+".png")
     plt.figure()
     if show:
         plt.show()
-def plotall(raw=False):
+def plotall(raw=False, box=False):
     inputs = []
     data = readbenchmarks("benchmarks.txt")
     for benchmark in data:
@@ -243,14 +257,14 @@ def plotall(raw=False):
     for input in inputs:
         print("Calculating plot for "+input)
         if raw:
-            plotraw(input=input, show=False)
+            plotraw(input=input, show=False, box=box)
         else:
             plotinput(input=input, show=False)
 
 
 if __name__ == "__main__":
     if "plot" in sys.argv:
-        plotall("raw" in sys.argv)
+        plotall("raw" in sys.argv, "box" in sys.argv)
     elif len(sys.argv) == 2:
         analyzebenchmarks(sys.argv[1])
     else:
