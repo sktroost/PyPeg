@@ -32,7 +32,7 @@ Practical uses include Parsing and Pattern-searching. In comparison to regular e
 
 --LPEG--
 
-LPeg an implementation of PEGs written in C to be used in the Lua programming language.
+LPeg is an implementation of PEGs written in C to be used in the Lua programming language.
 A crucial detail of this implementation is that it parses high level function calls, translating them to Bytecode, and interpreting that Bytecode.
 Therefore, we are able to improve that implementation by replacing LPegs C-interpreter with an RPython-Jit.
 I use a modified version of LPeg to parse PEGs and pass the generated Intermediate Representation, the LPeg Bytecode, to my VM.
