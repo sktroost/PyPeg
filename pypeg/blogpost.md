@@ -1,20 +1,21 @@
 An RPython JIT for Parsing Expression Grammars
 
-In this project we have used the RPython infrastructure to generate a JIT for a
+In this project we have used the RPython infrastructure to generate an RPython
+JIT for a
 less-typical use-case: string pattern matching. The work in this project is
 based on [Parsing Expression Grammars](bford.info/pub/lang/peg.pdf) and
 [LPeg](www.inf.puc-rio.br/~roberto/docs/peg.pdf), an implementation of PEGs
-designed to be used in Lua. In this post i will showcase some of the work that
-went into this Project, explain PEGs in general and LPeg, and show some
-results.
+designed to be used in Lua. In this post I will showcase some of the work that
+went into this project, explain PEGs in general and LPeg in particular, and
+show some results.
 
 
 # Parsing Expression Grammars
 
 Parsing Expression Grammas (PEGs) are a type of formal grammar similar to
-context-free grammars, with the main difference being that it is unambiguous.
+context-free grammars, with the main difference being that they are unambiguous.
 This is achieved by redefining the ambiguous choice operator of CFGs (usually
-noted as "|") as an *ordered* choice operator. In practice this means that if a
+noted as ``|``) as an *ordered* choice operator. In practice this means that if a
 rule in a PEG presents a choice, a PEG parser should prioritize the leftmost
 choice. Practical uses include parsing and pattern-searching. In comparison to
 regular expressions PEGs stand out as being able to be parsed in linear time,
@@ -25,11 +26,11 @@ being strictly more powerful than REs, as well as being arguably more readable.
 
 LPeg is an implementation of PEGs written in C to be used in the Lua
 programming language. A crucial detail of this implementation is that it parses
-high level function calls, translating them to Bytecode, and interpreting that
+high level function calls, translating them to bytecode, and interpreting that
 bytecode. Therefore, we are able to improve that implementation by replacing
-LPegs C-interpreter with an RPython-JIT. I use a modified version of LPeg to
+LPegs C-interpreter with an RPython JIT. I use a modified version of LPeg to
 parse PEGs and pass the generated Intermediate Representation, the LPeg
-Bytecode, to my VM.
+bytecode, to my VM.
 
 
 # The LPeg Library
@@ -69,13 +70,13 @@ to pass them into our own VM.
 
 # The VM
 
-The State of the VM at any point is defined by the following variables:
+The state of the VM at any point is defined by the following variables:
 
-- PC: program counter indicating the current instruction
-- fail: an indicator that some match failed and the VM must backtrack
-- index: counter indicating the current character of the inputstring
-- stackentries: stack of return addresses and choice points (more details later)
-- captures: stack of capture objects (more details later)
+- `PC`: program counter indicating the current instruction
+- `fail`: an indicator that some match failed and the VM must backtrack
+- `index`: counter indicating the current character of the input string
+- `stackentries`: stack of return addresses and choice points
+- `captures`: stack of capture objects
 
 The execution of bytecode manipulates the values of these variables in order to
 produce some output. How that works and what that output looks like will be
@@ -84,58 +85,59 @@ explained now.
 
 # The Bytecode
 
-For simplicity's sake i will not go over every individual bytecode, but instead
-choose some required to communicate core concepts.
+For simplicity's sake I will not go over every individual bytecode, but instead
+choose some that exemplify the core concepts of the bytecode set.
 
 ## generic character matching bytecodes
 
-- any: Checks if theres any characters left in the inputstring. If it succeeds
-  it advances the index and PC by 1, if not it sets fail to true
+- `any`: Checks if there's any characters left in the inputstring. If it succeeds
+  it advances the index and PC by 1, if not the bytecode fails.
 
-- char c: Checks if the current character is equal to c. It handles success and
-  failure like the any-bytecode.
+- `char c`: Checks if there is another bytecode in the input and if that
+  character is equal to `c`. Otherwise the bytecode fails.
 
-- set c1-c2 Checks if the current character is between (including) c1 and c2.
-  It handles success and failure like the any-bytecode.
+- `set c1-c2`: Checks if there is another bytecode in the input and if that
+  character is between (including) c1 and c2. Otherwise the bytecode fails.
 
 These bytecodes are the easiest to understand with very little impact on the
-VM. What setting fail to true actually means to the VM will be explained when
+VM. What it means for a bytecode to fail will be explained when
 we get to control flow bytecodes.
 
 ## control flow bytecodes
 
-- jmp n: Sets PC to n, effectively jumping to the n'th bytecode. Has no defined
+- `jmp n`: Sets `PC` to `n`, effectively jumping to the n'th bytecode. Has no defined
   failure case.
 
-- testchar c n: This is a lookahead bytecode. If the current character is equal
-  to c it advances the PC but not the index. Otherwise it jumps to n.
+- `testchar c n`: This is a lookahead bytecode. If the current character is equal
+  to `c` it advances the `PC` but not the index. Otherwise it jumps to `n`.
 
-- call n: Puts a return address (the current PC + 1) on the stackentries stack
-  and sets the PC to n. Has no defined failure case.
+- `call n`: Puts a return address (the current `PC + 1`) on the `stackentries` stack
+  and sets the `PC` to `n`. Has no defined failure case.
 
-- ret: Opposite of call. Removes the top value of the stackentries stack (if
+- `ret`: Opposite of `call`. Removes the top value of the `stackentries` stack (if
   the string of bytecodes is valid this will always be a return address) and
-  sets the PC to the removed value. Has no defined failure case.
+  sets the `PC` to the removed value. Has no defined failure case.
 
-- choice n: Puts a choice point on the stackentries stack. Has no defined
+- `choice n`: Puts a choice point on the `stackentries` stack. Has no defined
   failure case.
 
-- commit n: Removes the top value of the stackentries stack (if the string of
-  bytecodes is valid this will always be a choice point) and jumps to n. Has no
+- `commit n`: Removes the top value of the `stackentries` stack (if the string of
+  bytecodes is valid this will always be a choice point) and jumps to `n`. Has no
   defined failure case.
 
 
 ## failure handling, backtracking and choice points
 
-A choice point consist of the VM's current index and capturestack as well as a
-PC (which is not necessarily the VM's PC at the time of creating the
-choicepoint).
+A choice point consist of the VM's current `index` and `capturestack` as well as a
+`PC`. This is not the VM's `PC` at the time of creating the
+choicepoint, but rather the `PC` where we should continue trying to find
+matches when a failure occurs later.
 
 Now that we have talked about choice points, we can talk about how the VM
 behaves in the fail state. If the VM is in the fail state, it removed entries
 from the stackentries stack until it finds a choice point. Then it backtracks
 by restoring the VM to the state defined by the choice point. If no choice
-point is found this way, the VM halts.
+point is found this way, no match was found in the string and the VM halts.
 
 
 ## Captures
@@ -145,7 +147,7 @@ matched" or "the pattern did not match". Imagine searching a document for an
 IPv4 address and all your program responded was "I found one". In order to
 recieve additional information about our inputstring, captures are used.
 
--the capture object-
+### The capture object
 
 In my VM, two types of capture objects are supported, one of them being the
 position capture. It consists of a single index referencing the point in the
@@ -160,23 +162,23 @@ length.
 
 Capture objects are created using the following bytecodes:
 
-- Fullcapture Position: Pushes a positioncapture object with the current index
+- `Fullcapture Position`: Pushes a positioncapture object with the current index
   value to the capture stack.
 
-- Fullcapture Simple n: Pushes a simplecapture object with current index value
+- `Fullcapture Simple n`: Pushes a simplecapture object with current index value
   and size=n to the capture stack.
 
-- Opencapture Simple: Pushes an open simplecapture object with current index
+- `Opencapture Simple`: Pushes an open simplecapture object with current index
   value and undetermined size to the capture stack.
 
-- closecapture: Sets the top element of the capturestack to full and sets its
+- `closecapture`: Sets the top element of the capturestack to full and sets its
   size value using the difference between the current index and the index of
   the capture object.
 
 
 # The RPython Implementation
 
-These, and many more Bytecodes were implemented in an RPython-interpreter.
+These, and many more bytecodes were implemented in an RPython-interpreter.
 By adding jit hints, we were able to generate an efficient JIT.
 We will now take a closer look at some implementations of bytecodes.
 
@@ -192,9 +194,9 @@ We will now take a closer look at some implementations of bytecodes.
 ...
 ```
 
-The code for the any-bytecode is relatively straight-forward. It either
-advances the pc and index or sets the VM into the fail-state,
-depending on if the end of the inputstring has been reached or not.
+The code for the `any`-bytecode is relatively straight-forward. It either
+advances the `pc` and `index` or sets the VM into the fail state,
+depending on whether the end of the inputstring has been reached or not.
 
 
 ``` python
@@ -210,13 +212,13 @@ depending on if the end of the inputstring has been reached or not.
 ...
 ```
 
-The char-bytecode also looks as one would expect. If the VM's string index is
-out of range or the character comparison fails, the VM is set into the
-fail-state, otherwise the pc and index are advanced by 1. As you can see, the
+The `char`-bytecode also looks as one would expect. If the VM's string index is
+out of range or the character comparison fails, the VM is put into the
+fail state, otherwise the `pc` and `index` are advanced by 1. As you can see, the
 character we're comparing the current inputstring to is stored in the
-instruction object. Note that this code-example has been simplified for
+instruction object (note that this code-example has been simplified for
 clarity, since the actual implementation includes a jit-optimization that
-allows the VM to execute multiple successive char-bytecodes at once.
+allows the VM to execute multiple successive char-bytecodes at once).
 
 
 ``` python
@@ -226,7 +228,8 @@ allows the VM to execute multiple successive char-bytecodes at once.
 ...
 ```
 
-The jmp-bytecode comes with a goto-value which is a pc that is used to overwrite the current pc.
+The `jmp`-bytecode comes with a `goto` value which is a `pc` that we want
+execution to continue at.
 
 
 ``` python
@@ -238,9 +241,10 @@ The jmp-bytecode comes with a goto-value which is a pc that is used to overwrite
 ...
 ```
 
-As we can see here, the choice-bytecode puts a choice point onto the stack that
+As we can see here, the `choice`-bytecode puts a choice point onto the stack that
 may be backtracked to if the VM is in the fail-state. This choice point
-consists of a pc to jump to and index and capture values at the time the choice
+consists of a pc to jump to which is determined by the bytecode.
+But it also includes the current `index` and `captures` values at the time the choice
 point was created. An ongoing topic of jit optimization is which data structure
 is best suited to store choice points and return addresses. Besides naive
 implementations of stacks and single-linked lists, more case-specific
