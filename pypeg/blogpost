@@ -1,25 +1,8 @@
 An RPython JIT for Parsing Expression Grammars
 
-In this Project we have utilized RPython infrastructure to generate a JIT for a non-typical use-case: string pattern matching.
-The work in this Project is heavily based on [Parsing Expression Grammars](bford.info/pub/lang/peg.pdf) and [LPeg](www.inf.puc-rio.br/~roberto/docs/peg.pdf), an implementation of PEGs designed to be used in Lua.
-In this Post i will showcase some of the work that went into this Project, Explain PEGs in general and LPeg, and show some results.
-
-$cf: einleitung eher so: wir verwenden rpython infrastruktur um einen jit für einen interpreter in einem ganz anderen bereich zu kriegen, string pattern matching
-$cf: verwende markdown-syntax für links
-$cf: links einfügen
-
---JITS VS INTERPRETERS--
-
-$cf kann für blog post weg, aber in arbeit wird es eine sektion
-
-Both JITs (just-in-time compilers) and interpreters serve the same purpose: to allow the execution of programming code that is not native to the hardware.
-In the case of the LPeg Interpreter, this is performed by parsing the high-level language into an intermediate representation (bytecode), and executing this bytecode directly.
-A JIT does the same thing, but with a twist: it compiles part of the program that are frequently executed to machine code at runtime.
-It decides to do so by detecting frequently iterated loops of the program.
-
-We would expect a JIT to have significantly better performance than an equivalent interpreter given enough time of a given program is spent in loops, so that the time cost of generating machine code on the fly is outweighed by the time benefit of executing machine code as opposed to having to interpret the corresponding bytecode.
-
-As we will see in the "results" section, this expectation is fulfilled.
+In this project we have used the RPython infrastructure to generate a JIT for a less-typical use-case: string pattern matching.
+The work in this project is based on [Parsing Expression Grammars](bford.info/pub/lang/peg.pdf) and [LPeg](www.inf.puc-rio.br/~roberto/docs/peg.pdf), an implementation of PEGs designed to be used in Lua.
+In this post i will showcase some of the work that went into this Project, explain PEGs in general and LPeg, and show some results.
 
 
 --PARSING EXPRESSION GRAMMARS--
@@ -27,20 +10,20 @@ As we will see in the "results" section, this expectation is fulfilled.
 Parsing Expression Grammas (PEGs) are a type of formal grammar similar to context-free grammars, with the main difference being that it is unambiguous.
 This is achieved by redefining the ambiguous choice operator of CFGs (usually noted as "|") as an *ordered* choice operator.
 In practice this means that if a rule in a PEG presents a choice, a PEG parser should prioritize the leftmost choice.
-Practical uses include Parsing and Pattern-searching. In comparison to regular expressions PEGs stand out as being able to be parsed in linear time, being strictly more powerful than REs, as well as being arguably more readable.
+Practical uses include parsing and pattern-searching. In comparison to regular expressions PEGs stand out as being able to be parsed in linear time, being strictly more powerful than REs, as well as being arguably more readable.
 
 
 --LPEG--
 
 LPeg is an implementation of PEGs written in C to be used in the Lua programming language.
-A crucial detail of this implementation is that it parses high level function calls, translating them to Bytecode, and interpreting that Bytecode.
-Therefore, we are able to improve that implementation by replacing LPegs C-interpreter with an RPython-Jit.
+A crucial detail of this implementation is that it parses high level function calls, translating them to Bytecode, and interpreting that bytecode.
+Therefore, we are able to improve that implementation by replacing LPegs C-interpreter with an RPython-JIT.
 I use a modified version of LPeg to parse PEGs and pass the generated Intermediate Representation, the LPeg Bytecode, to my VM.
 
 
 --THE LPEG LIBRARY--
 
-The LPeg Interpreter executes bytecodes created by parsing a string of commands using the LPeg library. Our JIT supports a subset of the LPeg library, with some of the more advanced or obscure features being cut. Note that this subset is still powerful enough to do things like parse JSON.
+The LPeg Interpreter executes bytecodes created by parsing a string of commands using the LPeg library. Our JIT supports a subset of the LPeg library, with some of the more advanced or obscure features being left out. Note that this subset is still powerful enough to do things like parse JSON.
 
 Operator            Description
 lpeg.P(string)      Matches string literally
@@ -168,7 +151,7 @@ Sets the top element of the capturestack to full and sets its size value using t
 --The RPython Implementation--
 
 These, and many more Bytecodes were implemented in an RPython-interpreter.
-By adding jit-hints, we were able to generate an efficient Jit.
+By adding jit hints, we were able to generate an efficient JIT.
 We will now take a closer look at some implementations of bytecodes.
 
 -any-
@@ -221,12 +204,10 @@ The jmp-bytecode comes with a goto-value which is a pc that is used to overwrite
                 instruction.goto, index, captures)
 [...]
 
-As we can see here, the choice-bytecode puts a choice point onto the stack that may be consumed if the VM is in the fail-state. This choice point consists of a pc to jump to and index and capture values at the time the choice point was created.
-An ongoing topic of jit-optimization is which data structure is best suited to store choice points and return addresses.
+As we can see here, the choice-bytecode puts a choice point onto the stack that may be backtracked to if the VM is in the fail-state. This choice point consists of a pc to jump to and index and capture values at the time the choice point was created.
+An ongoing topic of jit optimization is which data structure is best suited to store choice points and return addresses.
 Besides naive implementations of stacks and single-linked lists, more case-specific structures are also being tested for performance.
 
-$cf: erklären, dass du die bytecodes in einem RPython-interpreter implementiert und jit-hints hinzugefügt hast
-- interpreter-code für any, char, choice, jump
 
 
 --RESULTS--
