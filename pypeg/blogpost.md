@@ -39,29 +39,30 @@ using the LPeg library. Our JIT supports a subset of the LPeg library, with
 some of the more advanced or obscure features being left out. Note that this
 subset is still powerful enough to do things like parse JSON.
 
-Operator            Description
-lpeg.P(string)      Matches string literally
-lpeg.P(n)           Matches exactly n characters
-lpeg.P(-n)          Matches at most n characters
-lpeg.S(string)      Matches any character in string (Set)
-lpeg.R("xy")        Matches any character between x and y (Range)
-pattern^n           Matches at least n repetitions of pattern
-pattern^-n          Matches at most n repetitions of pattern
-pattern1 * pattern2 Matches pattern1 followed by pattern2
-pattern1 + pattern2 Matches pattern1 or pattern2 (ordered choice)
-pattern1 - pattern2 Matches pattern1 if pattern2 does not match
--pattern            Equivalent to ("" - pattern)
+Operator            | Description
+--------------------|--------------------
+lpeg.P(string)      | Matches string literally
+lpeg.P(n)           | Matches exactly n characters
+lpeg.P(-n)          | Matches at most n characters
+lpeg.S(string)      | Matches any character in string (Set)
+lpeg.R("xy")        | Matches any character between x and y (Range)
+pattern^n           | Matches at least n repetitions of pattern
+pattern^-n          | Matches at most n repetitions of pattern
+pattern1 * pattern2 | Matches pattern1 followed by pattern2
+pattern1 + pattern2 | Matches pattern1 or pattern2 (ordered choice)
+pattern1 - pattern2 | Matches pattern1 if pattern2 does not match
+-pattern            | Equivalent to ("" - pattern)
 
 
 To extract semantic information from a pattern, captures are needed. These are
 the following operations supported for capture creation.
 
-Operation           What it produces
-lpeg.C(pattern)     the match for patten plus all captures made by pattern
-lpeg.Cp()           the current position (matches the empty string)
+Operation         | What it produces
+------------------|--------------------
+lpeg.C(pattern)   | the match for patten plus all captures made by pattern
+lpeg.Cp()         | the current position (matches the empty string)
 
-(tables taken from the [LPeg
-documentation](http://www.inf.puc-rio.br/~roberto/lpeg/))
+(tables taken from the [LPeg documentation](http://www.inf.puc-rio.br/~roberto/lpeg/))
 
 These patterns are translated into bytecode by LPeg, at which point we are able
 to pass them into our own VM.
