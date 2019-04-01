@@ -14,7 +14,7 @@ PYPYLOG=jit-log-opt:out ./pypeg_270219_newchoicepoints ./examples/5_mb_jsonpatte
 ----------------
 
 python ~/pypeg_git/pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
-python ~//pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
+python ~/pypy/rpython/bin/rpython -Ojit --make-jobs=1 target.py
 ^mit jit. ohne -Ojit für ohne
 
 ../../pypy/pytest.py
@@ -238,9 +238,9 @@ paar slides für morgen, ggf libreoffice / google slides.
     - zwei benchmarks 
 
 
+NOT TODO: intro, related work, jit opts, rpython-background, conclusion
 
-
-
+(alles andere: LPeg/Peg Background, Interpreter, results)
 
 google python keyword arguments
 
