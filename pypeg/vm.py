@@ -8,7 +8,6 @@ from sys import argv
 from flags import Flags
 from os import environ
 from rpython.rlib import rstring
-
 from rpython.rlib import jit
 
 IS_SIMPLE = True

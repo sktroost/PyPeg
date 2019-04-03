@@ -73,13 +73,23 @@ urlchar = lpeg.R("az","AZ","09") + lpeg.S("-._~:/?#@!$&*+,;=")}^0"""
     def test_testset(self):
         #this instructionset should match an arbitrarily long string of
         #'a's and 'b's, terminating with another character
-        instructionlist =(
-        [Instruction(name="testset", label=0, goto=3, charlist=[CharRange("a","b")]),
+        instructionlist = (
+        [Instruction(name="testset", label=0, goto=3, charlist=[CharRange("a","z"), CharRange("A","Z"), CharRange("0","9")]),
          Instruction(name="any", label=1),
          Instruction(name="jmp", label=2, goto=0),
          Instruction(name="any", label=3),
          Instruction(name="end", label=4)])
-        input = "abba"*100+"c"
+        input = "abZ0ba"*100+"c"
+        self.run_string(instructionlist,input)
+        # await approval from cfbolz. requires vm to run by instructionlist,
+        # which requires run_string to change (as far as i understand pypy)
+
+    def test_span(self):
+        #this instructionset should match an arbitrarily long string of
+        #'a's and 'b's, terminating with another character
+        pattern = 'lpeg.R("az")^0 * lpeg.R("09")^0'
+        instructionlist=relabel(parse(runpattern(pattern)))
+        input = "abbac"*100+"c" + "012312312445598" * 10
         self.run_string(instructionlist,input)
         # await approval from cfbolz. requires vm to run by instructionlist,
         # which requires run_string to change (as far as i understand pypy)

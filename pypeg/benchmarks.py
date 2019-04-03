@@ -16,7 +16,7 @@ from collections import OrderedDict
 executable_path = "/home/sktroost/PyPeg/pypeg/"
 pattern_input_path = "/home/sktroost/PyPeg/pypeg/examples/"
 lpeg_path = "/home/sktroost/PyPeg/pypeg/lpeg/"
-repetitions = 30
+repetitions = 100
 output = "/home/sktroost/PyPeg/pypeg/benchmarks.txt"
 blacklisted_executables = ["pypeg_180319_nochoicepointopt"]  # broken
 blacklisted_patterns = ["verylongjson"]
@@ -144,6 +144,11 @@ def benchmark_all_shellscripts():
                 ret.append(benchmark_shellscript("./urlgrep.sh", input))
             except CalledProcessError:
                 print("urlgrep.sh on "+input+" not executed.")
+        elif "email" in input:
+            try:
+                ret.append(benchmark_shellscript("./emailgrep.sh", input))
+            except CalledProcessError:
+                print("emailgrep.sh on "+input+" not executed.")
     return ret
 
 
