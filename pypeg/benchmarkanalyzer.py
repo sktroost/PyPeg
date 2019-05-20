@@ -45,8 +45,7 @@ def standarddeviation(iterable):
 
 
 def confidentinterval(iterable, percentage):
-    sortedlist = iterable[:]  # dont want to mess up the actual list
-    sortedlist.sort()
+    sortedlist = sorted(iterable[:])  # dont want to mess up the actual list
     index = int(float(percentage)/100 * len(sortedlist))+1
     return sortedlist[index]
 

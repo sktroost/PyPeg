@@ -1,3 +1,4 @@
+from __future__ import print_function
 from subprocess import check_output
 from sys import argv
 from os import chdir
@@ -8,7 +9,7 @@ from charlistelement import SingleChar, CharRange
 
 
 def line_to_instruction(line):
-    print line
+    print(line)
     if "':'" in line:  # escape before split
         line = replace(line, "':'", "'#'")
         labelsplit = line.split(":")

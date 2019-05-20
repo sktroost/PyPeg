@@ -76,7 +76,7 @@ class PcTuple(object):
 
     @jit.elidable
     def discard_all_but_one(self):
-        while 1:
+        while True:
             if self.prev is None:
                 return self
             self = self.prev

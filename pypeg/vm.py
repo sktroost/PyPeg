@@ -1,3 +1,4 @@
+from __future__ import print_function
 from utils import runpattern
 from parser import parse, relabel
 from stackentry import ChoicePoint, Bottom
@@ -84,7 +85,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
             print("Instruction: "+str(instructionlist[pc]))
             print("Captures: "+str(captures))
             if fail:
-                print "FAIL"
+                print("FAIL")
         if fail:
             fail = False
             if choice_points:
@@ -111,7 +112,7 @@ def run(instructionlist, inputstring, index=0, flags=Flags()):
                             + "with value "+str(pc))
         instruction = instructionlist[jit.promote(pc)]
         if flags.debug:
-            print instruction
+            print(instruction)
         if instruction.name == "char":
             if flags.optimize_char:
                 n = look_for_chars(instructionlist, pc)
@@ -362,7 +363,7 @@ def processcaptures(captures, inputstring, flags=Flags()):
     #returnlist = []
     out = rstring.StringBuilder()
     if flags.debug:
-        print captures
+        print(captures)
     while captures.prev is not None:
         if isinstance(captures, SimpleCapture):
             size = captures.get_size()
@@ -391,4 +392,4 @@ if __name__ == "__main__":
     inputstring = inputstring.strip()
     captures = runbypattern(pattern, inputstring).captures
     output = processcaptures(captures, inputstring)
-    print output
+    print(output)

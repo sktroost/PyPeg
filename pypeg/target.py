@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 import time
 from rpython.rlib import jit, rgc
@@ -13,7 +14,7 @@ def main(argv):
         if argv[i] == "--jit":
             jitarg = argv[i + 1]
             del argv[i: i+2]
-            print jitarg, argv
+            print(jitarg, argv)
             jit.set_user_param(None, jitarg)
         if argv[i] == "--time":
             printtime = True
@@ -45,10 +46,10 @@ def main(argv):
     else:
         gct2 = 0
 
-    print output
+    print(output)
     if printtime:
-        print "time:", t2 - t1
-        print "gc time:", (gct2 - gct1) / 1000.    
+        print("time:", t2 - t1)
+        print("gc time:", (gct2 - gct1) / 1000.)    
     return 0
 
 
