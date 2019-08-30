@@ -4,7 +4,7 @@ This is the github page for my Bachelor's thesis, "An RPython JIT for Parsing Ex
 
 The current title for the JIT, "pypeg" might change soon, since "pypeg" is already the name of an interpreter based on parsing expression grammars.
 
-A more detailed overview of the Project, it's application and results are available under https://github.com/sktroost/PyPeg/blob/master/pypeg/blogpost
+A more detailed overview of the Project, it's application and results is available under https://github.com/sktroost/PyPeg/blob/master/pypeg/pypeg_thesis.pdf
 
 However, here is a basic rundown:
 
@@ -32,7 +32,7 @@ Currently, this software requires a lot of dependencies and is not very user fri
 -libffi-dev (pypy requirement) (installed in ubuntu by opening a terminal and typing sudo apt-get install libffi-dev)
 -pypy source (https://bitbucket.org/pypy/pypy/src)
 
-A more detailed installation guide will be available soon.
+A more detailed installation guide may be available soon.
 
 --On what platforms does it run?--
 Currently x86-Linux only.
