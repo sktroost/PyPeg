@@ -1,5 +1,8 @@
 # PyPeg
 
+This project is mostly abandoned! If you actually want to get this Software to run on your machine or build something on top of it please get in touch: stefan_troost {at} web {dot} de.
+I hate it when I find an abandoned piece of software that I would really like to use but can't figure it out how to get the darn thing to run. This way, we can figure it out together if you want.
+
 This is the github page for my Bachelor's thesis, "An RPython JIT for Parsing Expression Grammars".
 
 The current title for the JIT, "pypeg" might change soon, since "pypeg" is already the name of an interpreter based on parsing expression grammars.
